@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RansomTuga", "RansomTuga\RansomTuga.vcxproj", "{412279DA-38A3-4929-A5C4-90C36E4B416C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC} = {51256311-DA63-44E8-A9E7-9EA6C066EFDC}
+		{68320B45-A94E-4CA4-94AA-A70703358B8A} = {68320B45-A94E-4CA4-94AA-A70703358B8A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataDecryptor", "DataDecryptor\DataDecryptor.vcxproj", "{51256311-DA63-44E8-A9E7-9EA6C066EFDC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68320B45-A94E-4CA4-94AA-A70703358B8A} = {68320B45-A94E-4CA4-94AA-A70703358B8A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InfoDecryptor", "InfoDecryptor\InfoDecryptor.vcxproj", "{68320B45-A94E-4CA4-94AA-A70703358B8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Debug|x64.ActiveCfg = Debug|x64
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Debug|x64.Build.0 = Debug|x64
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Debug|x86.ActiveCfg = Debug|Win32
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Debug|x86.Build.0 = Debug|Win32
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Release|x64.ActiveCfg = Release|x64
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Release|x64.Build.0 = Release|x64
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Release|x86.ActiveCfg = Release|Win32
+		{412279DA-38A3-4929-A5C4-90C36E4B416C}.Release|x86.Build.0 = Release|Win32
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Debug|x64.ActiveCfg = Debug|x64
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Debug|x64.Build.0 = Debug|x64
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Debug|x86.ActiveCfg = Debug|Win32
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Debug|x86.Build.0 = Debug|Win32
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Release|x64.ActiveCfg = Release|x64
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Release|x64.Build.0 = Release|x64
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Release|x86.ActiveCfg = Release|Win32
+		{51256311-DA63-44E8-A9E7-9EA6C066EFDC}.Release|x86.Build.0 = Release|Win32
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Debug|x64.ActiveCfg = Debug|x64
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Debug|x64.Build.0 = Debug|x64
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Debug|x86.ActiveCfg = Debug|Win32
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Debug|x86.Build.0 = Debug|Win32
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Release|x64.ActiveCfg = Release|x64
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Release|x64.Build.0 = Release|x64
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Release|x86.ActiveCfg = Release|Win32
+		{68320B45-A94E-4CA4-94AA-A70703358B8A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A226BA68-3CBA-4CE7-8537-6FCAEC15D02A}
+	EndGlobalSection
+EndGlobal
