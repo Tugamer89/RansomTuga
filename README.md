@@ -1,6 +1,9 @@
 # RansomTuga
-A simple Ransomware with a lot of options and fully customizable.
 <img src=".github/images/main.jpg" alt="mainImage">
+&nbsp;
+An advanced Ransomware with a lot of options and fully customizable.
+It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.
+After the encryption it sends the key and some pc informations to the attacker via email.
 
 
 # Table of Contents
@@ -52,6 +55,7 @@ And many more!
 
 # Todo
 - Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
+- Random IV
 - AntiViruses evasion
 - Anti-Debug functions
 - More anti-reverse functions (i.e. function names)
