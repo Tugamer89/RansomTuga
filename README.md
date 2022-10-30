@@ -1,5 +1,6 @@
 # RansomTuga
 A simple Ransomware with a lot of options and fully customizable.
+<img src=".github/images/main.jpg" alt="mainImage">
 
 
 # Table of Contents
