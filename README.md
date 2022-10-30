@@ -1,9 +1,12 @@
 # RansomTuga
 <img src=".github/images/main.jpg" alt="mainImage">
-&nbsp;
-An advanced Ransomware with a lot of options and fully customizable.
-It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.
-After the encryption it sends the key and some pc informations to the attacker via email.
+&nbsp;\
+It is advanced Ransomware with a lot of options and fully customizable.\
+It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
+After the encryption it sends the key and some pc informations to the attacker via email.\
+It also drops a readme.txt file and the decryptor and change the wallpaper of the victim computer.\
+It could also change the extension of crypted files and set a custom icon for those.\
+At the end it can delete the executable from which it was started.\
 
 
 # Table of Contents
