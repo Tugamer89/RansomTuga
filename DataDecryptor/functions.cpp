@@ -83,7 +83,12 @@ void decryptFiles(vector<string> files, string key) {
 }
 
 bool checkKey(string key) {
-    decryptFiles({ CHECKSUM_FILE + FILE_EXTENSION }, key);
+    try {
+        decryptFiles({ CHECKSUM_FILE + FILE_EXTENSION }, key);
+    }
+    catch (...) {
+        return false;
+    }
     ifstream fin(CHECKSUM_FILE, ios::in);
     string data((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
     fin.close();
