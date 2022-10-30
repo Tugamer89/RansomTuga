@@ -76,6 +76,6 @@ And many more!
   <summary>DataDecryptor Workflow</summary>
   <p align="center">
     &nbsp;
-    <img src=".github/images/DataDecryptor.png" alt="DataDecryptorWorkflow">
+    <img src=".github/images/workflow_DataDecryptor.png" alt="DataDecryptorWorkflow">
   </p>
 </details>
