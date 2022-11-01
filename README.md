@@ -1,5 +1,5 @@
 # RansomTuga
-<img src=".github/images/main.jpg" alt="mainImage">
+<img src=".github/images/main.jpg" alt="logo">
 
 It is an advanced Ransomware with a lot of options and fully customizable.\
 It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
@@ -57,12 +57,12 @@ And many more!
 
 
 # Todo
-- [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)\
-- [ ] Random IV\
-- [ ] Whitelist & Blacklist file extensions\
-- [ ] AntiViruses evasion\
-- [ ] Anti-Debug functions\
-- [ ] More anti-reverse functions (i.e. function names)\
+- [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
+- [ ] Random IV
+- [ ] Whitelist & Blacklist file extensions
+- [ ] AntiViruses evasion
+- [ ] Anti-Debug functions
+- [ ] More anti-reverse functions (i.e. function names)
 - [ ] Do more tests in more environments
 
 
