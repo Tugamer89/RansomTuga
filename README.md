@@ -57,12 +57,13 @@ And many more!
 
 
 # Todo
-- Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
-- Random IV
-- AntiViruses evasion
-- Anti-Debug functions
-- More anti-reverse functions (i.e. function names)
-- Do more tests in more environments
+[ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
+[ ] Random IV
+[ ] Whitelist & Blacklist file extensions
+[ ] AntiViruses evasion
+[ ] Anti-Debug functions
+[ ] More anti-reverse functions (i.e. function names)
+[ ] Do more tests in more environments
 
 
 # How does it work
