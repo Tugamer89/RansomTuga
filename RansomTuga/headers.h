@@ -1,5 +1,6 @@
 #pragma once
 #include "../commons/common.h"
+#include "json.hpp"
 #include <atlstr.h>
 #include <fstream>
 #include <sstream>
@@ -28,7 +29,7 @@ std::vector<std::string> split(const std::string& s, char delimiter);
 bool fileExists(const std::string& name);
 std::string getDate();
 std::string getHWID();
-std::string getIP();
+std::string getIPData();
 std::string getCPU();
 std::string getGPU();
 std::string getPcName();

