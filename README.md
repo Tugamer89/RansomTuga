@@ -62,6 +62,7 @@ And many more!
 - [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
 - [ ] Random IV
 - [x] Whitelist & Blacklist file extensions
+- [ ] Add ip geolocation
 - [ ] AntiViruses evasion
 - [ ] Anti-Debug functions
 - [ ] More anti-reverse functions (i.e. function names)
