@@ -1,6 +1,3 @@
-// TODO:
-// InfoFile starts with '$$$\n ': line 85
-
 #include "headers.h"
 
 using namespace std;
@@ -39,14 +36,15 @@ int main() {
         exit(0);
     }
 
-    string line, content;
+    string line;
+    vector<string> content;
     ifstream inFile(fileName);
     while (getline(inFile, line))
-        content += line;
+        content.push_back(line);
     inFile.close();
 
     bool founded = false;
-    string contentDecryptedOnce = aes_decrypt(KEY, content, IV);
+    string contentDecryptedOnce = aes_decrypt(KEY, content[0], IV);
     string contentDecryptedTwice;
     vector<string> dividedContentDecryptedOnce = split(contentDecryptedOnce, ' ');
     for (int i = 0; i < dividedContentDecryptedOnce.size(); i++) {
@@ -83,8 +81,11 @@ int main() {
 
     ofstream outFile(writeFileName, ios::out | ios::binary);
     unsigned char smarker[] = { 0xEF, 0xBB, 0xBF };
-    outFile << smarker << contentDecryptedTwice;
+    outFile << smarker;
     outFile.close();
+    ofstream outFile2(writeFileName, ios::out | ios::binary);
+    outFile2 << contentDecryptedTwice;
+    outFile2.close();
 
     cout << skCrypt(" File decrypted in \"") << writeFileName << skCrypt("\"\n\n ");
 

