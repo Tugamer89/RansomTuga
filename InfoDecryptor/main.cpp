@@ -76,7 +76,7 @@ int main() {
 
     for (int i = 0; i < dividedFileName.size(); i++) {
         if (i == dividedFileName.size() - 1)
-            writeFileName += string(skCrypt("decrypted.txt")) /* + dividedFileName[i]; //(uncomment this part if you want to keep original extension)*/;
+            writeFileName += string(skCrypt("decrypted.")) + dividedFileName[i];
         else
             writeFileName += dividedFileName[i] + string(skCrypt("."));
     }
