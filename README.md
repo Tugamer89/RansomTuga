@@ -73,7 +73,7 @@ And many more!
 - [ ] Get webcam pictures
 - [ ] Get Wi-Fi password
 - [x] Drop custom file
-- [ ] Drop & launch custom file for trojan mode
+- [x] Drop & launch custom file for trojan mode
 - [x] Whitelist & Blacklist file extensions
 - [x] Add ip geolocation
 - [ ] AntiViruses evasion

