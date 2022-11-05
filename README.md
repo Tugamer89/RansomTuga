@@ -27,7 +27,8 @@ At the end it can delete the executable from which it was started.\
 - **AES CBC 256** file encryption
 - **Debug mode** for fast testing
 - **Trojan mode**
-- **Task remover**
+- **Custom icon** for the compiled executable
+- **Tasks remover**
 - **Steal system informations** (HWID, IP, CPU brand and threads, RAM, GPU brand, Host name and username, screen resolution, windows version and language)
 - **Delete restore points**
 - **Custom file icon** for crypted files
