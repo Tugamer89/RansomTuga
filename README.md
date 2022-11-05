@@ -41,6 +41,7 @@ And many more!
 
 
 # How to compile
+- Install latest version of Python 3 [here](https://www.python.org/downloads/)
 - Install latest version of Visual Studio 2022 [here](https://visualstudio.microsoft.com/downloads/)
 - Install latest version of Git [here](https://git-scm.com/download/win)
 - Install vcpkg and CryptoPP using Git Bash:
