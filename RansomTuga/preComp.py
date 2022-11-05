@@ -3,11 +3,14 @@ sys.setrecursionlimit(1000000)      # for bigger files
 
 emailSenderLastPath = ''
 FAST_TEST = False
+CUSTOM_FILE = False
 for line in open('../commons/common.h', 'r').readlines():
     if '#define DEBUG' in line and 'true' in line:
         FAST_TEST = True
     if '#define EMAILSENDER' in line:
         emailSenderLastPath = line.split('"')[1].replace('\\\\', '\\')
+    if '#define DROP_CUSTOM_FILE' in line and 'true' in line:
+        emailSenderLastPath = True
 
 
 def split_str(seq, chunk, skip_tail=False):
@@ -117,6 +120,16 @@ for line in main_cppRead.readlines():
         fileIconContent = base64.b64encode(open(fileIconPath, 'rb').read()).decode()
         open('preCompilation.tmp', 'a').write("fileicon=" + fileIconPath + "\n")
         for subContent in split_str(fileIconContent, 500, False):
+            content += '"'+subContent+'"\n'
+        content += ';\n'
+        continue
+    if line.split('=')[0] == 'string CustomFileContent ' and line.split('=')[1] != ' \n' and CUSTOM_FILE:
+        content += 'string CustomFileContent = \n'
+        customFilePath = line.split('"')[1]
+        checkFileLocation(customFilePath, i)
+        customFileContent = base64.b64encode(open(customFilePath, 'rb').read()).decode()
+        open('preCompilation.tmp', 'a').write("customfile=" + customFilePath + "\n")
+        for subContent in split_str(customFileContent, 500, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue

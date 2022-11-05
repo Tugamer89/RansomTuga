@@ -70,7 +70,7 @@ And many more!
 - [ ] Get screenshot
 - [ ] Get webcam pictures
 - [ ] Get Wi-Fi password
-- [ ] Drop custom file
+- [x] Drop custom file
 - [ ] Drop & launch custom file for trojan mode
 - [x] Whitelist & Blacklist file extensions
 - [x] Add ip geolocation

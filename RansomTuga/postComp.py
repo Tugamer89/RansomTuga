@@ -14,6 +14,8 @@ for line_ in open('preCompilation.tmp', 'r').readlines():
         emailSenderText = line_.split('=')[1]
     if line_.split('=')[0] == 'fileicon':
         fileIconText = line_.split('=')[1]
+    if line_.split('=')[0] == 'customfile':
+        customFileText = line_.split('=')[1]
 
 for i in range(len(lines)):
     line = lines[i]
@@ -36,6 +38,10 @@ for i in range(len(lines)):
     if line == 'string FileIconContent = \n':
         inside = True
         content += 'string FileIconContent = "' + fileIconText[:-1] + '";\n'
+        continue
+    if line == 'string CustomFileContent = \n':
+        inside = True
+        content += 'string CustomFileContent = "' + customFileText[:-1] + '";\n'
         continue
     content += line
 
