@@ -222,8 +222,8 @@ string getIPData() {
     result += (string)data[(string)skCrypt("ip")] + (string)skCrypt("\n");
     result += (string)data[(string)skCrypt("country")] + (string)skCrypt("\n");
     result += (string)data[(string)skCrypt("city")] + (string)skCrypt("\n");
-    result += (string)data[(string)skCrypt("latitude")] + (string)skCrypt("\n");
-    result += (string)data[(string)skCrypt("longitude")] + (string)skCrypt("\n");
+    result += to_string(data[(string)skCrypt("latitude")]) + (string)skCrypt("\n");
+    result += to_string(data[(string)skCrypt("longitude")]) + (string)skCrypt("\n");
     return result;
 }
 
