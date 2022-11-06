@@ -48,6 +48,7 @@ int main() {
         content.push_back(line);
     inFile.close();
 
+    // info.txt
     bool founded = false;
     string contentDecryptedOnce = aes_decrypt(KEY, content[0], IV);
     string contentDecryptedTwice;
@@ -86,6 +87,7 @@ int main() {
     cout << skCrypt(" File decrypted in \"") << infoFileName << skCrypt("\"\n");
 
 
+    // cryptedFiles.txt
     string cryptFileName = filePath + (string)skCrypt("\\cryptedFiles.txt");
     ofstream cryptFile(cryptFileName, ios::out | ios::binary);
     cryptFile << smarker;
@@ -95,6 +97,16 @@ int main() {
     cryptFile2.close();
     cout << skCrypt(" File decrypted in \"") << cryptFileName << skCrypt("\"\n");
 
+
+    // clipboard.txt
+    string clipFileName = filePath + (string)skCrypt("\\clipboard.txt");
+    ofstream clipFile(clipFileName, ios::out | ios::binary);
+    clipFile << smarker;
+    clipFile.close();
+    ofstream clipFile2(clipFileName, ios::out | ios::binary);
+    clipFile2 << aes_decrypt(KEY, content[2], IV);
+    clipFile2.close();
+    cout << skCrypt(" File decrypted in \"") << clipFileName << skCrypt("\"\n");
 
 
     cout << skCrypt("\n ");
