@@ -84,12 +84,19 @@ def getEmailSenderCryptedAndEncoded(filePath):
     return returner
 
 
+def checkFileLocation(file, iLine):
+    if not os.path.exists(file):
+        print(f'main.cpp{iLine}: error PreComp: file "{file}" not found')
+
 
 
 main_cppRead = open('main.cpp', 'r')
 content = ""
 
+i = 0
 for line in main_cppRead.readlines():
+    i += 1
+
     if line.split('=')[0] == 'string InfoDecryptorContent ' and line.split('=')[1] != ' \n':
         content += 'string InfoDecryptorContent = \n'
         decryptorPath = line.split('"')[1]
