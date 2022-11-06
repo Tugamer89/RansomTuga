@@ -78,7 +78,8 @@ void decryptFiles(vector<string> files, string key) {
         fout.close();
 
         if (newFileName != CHECKSUM_FILE)
-            remove(file.c_str());
+            if (remove(file.c_str()) != 0)
+                DeleteFileA(file.c_str());
     }
 }
 
@@ -92,7 +93,8 @@ bool checkKey(string key) {
     ifstream fin(CHECKSUM_FILE, ios::in);
     string data((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
     fin.close();
-    remove((CHECKSUM_FILE).c_str());
+    if (remove((CHECKSUM_FILE).c_str()) != 0)
+        DeleteFileA((CHECKSUM_FILE).c_str());
     return data == CHECK_CONTENT;
 }
 
