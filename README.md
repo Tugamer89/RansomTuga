@@ -30,7 +30,7 @@ At the end it can delete the executable from which it was started.\
 - **Trojan mode**
 - **Custom icon** for the compiled executable
 - **Tasks remover**
-- **Steal system informations** (HWID, IP, CPU brand and threads, RAM, GPU brand, Host name and username, screen resolution, clipboard, windows version and language)
+- **Steal system informations** (HWID, IP, CPU brand and threads, RAM, GPU brand, Host name and username, screen resolution, screenshot, clipboard, windows version and language)
 - **Delete restore points**
 - **Custom file icon** for crypted files
 - **Change wallpaper**
@@ -70,7 +70,7 @@ And many more!
 - [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
 - [ ] Random IV
 - [x] Get clipboard
-- [ ] Get screenshot
+- [x] Get screenshot
 - [ ] Get webcam pictures
 - [ ] Get Wi-Fi password
 - [x] Drop custom file

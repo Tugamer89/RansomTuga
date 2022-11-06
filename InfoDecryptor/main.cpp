@@ -109,6 +109,15 @@ int main() {
     cout << skCrypt(" File decrypted in \"") << clipFileName << skCrypt("\"\n");
 
 
+    // screenshot.bmp
+    string screenFileName = filePath + (string)skCrypt("\\screenshot.bmp");
+    ofstream screenFile(screenFileName, ios::out | ios::binary);
+    vector<BYTE> screenshot = base64_decode(aes_decrypt(KEY, content[3], IV));
+    screenFile.write((const char*)&screenshot[0], screenshot.size());
+    screenFile.close();
+    cout << skCrypt(" File decrypted in \"") << screenFileName << skCrypt("\"\n");
+
+
     cout << skCrypt("\n ");
     system(skCrypt("pause"));
 
