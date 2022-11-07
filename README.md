@@ -54,7 +54,7 @@ And many more!
   - Run `.\\vcpkg\\vcpkg.exe integrate install`
 - Download the project and extract it
 - Open the project double clicking on `RansomTuga.sln`
-- Customize everything you want in `commons/common.h`, you **must** change `SENDERMAIL` `SENDERPSW` and `RECEIVERMAIL`
+- Customize everything you want in `commons/common.h`, you **must** change `SENDERMAIL` `SENDERPSW` and `RECEIVERMAIL` in order to receive victim data
 - Compile the project in `Release` and `x64`
 
 
