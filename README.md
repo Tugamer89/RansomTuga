@@ -114,7 +114,10 @@ There is none for the moment but I hope it fills up soon!\
 
 
 # Donations
-You are not obliged to donate but if you do I really appreciate it very much (if you donate write me everywhere so I will add you among the thanks)\
+You are not obliged to donate but if you do I really appreciate it very much!\
+If you donate write me everywhere so I will add you among the thanks.\
+Those who donate and want to propose an improvement or the addition of some new function will have priority over the others.\
+\
 XMR: `41ge57zKUGccYiLiZh7RzuUTFZysUrFBz2wL5kkPQo5QJYHbXFVy5rmKxq4PAas365GPygFa9GiaERiNUpg3sYYnUPBbapt`\
 ETH: `0x73D0b82F7D8c2899a54aA57c4075cca5e1CcbD03`\
 BTC: `bc1qj7kuy9mlutjapq76dc368yrsmqmg3k7p8y4g6n`\
