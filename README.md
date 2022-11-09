@@ -22,6 +22,8 @@ At the end it can delete the executable from which it was started.\
 - [How to use](#How-to-use)
 - [Todo list](#Todo)
 - [How does it work](#How-does-it-work)
+- [Thanks](#Thanks)
+- [Donations](#Donations)
 
 
 # Features
@@ -105,3 +107,19 @@ And many more!
     <img src=".github/images/workflow_DataDecryptor.png" alt="DataDecryptorWorkflow">
   </p>
 </details>
+
+
+# Thanks
+There is none for the moment but I hope it fills up soon!\
+
+
+# Donations
+You are not obliged to donate but if you do I really appreciate it very much (if you donate write me everywhere so I will add you among the thanks)\
+XMR: `41ge57zKUGccYiLiZh7RzuUTFZysUrFBz2wL5kkPQo5QJYHbXFVy5rmKxq4PAas365GPygFa9GiaERiNUpg3sYYnUPBbapt`
+ETH: `0x73D0b82F7D8c2899a54aA57c4075cca5e1CcbD03`
+BTC: `bc1qj7kuy9mlutjapq76dc368yrsmqmg3k7p8y4g6n`
+TRX: `TYpjEtunbiTsrS4p1JXyGxQikNGajkkWtq`
+ADA: `addr1qyhjrhxz425mwvn2x4yfa8t2xc70qr4ftg8xp7qf7u0903p0y8wv924fkuex5d2gn6wk5d3u7q82jkswvruqnac72lzq45ne0n`
+SOL: `HNKN5MiEBzUNk2yY2Q2MicPs8M4baaGMRdL9BeY5QtUw`
+LTC: `LZUdiSiXbU9AUZNjNKwVxNhVNSCHHSQkBm`
+DOGE: `DRdEj9EvMMrEC3WKyjdyfeAzZQdBCHC4cH`
