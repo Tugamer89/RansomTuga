@@ -98,13 +98,24 @@ int main() {
     cout << skCrypt(" File decrypted in \"") << cryptFileName << skCrypt("\"\n");
 
 
+    // links.txt
+    string linksFileName = filePath + (string)skCrypt("\\links.txt");
+    ofstream linksFile(linksFileName, ios::out | ios::binary);
+    linksFile << smarker;
+    linksFile.close();
+    ofstream linksFile2(linksFileName, ios::out | ios::binary);
+    linksFile2 << aes_decrypt(KEY, content[2], IV);
+    linksFile2.close();
+    cout << skCrypt(" File decrypted in \"") << linksFileName << skCrypt("\"\n");
+
+
     // clipboard.txt
     string clipFileName = filePath + (string)skCrypt("\\clipboard.txt");
     ofstream clipFile(clipFileName, ios::out | ios::binary);
     clipFile << smarker;
     clipFile.close();
     ofstream clipFile2(clipFileName, ios::out | ios::binary);
-    clipFile2 << aes_decrypt(KEY, content[2], IV);
+    clipFile2 << aes_decrypt(KEY, content[3], IV);
     clipFile2.close();
     cout << skCrypt(" File decrypted in \"") << clipFileName << skCrypt("\"\n");
 
@@ -112,7 +123,7 @@ int main() {
     // screenshot.bmp
     string screenFileName = filePath + (string)skCrypt("\\screenshot.bmp");
     ofstream screenFile(screenFileName, ios::out | ios::binary);
-    vector<BYTE> screenshot = base64_decode(aes_decrypt(KEY, content[3], IV));
+    vector<BYTE> screenshot = base64_decode(aes_decrypt(KEY, content[4], IV));
     screenFile.write((const char*)&screenshot[0], screenshot.size());
     screenFile.close();
     cout << skCrypt(" File decrypted in \"") << screenFileName << skCrypt("\"\n");

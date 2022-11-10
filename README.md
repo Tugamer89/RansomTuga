@@ -13,6 +13,7 @@ After the encryption it sends the key and some pc informations to the attacker v
 it retrieves various information from the victim's pc and sends them to the attacker.\
 It also drops a readme.txt file and the decryptor and change the wallpaper of the victim computer.\
 It could also change the extension of crypted files and set a custom icon for those.\
+It is able to upload files on AnonFiles before encryption.\
 At the end it can delete the executable from which it was started.\
 
 
@@ -37,6 +38,7 @@ At the end it can delete the executable from which it was started.\
 - **Custom file icon** for crypted files
 - **Change wallpaper**
 - **Whitelist** & **Blacklist** for files extensions (whitelist have priority)
+- **File uploader** before encryption
 - **Send email** with data encrypted in AES CBC 256
 - Send email also if pc is not connected to internet with a `.ps1` file obfuscated thanks to [Chimera](https://github.com/tokyoneon/Chimera)
 - **Self-delete** after execution
@@ -79,6 +81,7 @@ And many more!
 - [x] Drop & launch custom file for trojan mode
 - [x] Whitelist & Blacklist file extensions
 - [x] Add ip geolocation
+- [x] File sender
 - [ ] AntiViruses evasion
 - [ ] Anti-Debug functions
 - [ ] More anti-reverse functions (i.e. function names)

