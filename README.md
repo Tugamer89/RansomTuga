@@ -113,7 +113,7 @@ And many more!
 
 
 # Thanks
-There is none for the moment but I hope it fills up soon!\
+There is none for the moment but I hope it fills up soon!
 
 
 # Donations
