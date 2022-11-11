@@ -2,6 +2,7 @@
 #include "../commons/common.h"
 #include "json.hpp"
 #include <atlstr.h>
+#include <atlimage.h>
 #include <fstream>
 #include <sstream>
 #include <VersionHelpers.h>
