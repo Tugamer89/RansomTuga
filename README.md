@@ -9,12 +9,13 @@
 It is an advanced Ransomware with a lot of options and fully customizable.\
 It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
 It has a whitelist and a blacklist for the extension of files.\
+It take photos from all the webcams connected to the pc.\
 After the encryption it sends the key and some pc informations to the attacker via email.\
-it retrieves various information from the victim's pc and sends them to the attacker.\
+It retrieves various information from the victim's pc and sends them to the attacker.\
 It also drops a readme.txt file and the decryptor and change the wallpaper of the victim computer.\
 It could also change the extension of crypted files and set a custom icon for those.\
 It is able to upload files on AnonFiles before encryption.\
-At the end it can delete the executable from which it was started.\
+At the end it can delete the executable from which it was started.
 
 
 # Table of Contents
@@ -34,6 +35,7 @@ At the end it can delete the executable from which it was started.\
 - **Custom icon** for the compiled executable
 - **Tasks remover**
 - **Steal system informations** (HWID, IP, CPU brand and threads, RAM, GPU brand, Host name and username, screen resolution, screenshot, clipboard, windows version and language)
+- **Take photos** of **all** the webcams
 - **Delete restore points**
 - **Custom file icon** for crypted files
 - **Change wallpaper**
@@ -75,7 +77,7 @@ And many more!
 - [ ] Random IV
 - [x] Get clipboard
 - [x] Get screenshot
-- [ ] Get webcam pictures
+- [x] Get webcam pictures
 - [ ] Get Wi-Fi password
 - [x] Drop custom file
 - [x] Drop & launch custom file for trojan mode

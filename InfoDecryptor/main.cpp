@@ -129,6 +129,23 @@ int main() {
     cout << skCrypt(" File decrypted in \"") << screenFileName << skCrypt("\"\n");
 
 
+    // photos
+    for (string file : split(aes_decrypt(KEY, content[5], IV), '\n')) {
+        vector<string> splitted = split(file, ' ');
+        if (splitted.size() < 1)
+            break;
+        string fileName = splitted[0];
+        string fileData = splitted[1];
+        if (base64_decode(fileData).size() <= 10)
+            break;
+        string webcamFileName = filePath + (string)skCrypt("\\webcam-") + fileName;
+        ofstream webcamFile(webcamFileName, ios::out | ios::binary);
+        vector<BYTE> webcam = base64_decode(fileData);
+        webcamFile.write((const char*)&webcam[0], webcam.size());
+        webcamFile.close();
+        cout << skCrypt(" File decrypted in \"") << webcamFileName << skCrypt("\"\n");
+    }
+
     cout << skCrypt("\n ");
     system(skCrypt("pause"));
 

