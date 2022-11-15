@@ -115,7 +115,7 @@ And many more!
 
 
 # Thanks
-There is none for the moment but I hope it fills up soon!
+- [SafeSig](https://bf.hn/uid/105399)
 
 
 # Donations
