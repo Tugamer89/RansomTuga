@@ -10,7 +10,7 @@ It is an advanced Ransomware with a lot of options and fully customizable.\
 It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
 It has a whitelist and a blacklist for the extension of files.\
 It take photos from all the webcams connected to the pc.\
-After the encryption it sends the key and some pc informations to the attacker via email.\
+After the encryption it sends the key and some pc informations to the attacker via email and/or via a Telegram bot.\
 It retrieves various information from the victim's pc and sends them to the attacker.\
 It also drops a readme.txt file and the decryptor and change the wallpaper of the victim computer.\
 It could also change the extension of crypted files and set a custom icon for those.\
@@ -84,6 +84,7 @@ And many more!
 - [x] Whitelist & Blacklist file extensions
 - [x] Add ip geolocation
 - [x] File sender
+- [x] Info file sender through telegram bot
 - [ ] AntiViruses evasion
 - [ ] Anti-Debug functions
 - [ ] More anti-reverse functions (i.e. function names)

