@@ -1,7 +1,7 @@
 #pragma once
+#include <vector>
 #include <fstream>
 #include <sstream>
-#include <vector>
 #include "..\commons\common.h"
 
 std::string openfilename();

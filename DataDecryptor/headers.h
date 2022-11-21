@@ -1,8 +1,8 @@
 #pragma once
 #include "..\commons\common.h"
 #include <fstream>
-#include <streambuf>
 #include <atlstr.h>
+#include <streambuf>
 
 std::string exec(const char* cmd);
 bool fileExists(const std::string& name);
