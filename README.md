@@ -7,6 +7,7 @@
 <img src=".github/images/main.jpg" alt="logo">
 
 It is an advanced Ransomware with a lot of options and fully customizable.\
+It uses anti-dumping functions to evade some anti-viruses.\
 It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
 It has a whitelist and a blacklist for the extension of files.\
 It take photos from all the webcams connected to the pc.\

