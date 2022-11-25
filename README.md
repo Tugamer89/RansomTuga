@@ -55,9 +55,9 @@ And many more!
 - Install latest version of Git [here](https://git-scm.com/download/win)
 - Install vcpkg and CryptoPP using Git Bash:
   - Open  Git Bash
-  - Run `git clone https://github.com/microsoft/vcpkg`
+  - Run `git clone https://github.com/microsoft/vcpkg` 
   - Run `./vcpkg/bootstrap-vcpkg.bat`
-  - Run `./vcpkg/vcpkg.exe install cryptopp:x64-windows`
+  - Run `./vcpkg/vcpkg.exe install cryptopp:x64-windows-static`
   - Run `./vcpkg/vcpkg.exe integrate install`
 - Download the project and extract it
 - Change in the first line of `./RansomTuga/preCompilation.bat` and `./RansomTuga/postCompilation.bat` the word `py` with whatever command you use to open python in command prompt
