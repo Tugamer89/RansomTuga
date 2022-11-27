@@ -2,6 +2,7 @@
 
 //global includes
 #include "skStr.h"
+#include <fstream>
 #include <iostream>
 #include <Windows.h>
 #include <cryptopp/aes.h>

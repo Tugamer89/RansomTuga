@@ -1,11 +1,8 @@
 #pragma once
 #include "../commons/common.h"
 #include "json.hpp"
-#include <fstream>
 #include <sstream>
 #include <dshow.h>
-#include <iomanip>
-#include <atlstr.h>
 #include <wininet.h>
 #include <atlimage.h>
 #include <winternl.h>

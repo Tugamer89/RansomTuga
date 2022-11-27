@@ -1,8 +1,6 @@
 #pragma once
-#include <vector>
-#include <fstream>
-#include <sstream>
 #include "..\commons\common.h"
+#include <sstream>
 
 std::string OpenFilename();
 bool FileExists(const std::string& name);
