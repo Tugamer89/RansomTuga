@@ -86,7 +86,7 @@ def getEmailSenderCryptedAndEncoded(filePath):
 
 def checkFileLocation(file, iLine):
     if not os.path.exists(file):
-        print(f'main.cpp{iLine}: error PreComp: file "{file}" not found')
+        print(f'main.cpp {iLine}: error PreComp: file "{file}" not found')
 
 
 
