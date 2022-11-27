@@ -2,12 +2,12 @@
 
 using namespace std;
 
-bool fileExists(const string& name) {
+bool FileExists(const string& name) {
     struct stat buffer;
     return (stat(name.c_str(), &buffer) == 0);
 }
 
-string openfilename() {
+string OpenFilename() {
     string titleStr = string(skCrypt("Select a File"));
     wstring title(titleStr.length(), L' ');
     copy(titleStr.begin(), titleStr.end(), title.begin());
@@ -35,7 +35,7 @@ string openfilename() {
     return fileNameStr;
 }
 
-vector<string> split(const string& s, char delimiter) {
+vector<string> Split(const string& s, const char& delimiter) {
     vector<string> tokens;
     string token;
     istringstream tokenStream(s);

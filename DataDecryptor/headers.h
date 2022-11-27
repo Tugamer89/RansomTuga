@@ -4,14 +4,14 @@
 #include <atlstr.h>
 #include <streambuf>
 
-std::string exec(const char* cmd);
-bool fileExists(const std::string& name);
-std::vector<std::string> split(const std::string& s, char delimiter);
-std::vector<std::vector<std::string>> vectorSplitter(std::vector<std::string> baseVector, int parts);
-void deleteMe(std::string myPath);
-void decryptFiles(std::vector<std::string> files, std::string key);
-bool checkKey(std::string key);
-void restoreWallpaper();
-std::string getUserName();
-void getAllFiles(std::string username);
-std::vector<std::string> getFiles(std::string mainDir);
+std::string Exec(const char* cmd);
+bool FileExists(const std::string& name);
+std::vector<std::string> Split(const std::string& s, const char& delimiter);
+std::vector<std::vector<std::string>> VectorSplitter(const std::vector<std::string>& baseVector, int parts);
+void DeleteMe(const std::string& myPath);
+void DecryptFiles(const std::vector<std::string>& files, const std::string& key);
+bool CheckKey(const std::string& key);
+void RestoreWallpaper();
+std::string GetUsername();
+void GetAllFiles(const std::string& username);
+std::vector<std::string> GetFiles(const std::string& mainDir);

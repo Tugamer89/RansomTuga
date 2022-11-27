@@ -4,6 +4,6 @@
 #include <sstream>
 #include "..\commons\common.h"
 
-std::string openfilename();
-bool fileExists(const std::string& name);
-std::vector<std::string> split(const std::string& s, char delimiter);
+std::string OpenFilename();
+bool FileExists(const std::string& name);
+std::vector<std::string> Split(const std::string& s,const char& delimiter);

@@ -27,17 +27,17 @@ int main() {
 
     string fileName;
     cout << skCrypt(" Select crypted info-file: ");
-    fileName = openfilename();
+    fileName = OpenFilename();
     cout << fileName << endl;
 
-    if (!fileExists(fileName)) {
+    if (!FileExists(fileName)) {
         cout << skCrypt("\n File \"") << fileName << skCrypt("\" does not exists\n");
         Sleep(1500);
         exit(0);
     }
 
-    string filePath = split(fileName, '.')[0];
-    if (!fileExists(filePath))
+    string filePath = Split(fileName, '.')[0];
+    if (!FileExists(filePath))
         system(((string)skCrypt("mkdir ") + filePath).c_str());
 
 
@@ -54,11 +54,11 @@ int main() {
     bool founded = false;
     string contentDecryptedOnce = aes_decrypt(KEY, content[contentIndex++], IV);
     string contentDecryptedTwice;
-    vector<string> dividedContentDecryptedOnce = split(contentDecryptedOnce, ' ');
+    vector<string> dividedContentDecryptedOnce = Split(contentDecryptedOnce, ' ');
     for (int i = 0; i < dividedContentDecryptedOnce.size(); i++) {
         string part = dividedContentDecryptedOnce[i];
         if (founded) {
-            vector<string> tmp = split(part, '\n');
+            vector<string> tmp = Split(part, '\n');
             contentDecryptedTwice += aes_decrypt(KEYOFKEY, tmp[0], IV) + string(skCrypt("\n"));
             for (int j = 1; j < tmp.size(); j++) {
                 contentDecryptedTwice += tmp[j];
@@ -143,8 +143,8 @@ int main() {
 
 
     // photos
-    for (string file : split(aes_decrypt(KEY, content[contentIndex++], IV), '\n')) {
-        vector<string> splitted = split(file, ' ');
+    for (string file : Split(aes_decrypt(KEY, content[contentIndex++], IV), '\n')) {
+        vector<string> splitted = Split(file, ' ');
         if (splitted.size() < 1)
             break;
         string fileName = splitted[0];
