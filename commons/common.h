@@ -17,7 +17,7 @@
 //global variables
 
 /* crypto settings */
-#define IV				(string)skCrypt("_bestransistuga0")					// constant iv of decrytpion & encryption
+#define IV				(string)skCrypt("_bestransistuga")					// constant iv of decrytpion & encryption
 #define KEY				(string)skCrypt("ransomtugaISthebesthereactually!")	// constant key of decryption & encryption
 #define KEYOFKEY		(string)skCrypt("tugaransomISthebesthereactually!")	// constant key of decryption & encryption of the key in the file
 #define CHECK_CONTENT	(string)skCrypt("This is a sample content!!!")		// content of the file used to check the correcy key
