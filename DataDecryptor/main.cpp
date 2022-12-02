@@ -41,7 +41,11 @@ int main(int argc, char* argv[])
         
         cout << logo << skCrypt("\n\n\n");
         cout << skCrypt("Type decryption key: ");
-        cin >> key;
+        if (argc >= 3)
+            key = argv[2];
+        else
+            cin >> key;
+        
 
         if (key.size() == 32 && CheckKey(key)) {
             remove((CHECKSUM_FILE + FILE_EXTENSION).c_str());
