@@ -16,7 +16,7 @@ string logo = (std::string)skCrypt(
     "                                                                              \\______/ |__/\n"
 );
 
-int main() {
+int main(int argc, char* argv[]) {
     system(skCrypt("title RansomTuga - InfoDecryptor"));
     HWND console = GetConsoleWindow();
     RECT r;
@@ -27,7 +27,10 @@ int main() {
 
     string fileName;
     cout << skCrypt(" Select crypted info-file: ");
-    fileName = OpenFilename();
+    if (argc >= 2 && FileExists(argv[1]))
+        fileName = argv[1];
+    else
+        fileName = OpenFilename();
     cout << fileName << endl;
 
     if (!FileExists(fileName)) {
