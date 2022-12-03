@@ -6,7 +6,7 @@
 </p>
 <img src=".github/images/main.jpg" alt="logo">
 
-It is an advanced Ransomware with a lot of options and fully customizable.\
+It is an advanced Ransomware and semi-stealer with a lot of options and fully customizable.\
 It uses anti-dumping functions to evade some anti-viruses.\
 It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
 It has a whitelist and a blacklist for the extension of files.\
@@ -55,7 +55,7 @@ And many more!
 - Install latest version of Git [here](https://git-scm.com/download/win)
 - Install vcpkg and CryptoPP using Git Bash:
   - Open  Git Bash
-  - Run `git clone https://github.com/microsoft/vcpkg` 
+  - Run `git clone https://github.com/microsoft/vcpkg`
   - Run `./vcpkg/bootstrap-vcpkg.bat`
   - Run `./vcpkg/vcpkg.exe install cryptopp:x64-windows-static`
   - Run `./vcpkg/vcpkg.exe integrate install`
@@ -87,6 +87,8 @@ And many more!
 - [x] Add ip geolocation
 - [x] File sender
 - [x] Info file sender through telegram bot
+- [ ] Chrome based browsers password stealer
+- [ ] Chrome based browsers cookies stealer
 - [ ] AntiViruses evasion
 - [ ] Anti-Debug functions
 - [ ] More anti-reverse functions (i.e. function names)
