@@ -35,7 +35,20 @@ At the end it can delete the executable from which it was started.
 - **Trojan mode**
 - **Custom icon** for the compiled executable
 - **Tasks remover**
-- **Steal system informations** (HWID, IP, CPU brand and threads, RAM, GPU brand, Host name and username, screen resolution, screenshot, clipboard, wifi passwords, windows version and language)
+- **Steal system informations**:
+  - HWID
+  - IP
+  - CPU brand and threads
+  - RAM
+  - GPU brand
+  - Host name
+  - Username
+  - Screen resolution
+  - Screenshot
+  - Clipboard
+  - Wi-Fi passwords
+  - Windows version (not working always)
+  - Language
 - **Take photos** of **all** the webcams
 - **Delete restore points**
 - **Custom file icon** for crypted files
