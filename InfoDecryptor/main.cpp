@@ -61,15 +61,21 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < dividedContentDecryptedOnce.size(); i++) {
         string part = dividedContentDecryptedOnce[i];
         if (founded) {
-            vector<string> tmp = Split(part, '\n');
-            contentDecryptedTwice += aes_decrypt(KEYOFKEY, tmp[0], IV) + string(skCrypt("\n"));
-            for (int j = 1; j < tmp.size(); j++) {
-                contentDecryptedTwice += tmp[j];
-                if (j != tmp.size() - 1)
-                    contentDecryptedTwice += string(skCrypt("\n"));   
+            vector<string> splittedAtNewLine = Split(part, '\n');
+
+            contentDecryptedTwice += aes_decrypt(KEYOFKEY, Split(splittedAtNewLine[0], '\\')[0], IV) /*key*/ +
+                (string)skCrypt("\\") + aes_decrypt(KEYOFKEY, Split(splittedAtNewLine[0], '\\')[1], IV) /*iv*/ +
+                (string)skCrypt("\n");
+
+            for (int j = 1; j < splittedAtNewLine.size(); j++) {
+                contentDecryptedTwice += splittedAtNewLine[j];
+                if (j != splittedAtNewLine.size() - 1)
+                    contentDecryptedTwice += (string)skCrypt("\n");
             }
+
             if (i != dividedContentDecryptedOnce.size() - 1)
-                contentDecryptedTwice += string(skCrypt(" "));
+                contentDecryptedTwice += (string)skCrypt(" ");
+
             founded = false;
             continue;
         }
@@ -77,7 +83,7 @@ int main(int argc, char* argv[]) {
             founded = true;
         contentDecryptedTwice += part;
         if (i != dividedContentDecryptedOnce.size() - 1)
-            contentDecryptedTwice += string(skCrypt(" "));
+            contentDecryptedTwice += (string)skCrypt(" ");
     }
 
     string infoFileName = filePath + (string)skCrypt("\\info.txt");

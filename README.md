@@ -8,7 +8,7 @@
 
 It is an advanced Ransomware and semi-stealer with a lot of options and fully customizable.\
 It uses anti-dumping functions to evade some anti-viruses.\
-It encrypts files in AES CBC with a random generated 256 bit key and with an hardcoded IV.\
+It encrypts files in AES CBC with a random generated 256 bit key and 128 bit IV.\
 It has a whitelist and a blacklist for the extension of files.\
 It take photos from all the webcams connected to the pc.\
 After the encryption it sends the key and some pc informations to the attacker via email and/or via a Telegram bot.\
@@ -89,7 +89,7 @@ And many more!
 
 # Todo
 - [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
-- [ ] Random IV
+- [x] Random IV
 - [x] Get clipboard
 - [x] Get screenshot
 - [x] Get webcam pictures

