@@ -8,11 +8,11 @@ bool FileExists(const string& name) {
 }
 
 string OpenFilename() {
-    string titleStr = string(skCrypt("Select a File"));
+    string titleStr = (string)skCrypt("Select a File");
     wstring title(titleStr.length(), L' ');
     copy(titleStr.begin(), titleStr.end(), title.begin());
 
-    string filterStr = string(skCrypt("Text files (.txt)")) + '\0' + string(skCrypt("*.txt")) + '\0';
+    string filterStr = (string)skCrypt("Text files (.txt)") + '\0' + (string)skCrypt("*.txt") + '\0';
     wstring filter(filterStr.length(), L' ');
     copy(filterStr.begin(), filterStr.end(), filter.begin());
 
@@ -27,7 +27,7 @@ string OpenFilename() {
     ofn.lpstrTitle = title.c_str();
     ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_HIDEREADONLY | OFN_FORCESHOWHIDDEN | OFN_NOREADONLYRETURN;
 
-    string fileNameStr;
+    string fileNameStr = (string)skCrypt("");
 
     if (GetOpenFileName(&ofn))
         fileNameStr = string(filename.begin(), filename.end());
