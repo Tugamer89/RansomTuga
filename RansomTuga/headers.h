@@ -30,6 +30,7 @@ void ImageSizeIncreaser();
 void GetAllFiles(const std::string& username);
 int GetTimeOfDay(struct timeval* tp, struct timezone* tzp);
 std::string GenerateRandom(const int len);
+std::string GetRandomUserAgent();
 std::vector<std::string> GetFiles(const std::string& mainDir);
 std::vector<std::string> Split(const std::string& s,const char& delimiter);
 bool FileExists(const std::string& name);

