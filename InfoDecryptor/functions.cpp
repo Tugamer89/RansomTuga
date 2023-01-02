@@ -43,3 +43,17 @@ vector<string> Split(const string& s, const char& delimiter) {
         tokens.push_back(token);
     return tokens;
 }
+
+void CopyToClipboard(const std::string& s) {
+    OpenClipboard(0);
+    EmptyClipboard();
+
+    HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, s.size() + 1);
+
+    memcpy(GlobalLock(hg), s.c_str(), s.size() + 1);
+    GlobalUnlock(hg);
+    SetClipboardData(CF_TEXT, hg);
+
+    CloseClipboard();
+    GlobalFree(hg);
+}

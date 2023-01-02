@@ -63,9 +63,11 @@ int main(int argc, char* argv[]) {
         if (founded) {
             vector<string> splittedAtNewLine = Split(part, '\n');
 
-            contentDecryptedTwice += aes_decrypt(KEYOFKEY, Split(splittedAtNewLine[0], '\\')[0], IV) /*key*/ +
+            string keyNIV = aes_decrypt(KEYOFKEY, Split(splittedAtNewLine[0], '\\')[0], IV) /*key*/ +
                 (string)skCrypt("\\") + aes_decrypt(KEYOFKEY, Split(splittedAtNewLine[0], '\\')[1], IV) /*iv*/ +
                 (string)skCrypt("\n");
+            CopyToClipboard(keyNIV);
+            contentDecryptedTwice += keyNIV;
 
             for (int j = 1; j < splittedAtNewLine.size(); j++) {
                 contentDecryptedTwice += splittedAtNewLine[j];
