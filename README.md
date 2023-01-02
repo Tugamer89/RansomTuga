@@ -1,8 +1,8 @@
 # RansomTuga
 <p align="center">
     <a href="https://en.wikipedia.org/wiki/Microsoft_Windows" target="_blank"><img src="https://img.shields.io/badge/OS-windows-informational?style=plastic-square&logo=windows&logoColor=white" alt="os"></a>
-    <a href="https://en.wikipedia.org/wiki/Visual_Studio" target="_blank"><img src="https://img.shields.io/badge/Editor-VisualStudio-blue?style=plastic-square&logo=visual-studio&logoColor=white" alt="os"></a>
-    <a href="https://github.com/Tugamer89/RansomTuga" target="_blank"><img src="https://visitor-badge.laobi.icu/badge?page_id=tugamer89.RansomTuga" alt="os"></a>
+    <a href="https://en.wikipedia.org/wiki/Visual_Studio" target="_blank"><img src="https://img.shields.io/badge/Editor-VisualStudio-blue?style=plastic-square&logo=visual-studio&logoColor=white" alt="editor"></a>
+    <a href="https://github.com/Tugamer89/RansomTuga" target="_blank"><img src="https://visitor-badge.glitch.me/badge?page_id=tugamer89.RansomTuga" alt="visitors"></a>
 </p>
 <img src=".github/images/main.jpg" alt="logo">
 
