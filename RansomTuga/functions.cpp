@@ -1039,3 +1039,22 @@ cleanup:
     if (hrequest)
         InternetCloseHandle(hrequest);
 }
+
+BOOL WINAPI HookIsDebuggerPresent() {
+    return FALSE;
+}
+
+bool AntiDebug() {
+    if (IsDebuggerPresent() || CheckRemoteDebuggerPresent(GetCurrentProcess(), NULL))
+        return true;
+
+    void* pOriginalIsDebuggerPresent = (void*)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "IsDebuggerPresent");
+    void* pDetourIsDebuggerPresent = (void*)HookIsDebuggerPresent;
+    MH_CreateHook(pOriginalIsDebuggerPresent, pDetourIsDebuggerPresent, (LPVOID*)&pOriginalIsDebuggerPresent);
+    MH_EnableHook(pOriginalIsDebuggerPresent);
+
+    ULONG heapInformation = HEAP_NO_SERIALIZE;
+    HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &heapInformation, sizeof(heapInformation));
+
+    return false;
+}

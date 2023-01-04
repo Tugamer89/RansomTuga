@@ -71,6 +71,7 @@ And many more!
   - Run `git clone https://github.com/microsoft/vcpkg`
   - Run `./vcpkg/bootstrap-vcpkg.bat`
   - Run `./vcpkg/vcpkg.exe install cryptopp:x64-windows-static`
+  - Run `./vcpkg/vcpkg.exe install minhook:x64-windows-static`
   - Run `./vcpkg/vcpkg.exe integrate install`
 - Download the project and extract it
 - Change in the first line of `./RansomTuga/preCompilation.bat` and `./RansomTuga/postCompilation.bat` the word `py` with whatever command you use to open python in command prompt
@@ -103,8 +104,8 @@ And many more!
 - [ ] Chrome based browsers password stealer
 - [ ] Chrome based browsers cookies stealer
 - [ ] AntiViruses evasion
-- [ ] Anti-Debug functions
-- [ ] More anti-reverse functions (i.e. function names)
+- [x] Anti-Debug functions
+- [x] More anti-reverse functions (i.e. function names)
 - [ ] Do more tests in more environments
 
 
