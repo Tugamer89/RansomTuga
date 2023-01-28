@@ -66,7 +66,7 @@ And many more!
 
 
 # Todo list
-- [ ] Pre-encrypt dropping files
+- [x] Pre-encrypt dropping files
 - [ ] Convert strings to base64 LE at precompilation instead of at runtime
 - [ ] Chrome based browsers password stealer
 - [ ] Chrome based browsers cookies stealer
