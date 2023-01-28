@@ -25,9 +25,9 @@ for i in range(len(lines)):
         if line == ';\n':
             inside = False
         continue
-    if line == 'string InfoDecryptorContent = \n':
+    if line == 'string DataDecryptorContent = \n':
         inside = True
-        content += 'string InfoDecryptorContent = "' + decryptorText[:-1] + '";\n'
+        content += 'string DataDecryptorContent = "' + decryptorText[:-1] + '";\n'
         continue
     if line == 'string WallpaperContent = \n':
         inside = True

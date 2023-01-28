@@ -6,7 +6,7 @@ namespace fs = std::experimental::filesystem;
 
 EXTERN_C const CLSID CLSID_NullRenderer;
 EXTERN_C const CLSID CLSID_SampleGrabber;
-extern vector<string> filesLink;
+vector<string> filesLink;
 
 int GetTimeOfDay(struct timeval* tp, struct timezone* tzp) {
     static const uint64_t EPOCH = ((uint64_t)116444736000000000ULL);

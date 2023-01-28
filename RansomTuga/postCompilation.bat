@@ -1,1 +1,1 @@
-py %~dp0postComp.py
+python %~dp0postComp.py

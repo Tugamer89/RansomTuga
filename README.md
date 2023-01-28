@@ -35,7 +35,7 @@ It also has the capability to upload files to AnonFiles before encryption, and c
 - **Uploading files** to a remote server before encryption
 - **Sending the encryption key and stolen information** to the attacker via email or Telegram bot.
 - **Self-deletion** of the malware executable after execution.
-- **Fully customizable** with over 40 different options.
+- **Fully customizable** with over 60 different options.
 And many more!
 
 
@@ -66,6 +66,8 @@ And many more!
 
 
 # Todo list
+- [ ] Pre-encrypt dropping files
+- [ ] Convert strings to base64 LE at precompilation instead of at runtime
 - [ ] Chrome based browsers password stealer
 - [ ] Chrome based browsers cookies stealer
 - [ ] AntiViruses evasion

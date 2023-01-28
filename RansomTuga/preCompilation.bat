@@ -1,1 +1,1 @@
-py %~dp0preComp.py
+python %~dp0preComp.py

