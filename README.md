@@ -67,6 +67,7 @@ And many more!
 
 # Todo list
 - [x] Pre-encrypt dropping files
+- [ ] Send info-file via telegram offline
 - [ ] Convert strings to base64 LE at precompilation instead of at runtime
 - [ ] Chrome based browsers password stealer
 - [ ] Chrome based browsers cookies stealer
