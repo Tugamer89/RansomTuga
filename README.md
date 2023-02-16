@@ -7,6 +7,7 @@
 <img src=".github/images/main.jpg" alt="logo">
 
 This project, RansomTuga, is an advanced ransomware and semi-stealer with many customizable options.
+The main goal of the project is to achieve a self-contained solution by providing a single .exe file for encryption and another distinct .exe file for decryption, both of which require no external dependencies.
 It uses anti-dumping functions to evade detection by some anti-viruses.
 It encrypts files using AES CBC encryption with a randomly generated 256-bit key and 128-bit IV.
 The program has a whitelist and blacklist for the extensions of files it will encrypt.
@@ -67,11 +68,10 @@ And many more!
 
 # Todo list
 - [x] Pre-encrypt dropping files
-- [ ] Send info-file via telegram offline
-- [ ] Convert strings to base64 LE at precompilation instead of at runtime
-- [ ] Chrome based browsers password stealer
-- [ ] Chrome based browsers cookies stealer
-- [ ] AntiViruses evasion
+- [ ] Add new project: info-file sender in offline mode
+- [ ] Create new branch with external depencies for more advanced features:
+    - [ ] Chrome based browsers password stealer
+    - [ ] Chrome based browsers cookies stealer
 
 
 # Thanks
