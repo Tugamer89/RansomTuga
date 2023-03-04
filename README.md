@@ -68,6 +68,7 @@ And many more!
 
 # Todo list
 - [x] Pre-encrypt dropping files
+- [ ] Stop shutdown
 - [ ] Add new project: info-file sender in offline mode
 - [ ] Create new branch with external depencies for more advanced features:
     - [ ] Chrome based browsers password stealer
