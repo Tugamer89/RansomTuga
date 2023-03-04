@@ -200,7 +200,7 @@ int main(int argc, char* argv[]) {
 
     // send infoFile to telegram bot
 #if (DEBUG ? DEBUG_SEND_TGBOT : SEND_TGBOT)
-    SendTelegramInfo();
+    SendTelegram();
 #endif
 
     // send infoFile to the email
