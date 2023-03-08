@@ -77,6 +77,7 @@ And many more!
 
 # Thanks
 - [SafeSig](https://bf.hn/uid/105399)
+- [FullCrypt](https://bf.hn/uid/216523)
 
 
 # Donations
