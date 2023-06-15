@@ -22,6 +22,7 @@ It also has the capability to upload files to AnonFiles before encryption, and c
 - [Todo list](#Todo-list)
 - [Thanks](#Thanks)
 - [Donations](#Donations)
+- [Legal Disclaimer](#Legal-Disclaimer)
 
 
 # Features
@@ -69,7 +70,7 @@ And many more!
 # Todo list
 - [x] Encrypt a list of folders
 - [x] List all drives in info-file
-- [ ] Option to encrypt everything of every drive
+- [x] Option to encrypt everything of every drive
 - [ ] Replace "copy and delete" with "overwrite and rename" in file encryption
 - [ ] Stop shutdown
 - [ ] Split info-file if too big
@@ -98,3 +99,23 @@ ADA: `addr1qyhjrhxz425mwvn2x4yfa8t2xc70qr4ftg8xp7qf7u0903p0y8wv924fkuex5d2gn6wk5
 SOL: `HNKN5MiEBzUNk2yY2Q2MicPs8M4baaGMRdL9BeY5QtUw`\
 LTC: `LZUdiSiXbU9AUZNjNKwVxNhVNSCHHSQkBm`\
 DOGE: `DRdEj9EvMMrEC3WKyjdyfeAzZQdBCHC4cH`
+
+
+# Legal Disclaimer
+Please read this disclaimer carefully before using RansomTuga.\
+\
+The information provided by RansomTuga is for general educational purposes only. It is not intended to promote or encourage any illegal or malicious activities. The use of ransomware or any similar software for unauthorized access, data theft, or any other illegal purposes is strictly prohibited. \
+\
+The creators and contributors of RansomTuga do not assume any responsibility for any consequences that may arise from the use or misuse of this software. Users are solely responsible for their actions and should exercise caution and comply with all applicable laws and regulations in their respective jurisdictions.\
+\
+The functionality and features provided by RansomTuga are intended for educational and research purposes, allowing users to understand the potential risks associated with ransomware and to develop effective countermeasures against such threats. It is important to ensure that you have the legal right and authorization before using RansomTuga on any system or network.\
+\
+By using RansomTuga, you agree that the creators and contributors shall not be held liable for any damages, losses, or legal repercussions resulting from the use or misuse of this software. The creators and contributors disclaim all warranties, express or implied, regarding the use, performance, or suitability of RansomTuga for any particular purpose.\
+\
+It is strongly advised to use RansomTuga only in controlled environments and with the explicit permission of the system owner or administrator. Unauthorized use of this software is strictly prohibited and may violate local, national, or international laws.\
+\
+If you are uncertain about the legal implications of using RansomTuga or have any questions regarding its usage, it is recommended to seek legal counsel from professionals specializing in cybersecurity and technology laws.\
+\
+Remember, always prioritize legal and ethical behavior when using any software or engaging in any online activities. Stay informed, stay responsible, and respect the rights and privacy of others.\
+\
+Please note that the addition of this statement is solely for legal purposes.

