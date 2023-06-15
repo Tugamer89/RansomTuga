@@ -62,6 +62,7 @@ std::string GetPcName();
 std::string GetUsername();
 std::string GetResolution();
 std::string GetWinVersion();
+std::string GetDrives();
 std::string GetLanguage();
 std::string GetClipboard();
 std::string GetWifi();

@@ -68,6 +68,7 @@ And many more!
 
 # Todo list
 - [x] Encrypt a list of folders
+- [x] List all drives in info-file
 - [ ] Option to encrypt everything of every drive
 - [ ] Replace "copy and delete" with "overwrite and rename" in file encryption
 - [ ] Stop shutdown

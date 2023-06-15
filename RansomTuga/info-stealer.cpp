@@ -153,6 +153,34 @@ string GetWinVersion() {
     return result;
 }
 
+string GetDrives() {
+    stringstream output;
+    char buffer[256];
+    DWORD len = GetLogicalDriveStringsA(sizeof(buffer) / sizeof(buffer[0]), buffer);
+
+    if (len > 0 && len <= sizeof(buffer) / sizeof(buffer[0])) {
+        char* drive = buffer;
+
+        while (*drive) {
+            ULARGE_INTEGER freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes;
+
+            if (GetDiskFreeSpaceExA(drive, &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes))
+                output << drive <<
+                (string)skCrypt(" (") <<
+                (1 - static_cast<double>(totalNumberOfFreeBytes.QuadPart) / totalNumberOfBytes.QuadPart) * 100 <<
+                (string)skCrypt("/") <<
+                totalNumberOfBytes.QuadPart / (1024.0 * 1024.0 * 1024.0) <<
+                (string)skCrypt(" GB - ") <<
+                static_cast<int>((totalNumberOfBytes.QuadPart - totalNumberOfFreeBytes.QuadPart) / (1024.0 * 1024.0 * 1024.0)) <<
+                (string)skCrypt("%); ");
+
+            drive += strlen(drive) + 1;
+        }
+    }
+
+    return output.str();
+}
+
 string GetLanguage() {
     char buf[10];
     return string(buf, GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, buf, sizeof(buf)) - 1) +
