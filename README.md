@@ -69,7 +69,7 @@ And many more features are available!
 - [x] Encrypt a list of folders
 - [x] List all drives in info-file
 - [x] Option to encrypt everything of every drive
-- [ ] Replace "copy and delete" with "overwrite and rename" in file encryption
+- [x] Replace "copy and delete" with "overwrite and rename" in file encryption
 - [ ] Stop shutdown
 - [ ] Split info-file if too big
 - [ ] Add new project: info-file sender in offline mode

