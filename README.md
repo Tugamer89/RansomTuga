@@ -70,13 +70,13 @@ And many more features are available!
 - [x] List all drives in info-file
 - [x] Option to encrypt everything of every drive
 - [x] Replace "copy and delete" with "overwrite and rename" in file encryption
-- [ ] Stop shutdown
+- [ ] Add wiper
 - [ ] Split info-file if too big
 - [ ] Add new project: info-file sender in offline mode
 - [ ] Create new branch with external depencies for more advanced features:
     - [ ] Chrome based browsers password stealer
     - [ ] Chrome based browsers cookies stealer
-- [ ] More tests
+- [ ] Do more tests for email sending
 
 
 # Thanks
