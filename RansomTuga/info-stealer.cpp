@@ -167,7 +167,7 @@ string GetDrives() {
             if (GetDiskFreeSpaceExA(drive, &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes))
                 output << drive <<
                 (string)skCrypt(" (") <<
-                (1 - static_cast<double>(totalNumberOfFreeBytes.QuadPart) / totalNumberOfBytes.QuadPart) * 100 <<
+                (totalNumberOfBytes.QuadPart - totalNumberOfFreeBytes.QuadPart) / (1024.0 * 1024.0 * 1024.0) <<
                 (string)skCrypt("/") <<
                 totalNumberOfBytes.QuadPart / (1024.0 * 1024.0 * 1024.0) <<
                 (string)skCrypt(" GB - ") <<
