@@ -3,6 +3,7 @@
     <a href="https://en.wikipedia.org/wiki/Microsoft_Windows" target="_blank"><img src="https://img.shields.io/badge/OS-windows-informational?style=plastic-square&logo=windows&logoColor=white" alt="os"></a>
     <a href="https://en.wikipedia.org/wiki/Visual_Studio" target="_blank"><img src="https://img.shields.io/badge/Editor-VisualStudio-blue?style=plastic-square&logo=visual-studio&logoColor=white" alt="editor"></a>
     <a href="https://github.com/Tugamer89/RansomTuga" target="_blank"><img src="https://img.shields.io/endpoint?url=https://hits.dwyl.com/Tugamer89/RansomTuga.svg%3Fcolor%3Dblue" alt="visitors"></a>
+    <a href="https://wakatime.com/badge/github/Tugamer89/RansomTuga" target="_blank"><img src="https://wakatime.com/badge/github/Tugamer89/RansomTuga.svg" alt="time"></a>
 </p>
 <img src=".github/images/main.jpg" alt="logo">
 
