@@ -67,16 +67,15 @@ And many more features are available!
 
 
 # Todo list
-- [x] Encrypt a list of folders
-- [x] List all drives in info-file
-- [x] Option to encrypt everything of every drive
-- [x] Replace "copy and delete" with "overwrite and rename" in file encryption
-- [x] Add wiper
-- [ ] Split info-file if too big
-- [ ] Add new project: info-file sender in offline mode
-- [ ] Create new branch with external depencies for more advanced features:
-    - [ ] Chrome based browsers password stealer
-    - [ ] Chrome based browsers cookies stealer
+- [ ] Delete key after usage
+- [ ] Substitute anonfiles with some other provider
+- [ ] Clean up some hardcoded data
+- [ ] Add a GUI for the Decryptor
+- [ ] Improve anti-AV
+- [ ] Split info-file into multiple if too big
+- [ ] Chrome based browsers password stealer
+- [ ] Chrome based browsers cookies stealer
+- [ ] Add info-file sender in offline mode
 - [ ] Do more tests for email sending
 
 
