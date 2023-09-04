@@ -67,7 +67,7 @@ And many more features are available!
 
 
 # Todo list
-- [ ] Delete key after usage
+- [x] Delete key after usage
 - [ ] Substitute anonfiles with some other provider
 - [ ] Clean up some hardcoded data
 - [ ] Add a GUI for the Decryptor

