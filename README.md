@@ -83,6 +83,7 @@ And many more features are available!
 - [SafeSig](https://bf.hn/uid/105399)
 - [FullCrypt](https://bf.hn/uid/216523)
 - [Grief](https://breachforums.is/member?action=profile&uid=2212)
+- [Adamhkt](https://github.com/adamhkt)
 
 
 # Donations
