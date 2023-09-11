@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
     // open a new thread which deletes bad open tasks
 #if TSK_REMOVER
-    HANDLE hThreadTaskMng = CreateThread(NULL, 0, RemoveTasks, NULL, HIGH_PRIORITY_CLASS, new DWORD);
+    thread tskRemover = thread(RemoveTasks);
 #endif
 
     // increase PE image size

