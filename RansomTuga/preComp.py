@@ -88,7 +88,7 @@ def encryptString(string):
 
 def getEmailSenderCryptedAndEncoded(filePath):
     server = 'smtp.gmail.com'
-    port = 587
+    port = '587'
     host = 'www.google.com'
 
     shellText = open(filePath, 'r').read()
