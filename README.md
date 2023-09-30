@@ -68,15 +68,15 @@ And many more features are available!
 
 # Todo list
 - [x] Delete key after usage
+- [x] Do more tests for email sending
+- [ ] Fix decryption of multiple folders
 - [ ] Substitute anonfiles with some other provider
-- [ ] Clean up some hardcoded data
-- [ ] Add a GUI for the Decryptor
 - [ ] Improve anti-AV
+- [ ] Add a GUI for the Decryptor
 - [ ] Split info-file into multiple if too big
 - [ ] Chrome based browsers password stealer
 - [ ] Chrome based browsers cookies stealer
 - [ ] Add info-file sender in offline mode
-- [ ] Do more tests for email sending
 
 
 # Thanks
